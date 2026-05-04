@@ -1,0 +1,68 @@
+---
+description: Cursor → Claude Code 자동 핸드오프 (양방향 분산, .claude/rules/handoff.md 미러)
+alwaysApply: true
+---
+
+# Handoff Rule — Cursor → Claude Code 분산
+
+> Lian이 도구 분산 결정 안 해도 됨. Cursor 에이전트가 작업 중 자동 판단 → 복붙 프롬프트 박스 출력.
+> 반대 방향 (Claude Code → Cursor) = `.claude/rules/handoff.md`.
+
+---
+
+## 1. 언제 Claude Code 로 넘기나 (트리거)
+
+다음 중 하나라도 해당 = 즉시 핸드오프 출력:
+
+- **전체 코드베이스 분석** 필요 (100만 토큰 컨텍스트, Cursor 한계 초과)
+- **큰 리팩토링** (다중 단계, 아키텍처 변경, 5+ 파일 + 깊은 의존성)
+- **터미널 명령 자동화** (git, npm, 빌드, 배포, winget, python script 실행)
+- **외부 검색 + 긴 사고 + 의사결정** (perplexity dive, 시장 조사, 의사결정)
+- **ARC 시스템 룰 깊게 활용** (`.claude/` 자동 로드, hook 검증, raw/molds/ 사례 매칭, MODES Phase 1 PLAN.md 작성)
+- **PLAN.md 1장 작성** (대화·검증 길어짐)
+- Lian이 명시적으로 "클로드코드로 넘겨" / "이건 머리 써야겠는데"
+
+## 2. 언제 Cursor 가 유지
+
+- Tab 자동완성, Cmd+K 인라인 편집
+- Composer multi-file 빠른 수정 (3-5 파일, 단순 변경)
+- UI Design Mode 시각적 반복
+- Background Agent 병렬 작업 (테스트 자동, PR 생성)
+
+## 3. 출력 형식 (정확히 이 형태로)
+
+핸드오프 발동 시 답변 마지막에 박스로:
+
+```
+🟣 리안, 여기서부터는 Claude Code 가 할 일이야.
+
+Claude Code 터미널에 이 프롬프트 그대로 복붙:
+
+----- 복붙 시작 -----
+[작업 컨텍스트 1줄]
+[Cursor가 한 일 bullet 3개 이내]
+[Claude Code가 할 일 bullet 3개 이내]
+[컨텍스트 파일 절대경로]
+끝나면 답변 마지막에 "🟢 Cursor로 가" 박스 + 결과 1줄 요약 + Lian이 Cursor 에이전트 창에 복붙할 프롬프트 박스 출력.
+----- 복붙 끝 -----
+
+작업 끝나면 Cursor 에이전트 창에 와서 "클코 끝났어" 한 마디 + 결과 1줄.
+```
+
+## 4. 컨텍스트 인계 룰
+
+- **파일 경로**: 항상 절대경로 (D:\work\ARC\...).
+- **현재 상태**: 변경된 파일 명시 + uncommitted 여부.
+- **PLAN reference**: `projects/{name}/PLAN.md` 또는 `raw/molds/my/{slug}.md` 가리킴.
+- **금지**: 모호한 "그것/저것" 사용 X.
+
+## 5. Claude Code 끝나고 돌아올 때
+
+Lian이 "클코 끝났어" 또는 "🟢 Cursor로 가" 박스 복붙하면:
+
+1. 변경 파일 확인
+2. 다음 동작 결정 또는 다음 핸드오프
+
+## 6. 자기 점검
+
+매 응답 끝에 self-check: "이 답변에 §1 트리거 발동했나? 발동했는데 핸드오프 안 박았으면 룰 위반."

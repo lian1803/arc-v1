@@ -18,6 +18,7 @@ ARC = Lian이 사업 N개 굴릴 때 쓰는 인프라.
 - 사례 → raw/molds/{my|external|failed}/ / 외부 자료 → raw/sources/
 - LIVE 사업 → projects/{이름}/ / 도구 → tools/{search|image|cost|sim}/
 - 보존 → archive/ / 파일 위치 룰 → .claude/rules/file-routing.md (hook 작동)
+- Cursor 핸드오프 → .claude/rules/handoff.md (양방향 자동 분산)
 
 ## Gate
 

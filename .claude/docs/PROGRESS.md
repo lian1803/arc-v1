@@ -70,6 +70,7 @@
 - git 신규: `.git` 폐기 + Git for Windows 2.54.0 설치 + 새 init + first commit 987 files / 244,470 lines + push → https://github.com/lian1803/arc-v1 (public).
 - Cursor dive 2회 ($0.02): Cursor 3 (4월 출시 Background Agents/Composer 2/Agent Window) + 5월 점유율 31% AI IDE 1위. ARC MODES.md "Cursor/Claude 1대1" 외부 정론 정합 확인.
 - ★ marketing_agency 호환성 연결: luna 통째 carry (7 sub-project + _shared) → `raw/molds/my/marketing_agency.md` mold 등록 / NEXT.md 진행 사업 #4 추가 / CLAUDE.md ARC integration 섹션 luna DOCTRINE 참조 → ARC 시스템 룰 매핑.
+- ★ Cursor 양방향 핸드오프 시스템: `.claude/rules/handoff.md` (Claude Code 측) + `.cursor/rules/{arc,modes,handoff,file-routing}.mdc` 4개 (Cursor 측 미러) + CLAUDE.md 라우터 1줄. AI가 작업 분산 자동 판단 → Lian은 복붙만. CLAUDE.md 25/30.
 
 **다음 (2026-05-05):**
 - 옵션 A 1순위 — sales_offline (마케팅 에이전시 메인) 또는 test_run_002 PLAN 1장. 시스템 작업 5/3+5/4+오늘 누적 위반 마감.
