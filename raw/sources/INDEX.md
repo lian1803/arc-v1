@@ -5,7 +5,7 @@
 
 ---
 
-## 통합본 4개 (시간순)
+## 통합본 6개 (시간순)
 
 | 날짜 | 파일 | 주제 | 핵심 발견 |
 |---|---|---|---|
@@ -13,6 +13,8 @@
 | 2026-05-03 | `perplexity_meta_buildgap_2026-05-03.md` | AI 빌드 갭 (5쿼리 1차) | reference-driven은 표면 70%/기능 UX 40% 미만. ICP-loop 검증이 시장 갭. |
 | 2026-05-03 | `perplexity_solopreneur_standard_2026-05-03.md` | 1인 창업가 표준 (5쿼리 2차) | ARC 방향 = 외부 정론 정합. Luna = enterprise 패턴. SDD + vibe coding이 정답. |
 | 2026-05-03 | `perplexity_develop_2026-05-03.md` | ARC 디벨롭 방법 (5쿼리 3차) | ARC = day 1-5 정상. 사례 채우기 우선. ★ Pilot Graveyard 경고. |
+| 2026-05-04 | `dive_Cursor_AI_2026년_3월_이후_업데이트_..._2026-05-04.md` | Cursor 3 (4월 출시) 업데이트 채택 | Background Agents (Fortune 500의 50%+) / Composer 2 (51.7% 해결률) / Agent Window (사용량 +44%) / Supermaven autocomplete 핵심 |
+| 2026-05-04 | `dive_Cursor_IDE_2026년_5월_..._2026-05-04.md` | Cursor 5월 시장 점유율 / 표준 여부 | AI IDE 부문 31% (1위, 사실상 표준). Claude Code 18% 동률. SpaceX 600억 달러 인수 옵션. 실 표준 = Cursor + Claude Code 병행 ($40/월). |
 
 ## 부트캠프 자료
 
@@ -32,6 +34,7 @@
 
 - ✅ 1인 vs 엔터프라이즈 룰 시스템 — 3차 Q3 답 명확
 - ✅ Cursor/Claude 도구 스택 — 2차 Q1 답 명확
+- ✅ Cursor 2026-05 시장 점유율 / Cursor 3 채택 — 5/4 dive 2건 (위 표 참조)
 - ✅ 1인 SaaS 표준 워크플로우 (30일 검증 → 2-8주 MVP → 베타 5-20명) — 2차 Q2
 - ✅ Spec-Driven Development (SDD) vs 체크리스트 — 2차 Q4
 - ✅ Pilot Graveyard 경고 — 3차 Q5

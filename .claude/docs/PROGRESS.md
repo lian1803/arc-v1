@@ -57,3 +57,23 @@
 
 **경고 (누적):**
 - 5/3 + 5/4 모두 시스템 작업 위주. 사업 launch 0건 = Pilot Graveyard 더 깊어짐. 다음 세션 1순위 = 사업 launch 트랙.
+
+---
+
+## 2026-05-04 (오프라인 직전 마감 — ARC 인프라 마무리)
+
+**한 일:**
+- ARC 루트 청소: `.tmp_*` 30개 → `archive/2026-05_root_cleanup/` (5 카테고리 보존). luna §14 정합 후행.
+- 자동 라우팅 hook: `.claude/hooks/route_root_writes.py` PreToolUse(Write|Edit) 화이트리스트 외 루트 신규 파일 차단 (exit 2). 스모크 9/9 PASS.
+- `.claude/rules/file-routing.md` 박음 (토글 4섹션). `.gitignore` 신설 (.env / .tmp_* / 영상 / 캐시).
+- 루트 .md 4개 → `.claude/docs/` (MODES/NEXT/PREMISES/PROGRESS). CLAUDE.md @import 4줄 + 본문 압축 = 24/30줄. 루트 항목 14 → 10.
+- git 신규: `.git` 폐기 + Git for Windows 2.54.0 설치 + 새 init + first commit 987 files / 244,470 lines + push → https://github.com/lian1803/arc-v1 (public).
+- Cursor dive 2회 ($0.02): Cursor 3 (4월 출시 Background Agents/Composer 2/Agent Window) + 5월 점유율 31% AI IDE 1위. ARC MODES.md "Cursor/Claude 1대1" 외부 정론 정합 확인.
+- ★ marketing_agency 호환성 연결: luna 통째 carry (7 sub-project + _shared) → `raw/molds/my/marketing_agency.md` mold 등록 / NEXT.md 진행 사업 #4 추가 / CLAUDE.md ARC integration 섹션 luna DOCTRINE 참조 → ARC 시스템 룰 매핑.
+
+**다음 (2026-05-05):**
+- 옵션 A 1순위 — sales_offline (마케팅 에이전시 메인) 또는 test_run_002 PLAN 1장. 시스템 작업 5/3+5/4+오늘 누적 위반 마감.
+- selfie_factory 첫 사용도 옵션 A 후보.
+
+**경고 (계속):**
+- launch 0건 유지. 다음 세션 = PLAN.md 1장이 첫 동작.
