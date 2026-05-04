@@ -1,0 +1,108 @@
+{
+  "fetched_at": "2026-04-27T21:38:51.737458",
+  "categories": {
+    "식당": {
+      "sample_size": 10,
+      "avg_photo": 2402,
+      "avg_review": 1273,
+      "avg_blog": 173,
+      "intro_rate": 0.0,
+      "menu_rate": 1.0,
+      "directions_rate": 0.5,
+      "booking_rate": 1.0,
+      "talktalk_rate": 1.0,
+      "news_rate": 0.8,
+      "instagram_rate": 1.0,
+      "kakao_rate": 1.0,
+      "place_ids": [
+        "2019621691",
+        "1679074820",
+        "1922492109",
+        "2050473976",
+        "1733407310",
+        "2013835776",
+        "2059245149",
+        "2096559480",
+        "2067155747",
+        "2047756006"
+      ]
+    },
+    "미용실": {
+      "sample_size": 10,
+      "avg_photo": 3471,
+      "avg_review": 4215,
+      "avg_blog": 2041,
+      "intro_rate": 0.1,
+      "menu_rate": 1.0,
+      "directions_rate": 0.1,
+      "booking_rate": 1.0,
+      "talktalk_rate": 1.0,
+      "news_rate": 1.0,
+      "instagram_rate": 1.0,
+      "kakao_rate": 1.0,
+      "place_ids": [
+        "2016517162",
+        "1210917989",
+        "1478005196",
+        "13154187",
+        "38447185",
+        "2001903577",
+        "2096907742",
+        "2005275293",
+        "2072177874",
+        "2088367318"
+      ]
+    },
+    "카페": {
+      "sample_size": 10,
+      "avg_photo": 4156,
+      "avg_review": 1362,
+      "avg_blog": 284,
+      "intro_rate": 0.0,
+      "menu_rate": 1.0,
+      "directions_rate": 0.1,
+      "booking_rate": 1.0,
+      "talktalk_rate": 1.0,
+      "news_rate": 1.0,
+      "instagram_rate": 1.0,
+      "kakao_rate": 1.0,
+      "place_ids": [
+        "2050473976",
+        "31391054",
+        "1591108936",
+        "2004674248",
+        "2082860637",
+        "2088955150",
+        "2023904447",
+        "2044694063",
+        "2061372214",
+        "2061926299"
+      ]
+    },
+    "학원": {
+      "sample_size": 8,
+      "avg_photo": 3533,
+      "avg_review": 2202,
+      "avg_blog": 907,
+      "intro_rate": 0.0,
+      "menu_rate": 1.0,
+      "directions_rate": 0.5,
+      "booking_rate": 1.0,
+      "talktalk_rate": 1.0,
+      "news_rate": 1.0,
+      "instagram_rate": 1.0,
+      "kakao_rate": 1.0,
+      "place_ids": [
+        "1261356767",
+        "1732986952",
+        "38233139",
+        "20103205",
+        "21878678",
+        "13449099",
+        "1006030700",
+        "20734767"
+      ]
+    },
+    "기타": {}
+  }
+}

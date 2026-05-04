@@ -1,0 +1,56 @@
+# 시크릿
+.env
+.env.local
+
+# 임시 / 스크래치
+.tmp_*
+temp_*
+scratch_*
+
+# 비용 로그 (로컬만)
+.cost_log.jsonl
+
+# Python 캐시
+__pycache__/
+*.pyc
+*.pyo
+
+# Claude Code state
+.claude/state/
+.claude/scheduled_tasks.lock
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 의존성
+node_modules/
+.venv/
+venv/
+
+# 영상/오디오 (GitHub 100MB 한도 초과 방지)
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.mp3
+*.wav
+*.flac
+*.m4a
+*.ogg
+
+# 빌드/렌더 출력 폴더
+**/_out/
+**/output/
+**/v3_final/
+**/v3_iter/
+**/v4_*/
+**/v5_*/
+**/factory_*_assets/
+**/winner_*/
+
+# DB / 대용량 데이터
+*.db
+*.sqlite
+*.sqlite3

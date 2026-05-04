@@ -1,0 +1,82 @@
+{
+  "total_sources": 6,
+  "results": {
+    "saramin": {
+      "source": "saramin",
+      "region": "양주",
+      "phone_count": 0,
+      "elapsed_sec": 23.4,
+      "samples": [],
+      "errors": []
+    },
+    "jobkorea": {
+      "source": "jobkorea",
+      "region": "양주",
+      "phone_count": 4,
+      "elapsed_sec": 21.8,
+      "samples": [
+        {
+          "phone": "010-9399-4221",
+          "name": "제이숲 채용 - [제이숲] AMD (쿠팡 담당, 경력)",
+          "gi_no": "49065659"
+        },
+        {
+          "phone": "010-9074-4489",
+          "name": "웅진프리드라이프 경기북부본부 채용 - 웅진프리드라이프 양주지점 상반기 장례 STAFF 채용",
+          "gi_no": "48988835"
+        },
+        {
+          "phone": "010-6698-4253",
+          "name": "조이에듀 채용 - 2026년 어린이집  영어강사(프리랜서) 구인-양주",
+          "gi_no": "48962055"
+        },
+        {
+          "phone": "010-2307-4251",
+          "name": "조이에듀 채용 - 2026년 어린이집  영어강사(프리랜서) 구인-양주",
+          "gi_no": "48962055"
+        }
+      ],
+      "errors": []
+    },
+    "alba": {
+      "source": "alba",
+      "region": "양주",
+      "phone_count": 0,
+      "elapsed_sec": 0.6,
+      "samples": [],
+      "errors": []
+    },
+    "soomgo": {
+      "source": "soomgo",
+      "region": "양주",
+      "phone_count": 0,
+      "elapsed_sec": 5.8,
+      "samples": [],
+      "errors": []
+    },
+    "modoo": {
+      "source": "modoo",
+      "region": "양주",
+      "phone_count": 0,
+      "elapsed_sec": 0.9,
+      "samples": [],
+      "errors": []
+    },
+    "kakao_channel": {
+      "source": "kakao_channel",
+      "region": "양주",
+      "phone_count": 0,
+      "elapsed_sec": 0.3,
+      "samples": [],
+      "errors": []
+    }
+  },
+  "verdict": {
+    "saramin": "FAIL",
+    "jobkorea": "PASS",
+    "alba": "FAIL",
+    "soomgo": "FAIL",
+    "modoo": "FAIL",
+    "kakao_channel": "FAIL"
+  }
+}

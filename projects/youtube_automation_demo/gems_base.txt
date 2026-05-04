@@ -1,0 +1,12 @@
+# Gems Base Prompt — 시니어 한국 채널 페르소나/스타일 가이드
+#
+# 원본 위치 (사라짐): C:\Users\lian1\Desktop\새 텍스트 문서 (17).txt
+# 원본 사용처: run_v3_iterate.py / run_patterns.py 의 base() 함수에서
+#             모든 Gemini 호출 앞에 prepend.
+#
+# 이 파일이 비어있거나 # 주석만 있으면 두 스크립트는 FileNotFoundError 로 STOP.
+# 시니어 채널 페르소나/톤/포맷 가이드를 여기 그대로 붙여넣으면 됨.
+#
+# 참고: 기존 출력 (이미 생성된 winner_full.txt) 은 v3_iter/ 에 있어서
+#       R1/R2/R3 재실행 안 하면 이 파일 안 채워도 됨.
+#       gen_v3_final.py / render_hyunsu.py 는 이 파일 안 읽음.

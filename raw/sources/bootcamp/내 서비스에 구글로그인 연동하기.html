@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>내 서비스에 구글 로그인 연동하기 — Supabase + 바이브 코딩</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#F0F0F0;display:flex;justify-content:center;align-items:center;min-height:100vh;overflow:hidden}
+.sc{width:1280px;height:720px;position:relative;background:#FFF;box-shadow:0 20px 60px rgba(0,0,0,.15);overflow:hidden}
+@media(max-width:1300px){.sc{transform:scale(calc(100vw/1300));transform-origin:top center}}
+.pb{position:absolute;top:0;left:0;height:3px;background:#FF6B00;transition:width .3s;z-index:100}
+.s{display:none;width:100%;height:100%;padding:56px 76px;position:relative}
+.s.active{display:flex;flex-direction:column}
+.nav-btn{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:none;background:#EEE;color:#333;font-size:1.3rem;cursor:pointer;z-index:50;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.nav-btn:hover{background:#FF6B00;color:#FFF}
+.nav-prev{left:16px}.nav-next{right:16px}
+.pn{position:absolute;bottom:18px;right:38px;font-size:.82rem;color:#AAA;font-weight:500}
+.st{font-size:2.3rem;font-weight:800;color:#111;margin-bottom:24px;line-height:1.3}
+.ac{color:#FF6B00;font-weight:700}
+.ab{background:#FF6B00;color:#FFF;padding:4px 16px;border-radius:20px;font-weight:700;font-size:.85rem;display:inline-block}
+.au{border-bottom:4px solid #FF6B00;padding-bottom:2px}
+.ax{border-left:4px solid #FF6B00;padding:14px 22px;background:#FFF8F0;border-radius:0 8px 8px 0;margin:10px 0}
+.row{display:flex;gap:28px;flex:1;align-items:stretch}
+.c50{flex:0 0 48%}.c60{flex:0 0 58%}.c40{flex:0 0 38%}
+.col{flex:1;display:flex;flex-direction:column;justify-content:center}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+.card{background:#FAFAFA;border:1px solid #EEE;border-radius:12px;padding:20px}
+.card-ac{border-color:#FF6B00;border-width:2px;background:#FFFAF5}
+.badge{display:inline-block;padding:3px 12px;border-radius:20px;font-size:.78rem;font-weight:600}
+.b-or{background:#FFF3E8;color:#FF6B00;border:1px solid #FFD9B3}
+.b-gr{background:#ECFDF5;color:#059669;border:1px solid #A7F3D0}
+.b-bl{background:#EFF6FF;color:#2563EB;border:1px solid #BFDBFE}
+.b-rd{background:#FEF2F2;color:#DC2626;border:1px solid #FECACA}
+.ce{background:#1e1e1e;border-radius:12px;overflow:hidden;font-family:'Courier New',monospace;font-size:.88rem}
+.ce .tb{background:#2d2d2d;padding:7px 14px;display:flex;gap:5px;align-items:center}
+.ce .d{width:11px;height:11px;border-radius:50%}.ce .d.r{background:#ff5f56}.ce .d.y{background:#ffbd2e}.ce .d.g{background:#27c93f}
+.ce .fn{color:#8b949e;font-size:.78rem;margin-left:10px}
+.ce .cb{padding:14px 18px;color:#d4d4d4;line-height:1.7}
+.kw{color:#ff79c6}.str{color:#f1fa8c}.cm{color:#6272a4}.fnn{color:#50fa7b}.num{color:#bd93f9}.vr{color:#8be9fd}.er{color:#f85149}.ok{color:#3fb950}
+.tm{background:#0d1117;border-radius:12px;overflow:hidden;font-family:'Courier New',monospace;font-size:.88rem}
+.tm .tb{background:#161b22;padding:7px 14px;color:#8b949e;font-size:.78rem}
+.tm .bd{padding:14px 18px;color:#c9d1d9;line-height:1.8}
+.br{border:1px solid #e1e4e8;border-radius:12px;overflow:hidden}
+.br .tl{background:#f6f8fa;padding:7px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #e1e4e8}
+.br .ds{display:flex;gap:4px}.br .ds span{width:9px;height:9px;border-radius:50%;background:#ccc}
+.br .ub{background:#fff;border:1px solid #d0d7de;border-radius:6px;padding:3px 10px;flex:1;font-size:.78rem;color:#57606a}
+.br .ct{padding:16px}
+.cu{background:#FF6B00;color:#fff;padding:12px 18px;border-radius:14px 14px 4px 14px;max-width:85%;align-self:flex-end;margin-left:auto;font-size:.9rem;line-height:1.6;margin-bottom:7px}
+.ca{background:#F3F3F3;color:#222;padding:12px 18px;border-radius:14px 14px 14px 4px;max-width:85%;font-size:.9rem;line-height:1.6;margin-bottom:7px}
+.cc{display:flex;flex-direction:column;gap:3px}
+.sc-num{width:38px;height:38px;border-radius:50%;background:#FF6B00;color:#FFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;flex-shrink:0}
+.wc{background:#FFFBEB;border:2px solid #FDE68A;border-radius:12px;padding:16px;display:flex;gap:10px;align-items:flex-start}
+.wc .wi{font-size:1.3rem;flex-shrink:0}
+.wc .wt{font-weight:700;font-size:.9rem;color:#92400E;margin-bottom:3px}
+.wc .wd{font-size:.8rem;color:#78716C;line-height:1.5}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.bk{animation:blink 1s step-end infinite;color:#3fb950}
+.sb-green{background:#3ECF8E;color:#fff;font-weight:700;padding:6px 14px;border-radius:8px;display:inline-flex;align-items:center;gap:6px;font-size:.85rem}
+.gcp-blue{background:#4285F4;color:#fff;font-weight:700;padding:6px 14px;border-radius:8px;display:inline-flex;align-items:center;gap:6px;font-size:.85rem}
+.ts{justify-content:center;padding:76px 96px}
+.ts .mt{font-size:3rem;font-weight:800;color:#111;line-height:1.3;margin-bottom:18px}
+.ts .ms{font-size:1.2rem;font-weight:400;color:#666;margin-bottom:10px}
+.ts .md{font-size:.9rem;color:#AAA}
+.flow-box{background:#F9F9F9;border:2px solid #DDD;border-radius:12px;padding:14px 18px;text-align:center;min-width:110px}
+.flow-box.active{border-color:#FF6B00;background:#FFF8F0}
+.flow-box .fi{font-size:1.4rem;margin-bottom:4px}
+.flow-box .ft{font-weight:700;font-size:.85rem;color:#111}
+.flow-box .fs{font-size:.72rem;color:#888;margin-top:3px}
+.fa{font-size:1.3rem;color:#CCC;flex-shrink:0}
+</style>
+</head>
+<body>
+<div class="sc">
+<div class="pb" id="progressBar"></div>
+
+<div class="s ts active" id="s1">
+<div style="display:flex;align-items:center;gap:44px">
+<div style="flex:1">
+<div style="margin-bottom:18px"><span class="ab">Supabase + 바이브 코딩</span></div>
+<div class="mt">내 서비스에<br><span class="ac">구글 로그인</span><br>연동하기</div>
+<div class="ms">세팅부터 구현까지, 한 번에 끝내는 완전 가이드</div>
+<div class="md">안티그래비티 + Supabase + Google Cloud Platform</div>
+</div>
+<div style="flex:0 0 360px">
+<div class="br">
+<div class="tl"><div class="ds"><span></span><span></span><span></span></div><div class="ub">myservice.com</div></div>
+<div class="ct" style="text-align:center;padding:30px">
+<div style="font-size:1.1rem;font-weight:700;color:#333;margin-bottom:20px">내 서비스에 로그인</div>
+<div style="display:inline-flex;align-items:center;gap:10px;background:#fff;border:2px solid #4285F4;border-radius:8px;padding:12px 28px;cursor:pointer">
+<svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.9 33.1 29.4 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6 29.2 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 15.5 18.8 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6 29.2 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5 0 9.6-1.8 13.2-5l-6.1-5.2C29.2 35.2 26.7 36 24 36c-5.4 0-9.9-3.1-11.3-8.2l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.1 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
+<span style="font-weight:700;font-size:1rem;color:#333">Google로 로그인</span>
+</div>
+<div style="margin-top:14px;font-size:.78rem;color:#aaa">↑ 이걸 만들 거예요!</div>
+</div></div>
+</div></div>
+<div class="pn"></div>
+</div>
+
+<div class="s" id="s2">
+<div class="st">왜 <span class="ac">구글 로그인</span>이 중요한가?</div>
+<div class="row" style="flex:1">
+<div class="c50" style="display:flex;flex-direction:column;justify-content:center">
+<div style="background:#FFF5F5;border:2px solid #FCA5A5;border-radius:16px;padding:22px;margin-bottom:14px">
+<div style="font-weight:700;font-size:1.05rem;color:#DC2626;margin-bottom:6px">❌ 이런 로그인 페이지를 보면?</div>
+<div style="font-size:.9rem;color:#666;line-height:1.6">• 이메일로 회원가입하기<br>• 아이디/패스워드 만들기<br>• 이메일 인증, 비밀번호 규칙...<br><br><span style="color:#DC2626;font-weight:600">→ 대부분 "귀찮아서 그냥 닫아버림"</span></div>
+</div>
+<div style="background:#F0FFF4;border:2px solid #86EFAC;border-radius:16px;padding:22px">
+<div style="font-weight:700;font-size:1.05rem;color:#16A34A;margin-bottom:6px">✅ 이런 로그인이 있으면?</div>
+<div style="font-size:.9rem;color:#666;line-height:1.6">• 구글 로그인 버튼 클릭 한 번<br>• 2초 만에 로그인 완료<br>• 비밀번호 기억할 필요 없음<br><br><span style="color:#16A34A;font-weight:600">→ "오 편하네, 바로 쓸게요"</span></div>
+</div>
+</div>
+<div class="c50" style="display:flex;flex-direction:column;justify-content:center">
+<svg width="460" height="380" viewBox="0 0 460 380">
+<rect x="80" y="20" width="300" height="60" rx="12" fill="#FEF2F2" stroke="#FCA5A5" stroke-width="2"/>
+<text x="230" y="45" text-anchor="middle" font-size="13" font-weight="700" fill="#DC2626">이메일 회원가입 → 복잡</text>
+<text x="230" y="65" text-anchor="middle" font-size="10" fill="#999">ID, PW, 이메일 인증, 약관 동의...</text>
+<text x="230" y="100" text-anchor="middle" font-size="20">😩</text>
+<path d="M230 110 L230 140" stroke="#DDD" stroke-width="2" stroke-dasharray="4,4"/>
+<rect x="80" y="150" width="300" height="60" rx="12" fill="#F0FFF4" stroke="#86EFAC" stroke-width="2"/>
+<text x="230" y="175" text-anchor="middle" font-size="13" font-weight="700" fill="#16A34A">구글 로그인 → 클릭 한 번</text>
+<text x="230" y="195" text-anchor="middle" font-size="10" fill="#999">버튼 클릭 → 구글 계정 선택 → 끝!</text>
+<text x="230" y="230" text-anchor="middle" font-size="20">🎉</text>
+<rect x="60" y="260" width="340" height="80" rx="16" fill="#FF6B00"/>
+<text x="230" y="293" text-anchor="middle" font-size="15" font-weight="800" fill="white">서비스를 만들 때</text>
+<text x="230" y="316" text-anchor="middle" font-size="14" font-weight="700" fill="#FFD9B3">소셜 로그인 = 기본 중의 기본!</text>
+</svg>
+</div></div>
+<div class="pn"></div>
+</div>
+
+<div class="s" id="s3">
+<div class="st">AI가 잘하는 것 vs <span class="ac">사람이 해야 하는 것</span></div>
+<div class="row" style="flex:1">
+<div class="c50" style="display:flex;flex-direction:column;justify-content:center">
+<div class="card card-ac" style="padding:22px;margin-bottom:16px">
+<div style="font-weight:800;font-size:1.1rem;color:#FF6B00;margin-bottom:10px">🤖 AI(바이브 코딩)가 잘하는 것</div>
+<div style="font-size:.92rem;color:#555;line-height:1.8">구글 로그인 <span class="ac">코드 짜기</span><br><br>실제 코드는 이게 전부:</div>
+<div class="ce" style="margin-top:10px">
+<div class="tb"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="fn">google-login.js</span></div>
+<div class="cb" style="font-size:.78rem;line-height:1.8">
+<div><span class="kw">const</span> { data, error } = <span class="kw">await</span></div>
+<div>&nbsp;&nbsp;supabase.auth.<span class="fnn">signInWithOAuth</span>({</div>
+<div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="vr">provider</span>: <span class="str">'google'</span></div>
+<div>&nbsp;&nbsp;})</div>
+</div></div>
+<div style="font-size:.82rem;color:#999;margin-top:8px;text-align:center">→ 코드 자체는 이게 끝! 4줄!</div>
+</div>
+</div>
+<div class="c50" style="display:flex;flex-direction:column;justify-content:center">
+<div style="background:#FFF5F5;border:2px solid #FCA5A5;border-radius:16px;padding:22px">
+<div style="font-weight:800;font-size:1.1rem;color:#DC2626;margin-bottom:10px">🧑 사람이 직접 해야 하는 것</div>
+<div style="font-size:.92rem;color:#555;line-height:1.8">구글 로그인 <span style="color:#DC2626;font-weight:700">세팅하기</span><br><br>AI가 못하는 이유:</div>
+<div style="font-size:.88rem;color:#666;line-height:1.8;margin-top:8px">
+• Supabase 홈페이지 접속 → 클릭<br>
+• Google Cloud 접속 → 프로젝트 생성<br>
+• API 키 복사 → 붙여넣기<br>
+• 리다이렉트 URI 설정<br>
+<span style="color:#DC2626;font-weight:600">→ 토시 하나라도 틀리면 안 됨!</span>
+</div>
+</div>
+<div class="ax" style="margin-top:12px">
+<div style="font-size:.95rem;color:#333;line-height:1.6"><strong>이번 슬라이드의 핵심:</strong><br>코드는 AI가 해주지만,<br><span class="ac">세팅은 여러분이 직접</span> 해야 합니다!</div>
+</div>
+</div></div>
+<div class="pn"></div>
+</div>
+
+<div class="s" id="s4">
+<div class="st">전체 과정 <span class="ac">한눈에 보기</span></div>
+<div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+<div style="display:flex;align-items:center;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:24px">
+<div class="flow-box active"><div class="fi">🔧</div><div class="ft">1. Supabase</div><div class="fs">구글 프로바이더 켜기</div></div>
+<div class="fa">→</div>
+<div class="flow-box"><div class="fi">🔑</div><div class="ft">2. Google Cloud</div><div class="fs">Client ID 발급</div></div>
+<div class="fa">→</div>
+<div class="flow-box"><div class="fi">🔗</div><div class="ft">3. 서로 연결</div><div class="fs">키 값 교환</div></div>
+<div class="fa">→</div>
+<div class="flow-box"><div class="fi">💻</div><div class="ft">4. 안티그래비티</div><div class="fs">코드 생성</div></div>
+<div class="fa">→</div>
+<div class="flow-box"><div class="fi">⚙️</div><div class="ft">5. API 키 입력</div><div class="fs">환경 설정</div></div>
+<div class="fa">→</div>
+<div class="flow-box" style="border-color:#22C55E;background:#F0FFF4"><div class="fi">✅</div><div class="ft">6. 완성!</div><div class="fs">구글 로그인 성공</div></div>
+</div>
+<div style="display:flex;gap:20px">
+<div style="flex:1;background:#F0FFF4;border:2px solid #86EFAC;border-radius:12px;padding:18px">
+<div style="font-weight:700;font-size:.95rem;color:#16A34A;margin-bottom:6px">📋 필요한 것</div>
+<div style="font-size:.88rem;color:#555;line-height:1.7">• <span class="sb-green" style="font-size:.75rem;padding:2px 8px">Supabase</span> 계정 (무료)<br>• <span class="gcp-blue" style="font-size:.75rem;padding:2px 8px">Google</span> 계정<br>• 안티그래비티 (바이브 코딩 도구)</div>
+</div>
+<div style="flex:1;background:#FFF8F0;border:2px solid #FFD9B3;border-radius:12px;padding:18px">
+<div style="font-weight:700;font-size:.95rem;color:#FF6B00;margin-bottom:6px">⏱️ 예상 소요 시간</div>
+<div style="font-size:.88rem;color:#555;line-height:1.7">• 세팅 (1~3번): <span class="ac">약 15분</span><br>• 구현 (4~6번): <span class="ac">약 5분</span><br>• 총 20분이면 완성!</div>
+</div>
+</div></div>
+<div class="pn"></div>
+</div>
+
+<div class="s" id="s5">
+<span class="ab" style="margin-bottom:12px">개념 이해</span>
+<div class="st">프로바이더(Provider)란? — <span class="ac">로그인 방식</span>의 종류</div>
+<div class="row" style="flex:1">
+<div class="c60" style="display:flex;flex-direction:column;justify-content:center">
+<div style="font-size:1.05rem;color:#333;line-height:1.8;margin-bottom:16px">Supabase에서 <span class="ac">프로바이더</span> = 로그인 방식<br>"어떤 방법으로 로그인할 수 있게 할 거야?"를 선택하는 겁니다.</div>
+<div class="g2" style="gap:12px">
+<div class="card" style="padding:14px;display:flex;align-items:center;gap:12px">
+<svg width="32" height="32" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.9 33.1 29.4 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6 29.2 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 15.5 18.8 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6 29.2 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5 0 9.6-1.8 13.2-5l-6.1-5.2C29.2 35.2 26.7 36 24 36c-5.4 0-9.9-3.1-11.3-8.2l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.1 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
+<div><div style="font-weight:700;font-size:.95rem">Google</div><div style="font-size:.78rem;color:#888">← 오늘 할 것!</div></div>
+</div>
+<div class="card" style="padding:14px;display:flex;align-items:center;gap:12px">
+<div style="width:32px;height:32px;background:#FEE500;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem">💬</div>
+<div><div style="font-weight:700;font-size:.95rem">Kakao</div><div style="font-size:.78rem;color:#888">카카오 로그인</div></div>
+</div>
+<div class="card" style="padding:14px;display:flex;align-items:center;gap:12px">
+<div style="width:32px;height:32px;background:#000;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem">🍎</div>
+<div><div style="font-weight:700;font-size:.95rem">Apple</div><div style="font-size:.78rem;color:#888">애플 로그인</div></div>
+</div>
+<div class="card" style="padding:14px;display:flex;align-items:center;gap:12px">
+<div style="width:32px;height:32px;background:#333;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem;font-weight:700">GH</div>
+<div><div style="font-weight:700;font-size:.95rem">GitHub</div><div style="font-size:.78rem;color:#888">깃허브 로그인</div></div>
+</div>
+</div>
+</div>
+<div class="c40" style="display:flex;flex-direction:column;justify-content:center">
+<div class="ax">
+<div style="font-size:1rem;font-weight:700;margin-bottom:6px">💡 비유로 이해하기</div>
+<div style="font-size:.92rem;color:#444;line-height:1.7">건물에 들어가는 <span class="ac">출입 방법</span>과 같아요:<br><br>🔑 열쇠 = 이메일/비밀번호<br>📱 카드키 = 구글 로그인<br>👆 지문 = 애플 로그인<br><br>여러 출입 방법 중<br><span class="ac">구글이라는 카드키</span>를<br>만들어 주는 겁니다!</div>
+</div>
+</div></div>
+<div class="pn"></div>
+</div>
+
+<div class="s" id="s6">
+<span class="ab" style="margin-bottom:12px">Step 1</span>
+<div class="st">Supabase에서 <span class="ac">구글 프로바이더</span> 켜기</div>
+<div class="row" style="flex:1">
+<div class="c50" style="display:flex;flex-direction:column;justify-content:center">
+<div class="br">
+<div class="tl"><div class="ds"><span></span><span></span><span></span></div><div class="ub">supabase.com/dashboard</div></div>
+<div class="ct" style="padding:14px">
+<div style="font-size:.82rem;font-weight:700;color:#333;margin-bottom:10px">Authentication → Sign-in Providers</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#F5F5F5;border-radius:8px">
+<div style="display:flex;align-items:center;gap:8px"><span style="font-size:.9rem">📧</span><span style="font-size:.82rem;font-weight:600">Email</span></div>
+<span class="b-gr" style="font-size:.7rem">Enabled</span>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#FFF8F0;border:2px solid #FF6B00;border-radius:8px">
+<div style="display:flex;align-items:center;gap:8px">
+<svg width="16" height="16" viewBox="0 0 48 48"><path fill="#4285F4" d="M43.6 20.1H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6 29.2 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/></svg>
+<span style="font-size:.82rem;font-weight:600">Google</span></div>
+<span class="b-rd" style="font-size:.7rem">Disabled → <span class="ac">Enable!</span></span>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#F5F5F5;border-radius:8px">
+<div style="display:flex;align-items:center;gap:8px"><span style="font-size:.9rem">🍎</span><span style="font-size:.82rem;font-weight:600">Apple</span></div>
+<span class="b-rd" style="font-size:.7rem">Disabled</span>
+</div>
+</div>
+<div style="margin-top:10px;text-align:center;font-size:.78rem;color:#FF6B00;font-weight:600">👆 Google을 눌러서 Enable 시키기!</div>
+</div></div>
+</div>
+<div class="c50" style="display:flex;flex-direction:column;justify-content:center">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:center;gap:12px"><div class="sc-num">1</div><div><div style="font-weight:700;font-size:.95rem">Supabase 프로젝트 접속</div><div style="font-size:.8rem;color:#888">dashboard에서 내 프로젝트 클릭</div></div></div>
+<div style="display:flex;align-items:center;gap:12px"><div class="sc-num">2</div><div><div style="font-weight:700;font-size:.95rem">Authentication 메뉴 클릭</div><div style="font-size:.8rem;color:#888">왼쪽 사이드바에서 찾기</div></div></div>
+<div style="display:flex;align-items:center;gap:12px"><div class="sc-num">3</div><div><div style="font-weight:700;font-size:.95rem">Sign-in Providers 탭</div><div style="font-size:.8rem;color:#888">여기서 Google 클릭</div></div></div>
+<div style="display:flex;align-items:center;gap:12px"><div class="sc-num">4</div><div><div style="font-weight:700;font-size:.95rem">Google Enable 토글 ON</div><div style="font-size:.8rem;color:#888">저장 누르면... 에러! 😱</div></div></div>
+</div>
+<div class="wc" style="margin-top:14px">
+<div class="wi">🔴</div>
+<div><div class="wt">Client ID가 없어서 에러 발생!</div>
+<div class="wd">→ 이 Client ID를 <span style="font-weight:700">Google Cloud Platform</span>에서 받아와야 합니다.</div>
+</div></div>
+</div></div>
+<div class="pn"></div>
+</div>
+
+<div class="s" id="s7">
+<span class="ab" style="margin-bottom:12px">Step 2</span>
+<div class="st">Google Cloud Platform에서 <span class="ac">Client ID</span> 발급받기</div>
+<div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+<div style="font-size:1rem;color:#333;margin-bottom:16px"><span class="gcp-blue" style="font-size:.8rem;padding:3px 10px">Google Cloud Platform</span>이란? 구글이 제공하는 개발자 관리 도구입니다. 여기서 "내 서비스에 구글 로그인을 달겠다"고 <span class="ac">등록</span>하는 거예요.</div>
+<div class="g3" style="align-items:stretch">
+<div class="card" style="padding:16px;text-align:center">
+<div style="font-size:2rem;margin-bottom:6px">1️⃣</div>
+<div style="font-weight:700;font-size:.92rem;margin-bottom:4px">GCP 접속 & 로그인</div>
+<div style="font-size:.8rem;color:#666;line-height:1.5"><span class="ac">console.cloud.google.com</span><br>구글 계정으로 로그인<br>국가/동의 진행</div>
+</div>
+<div class="card" style="padding:16px;text-align:center">
+<div style="font-size:2rem;margin-bottom:6px">2️⃣</div>
+<div style="font-weight:700;font-size:.92rem;margin-bottom:4px">새 프로젝트 만들기</div>
+<div style="font-size:.8rem;color:#666;line-height:1.5">프로젝트 이름 입력<br>(예: "MyProject")<br>만들기 클릭</div>
+</div>
+<div class="card" style="padding:16px;text-align:center">
+<div style="font-size:2rem;margin-bottom:6px">3️⃣</div>
+<div style="font-weight:700;font-size:.92rem;margin-bottom:4px">OAuth 동의 화면</div>
+<div style="font-size:.8rem;color:#666;line-height:1.5">앱 이름 입력<br>지원 이메일 입력<br><span class="ac">외부</span> 선택 → 만들기</div>
+</div>
+<div class="card card-ac" style="padding:16px;text-align:center">
+<div style="font-size:2rem;margin-bottom:6px">4️⃣</div>
+<div style="font-weight:700;font-size:.92rem;margin-bottom:4px">사용자 인증 정보</div>
+<div style="font-size:.8rem;color:#666;line-height:1.5">OAuth 2.0 클라이언트 ID<br><span class="ac">웹 애플리케이션</span> 선택<br>이름 입력</div>
+</div>
+<div class="card" style="padding:16px;text-align:center">
+<div style="font-size:2rem;margin-bottom:6px">5️⃣</div>
+<div style="font-weight:700;font-size:.92rem;margin-bottom:4px">JavaScript 원본 입력</div>
+<div style="font-size:.8rem;color:#666;line-height:1.5">내 서비스 도메인 입력<br>+ 개발환경 주소:<br><span class="ac">http://localhost:5173</span></div>
+</div>
+<div class="card" style="padding:16px;text-align:center;background:#F0FFF4;border-color:#86EFAC">
+<div style="font-size:2rem;margin-bottom:6px">6️⃣</div>
+<div style="font-weight:700;font-size:.92rem;margin-bottom:4px;color:#16A34A">리다이렉트 URI 입력</div>
+<div style="font-size:.8rem;color:#666;line-height:1.5"><span class="ac">Supabase에서 복사</span>해서<br>여기에 붙여넣기!<br>→ 만들기 클릭</div>
+</div>
+</div></div>
+<div class="pn"></div>
+</div>
+
+<div class="s" id="s8">
+<span class="ab" style="margin-bottom:12px">Step 2 — 핵심</span>
+<div class="st">리다이렉트 URI가 뭐예요? — <span class="ac">Supabase ↔ Google 연결 고리</span></div>
+<div class="row" style="flex:1">
+<div class="c60" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
+<svg width="600" height="340" viewBox="0 0 600 340">
+<rect x="30" y="50" width="220" height="120" rx="16" fill="#F0FFF4" stroke="#3ECF8E" stroke-width="3"/>
+<text x="140" y="85" text-anchor="middle" font-size="28">🟢</text>
+<text x="140" y="115" text-anchor="middle" font-size="15" font-weight="800" fill="#3ECF8E">Supabase</text>
+<text x="140" y="140" text-anchor="middle" font-size="10" fill="#888">Redirect URI 복사</text>
+<text x="140" y="155" text-anchor="middle" font-size="9" fill="#999">(Callback URL)</text>
+<rect x="350" y="50" width="220" height="120" rx="16" fill="#EFF6FF" stroke="#4285F4" stroke-width="3"/>
+<text x="460" y="85" text-anchor="middle" font-size="28">🔵</text>
+<text x="460" y="115" text-anchor="middle" font-size="15" font-weight="800" fill="#4285F4">Google Cloud</text>
+<text x="460" y="140" text-anchor="middle" font-size="10" fill="#888">리다이렉트 URI에 붙여넣기</text>
+<text x="460" y="155" text-anchor="middle" font-size="9" fill="#999">(승인된 리디렉션 URI)</text>
+<line x1="250" y1="95" x2="350" y2="95" stroke="#FF6B00" stroke-width="3" marker-end="url(#aO)"/>
+<text x="300" y="85" text-anchor="middle" font-size="10" font-weight="700" fill="#FF6B00">URI 복사 →</text>
+<line x1="350" y1="135" x2="250" y2="135" stroke="#4285F4" stroke-width="3" marker-end="url(#aB)"/>
+<text x="300" y="152" text-anchor="middle" font-size="10" font-weight="700" fill="#4285F4">← Client ID</text>
+<defs>
+<marker id="aO" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#FF6B00"/></marker>
+<marker id="aB" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#4285F4"/></marker>
+</defs>
+<rect x="120" y="210" width="360" height="90" rx="12" fill="#FFF8F0" stroke="#FF6B00" stroke-width="2"/>
+<text x="300" y="240" text-anchor="middle" font-size="12" font-weight="700" fill="#FF6B00">💡 비유: "택배 반송 주소"와 같아요!</text>
+<text x="300" y="262" text-anchor="middle" font-size="10" fill="#666">구글: "로그인 성공하면 어디로 보내줄까?"</text>
+<text x="300" y="280" text-anchor="middle" font-size="10" fill="#666">Supabase: "이 주소로 보내주세요!" (= Redirect URI)</text>
+</svg>
+</div>
+<div class="c40" style="display:flex;flex-direction:column;justify-content:center">
+<div class="wc" style="margin-bottom:12px">
+<div class="wi">⚠️</div>
+<div><div class="wt">리다이렉트 URI 복사 방법</div>
+<div class="wd">Supabase → Authentication → Google Provider → 아래 <span style="font-weight:700">Callback URL</span>의 Copy 버튼 클릭!</div>
+</div></div>
+<div class="card" style="padding:14px">
+<div style="font-weight:700;font-size:.9rem;margin-bottom:6px">📋 URI 형태 예시</div>
+<div class="ce" style="margin-top:6px">
+<div class="cb" style="font-size:.72rem;line-height:1.6;word-break:break-all">
+<span class="str">https://</span><span class="vr">xxxx</span><span class="str">.supabase.co/auth/v1/callback</span>
+</div></div>
+<div style="font-size:.78rem;color:#888;margin-top:6px">이걸 복사해서 Google Cloud에<br>그대로 붙여넣기하세요!</div>
+</div>
+</div></div>
+<div class="pn"></div>
+</div>
+
+<div class="s" id="s9">
+<span class="ab" style="margin-bottom:12px">Step 3</span>
+<div class="st">Client ID를 받아서 <span class="ac">Supabase에 넣기</span></div>
+<div class="row" style="flex:1">
+<div class="c50" style="display:flex;flex-direction:column;justify-content:center">
+<svg width="480" height="400" viewBox="0 0 480 400">
+<rect x="20" y="20" width="200" height="80" rx="12" fill="#EFF6FF" stroke="#4285F4" stroke-width="2"/>
+<text x="120" y="52" text-anchor="middle" font-size="12" font-weight="700" fill="#4285F4">Google Cloud</text>
+<text x="120" y="72" text-anchor="middle" font-size="10" fill="#888">Client ID 생성됨!</text>
+<text x="120" y="90" text-anchor="middle" font-size="9" fill="#999">📋 복사하기 클릭</text>
+<path d="M220 60 L260 60" stroke="#FF6B00" stroke-width="3" marker-end="url(#aO)"/>
+<rect x="260" y="20" width="200" height="80" rx="12" fill="#F0FFF4" stroke="#3ECF8E" stroke-width="2"/>
+<text x="360" y="52" text-anchor="middle" font-size="12" font-weight="700" fill="#3ECF8E">Supabase</text>
+<text x="360" y="72" text-anchor="middle" font-size="10" fill="#888">Client ID 칸에 붙여넣기</text>
+<text x="360" y="90" text-anchor="middle" font-size="9" fill="#3ECF8E">→ 저장! ✅</text>
+<text x="240" y="48" text-anchor="middle" font-size="9" font-weight="700" fill="#FF6B00">복사!</text>
+<rect x="80" y="140" width="320" height="50" rx="10" fill="#F0FFF4" stroke="#22C55E" stroke-width="2.5"/>
+<text x="240" y="162" text-anchor="middle" font-size="14" font-weight="800" fill="#22C55E">🎉 구글 프로바이더 Enable 성공!</text>
+<text x="240" y="180" text-anchor="middle" font-size="10" fill="#888">초록색으로 Enabled 표시됨</text>
+
+<rect x="40" y="230" width="400" height="140" rx="14" fill="#FAFAFA" stroke="#DDD" stroke-width="1"/>
+<text x="240" y="260" text-anchor="middle" font-size="13" font-weight="700" fill="#333">📌 여기까지 정리 (세팅 파트)</text>
+<text x="240" y="285" text-anchor="middle" font-size="10" fill="#666">1. Supabase → Google Provider → Enable 시도 → Client ID 필요!</text>
+<text x="240" y="305" text-anchor="middle" font-size="10" fill="#666">2. Google Cloud → 프로젝트 생성 → OAuth → Client ID 발급</text>
+<text x="240" y="325" text-anchor="middle" font-size="10" fill="#666">3. Supabase의 Redirect URI → Google Cloud에 등록</text>
+<text x="240" y="345" text-anchor="middle" font-size="10" fill="#FF6B00" font-weight="700">4. Client ID → Supabase에 입력 → 저장 → 성공! 🎉</text>
+</svg>
+</div>
+<div class="c50" style="display:flex;flex-direction:column;justify-content:center">
+<div class="ax">
+<div style="font-size:1rem;font-weight:700;margin-bottom:8px">🎯 핵심 정리</div>
+<div style="font-size:.92rem;color:#444;line-height:1.8">결국 Supabase와 Google Cloud가<br>서로를 <span class="ac">인증</span>하는 과정입니다.<br><br>
+<strong>Google → Supabase:</strong><br>"이 Client ID로 나를 확인해"<br><br>
+<strong>Supabase → Google:</strong><br>"로그인 끝나면 이 주소로 보내줘"<br>(= Redirect URI)</div>
+</div>
+<div class="card" style="padding:14px;margin-top:12px;background:#F0FFF4;border-color:#86EFAC">
+<div style="font-weight:700;font-size:.92rem;color:#16A34A;margin-bottom:4px">✅ 세팅 파트 완료!</div>
+<div style="font-size:.82rem;color:#666;line-height:1.5">여기까지가 AI가 해줄 수 없는 부분입니다.<br>이제부터는 <span class="ac">바이브 코딩</span>의 시간!</div>
+</div>
+</div></div>
+<div class="pn"></div>
+</div>
+
+<div class="s" id="s10">
+<span class="ab" style="margin-bottom:12px">Step 4 — 구현</span>
+<div class="st">안티그래비티에서 <span class="ac">구글 로그인 코드</span> 만들기</div>
+<div class="row" style="flex:1">
+<div class="c50" style="display:flex;flex-direction:column;justify-content:center">
+<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
+<div style="display:flex;align-items:center;gap:12px"><div class="sc-num">1</div><div><div style="font-weight:700;font-size:.92rem">프로젝트 폴더 만들기</div><div style="font-size:.78rem;color:#888">바탕화면에 "구글 로그인" 폴더 생성</div></div></div>
+<div style="display:flex;align-items:center;gap:12px"><div class="sc-num">2</div><div><div style="font-weight:700;font-size:.92rem">안티그래비티에서 폴더 열기</div><div style="font-size:.78rem;color:#888">드래그 앤 드랍으로 폴더 넣기</div></div></div>
+<div style="display:flex;align-items:center;gap:12px"><div class="sc-num">3</div><div><div style="font-weight:700;font-size:.92rem">AI에게 프롬프트 입력</div><div style="font-size:.78rem;color:#888">아래 프롬프트 참고!</div></div></div>
+</div>
+<div class="ce">
+<div class="tb"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="fn">프롬프트 예시</span></div>
+<div class="cb" style="font-size:.78rem;line-height:1.7">
+<div><span class="str">여기에다가 Supabase 이용해서</span></div>
+<div><span class="str">구글 로그인 기능 만들 거야.</span></div>
+<div><span class="str">웹 프로그래밍 할 거고</span></div>
+<div><span class="str">간단하게 HTML, JS, CSS로 구현해줘.</span></div>
+<div><span class="str">서버는 없어.</span></div>
+<div style="margin-top:6px"><span class="cm">// + Supabase JS CDN 문서 링크 첨부!</span></div>
+</div></div>
+</div>
+<div class="c50" style="display:flex;flex-direction:column;justify-content:center">
+<div class="wc" style="margin-bottom:12px">
+<div class="wi">💡</div>
+<div><div class="wt">Supabase CDN 문서를 함께 주세요!</div>
+<div class="wd">AI가 Supabase를 모를 수 있으니<br><strong>supabase.com/docs/reference/javascript</strong><br>의 <span style="font-weight:700">#install-cdn</span> 링크를 붙여주면<br>훨씬 정확한 코드를 생성합니다.</div>
+</div></div>
+<div class="card" style="padding:14px">
+<div style="font-weight:700;font-size:.9rem;margin-bottom:8px">🔧 AI가 만들어주는 파일들</div>
+<div style="font-family:'Courier New',monospace;font-size:.82rem;line-height:2;color:#333;background:#F5F5F5;padding:10px 14px;border-radius:8px">
+📄 <strong>index.html</strong> — 화면 구조<br>
+📄 <strong>script.js</strong> — 로그인 로직<br>
+📄 <strong>style.css</strong> — 디자인
+</div>
+<div style="font-size:.78rem;color:#888;margin-top:6px">→ AI가 수정을 제안하면 "수락(Accept)" 클릭!</div>
+</div>
+</div></div>
+<div class="pn"></div>
+</div>
+
+<div class="s" id="s11">
+<span class="ab" style="margin-bottom:12px">Step 5</span>
+<div class="st">Supabase <span class="ac">API 키</span>를 코드에 넣기</div>
+<div class="row" style="flex:1">
+<div class="c50" style="display:flex;flex-direction:column;justify-content:center">
+<div style="font-size:.95rem;color:#333;line-height:1.7;margin-bottom:14px">AI가 만든 코드에는 <span class="ac">빈칸 2개</span>가 있어요.<br>Supabase에서 값을 복사해서 넣어주면 됩니다!</div>
+<div class="ce">
+<div class="tb"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="fn">script.js</span></div>
+<div class="cb" style="font-size:.78rem;line-height:1.8">
+<div><span class="cm">// TODO: 아래 값들을 실제 Supabase 정보로 바꾸세요</span></div>
+<div style="margin-top:4px"><span class="kw">const</span> SUPABASE_URL = <span class="er">'여러분의_URL'</span></div>
+<div><span class="cm">// 예: https://xxx.supabase.co</span></div>
+<div style="margin-top:4px"><span class="kw">const</span> SUPABASE_KEY = <span class="er">'여러분의_키'</span></div>
+<div><span class="cm">// 예: eyJhbGciOiJIUzI1NiIs...</span></div>
+</div></div>
+</div>
+<div class="c50" style="display:flex;flex-direction:column;justify-content:center">
+<div class="br">
+<div class="tl"><div class="ds"><span></span><span></span><span></span></div><div class="ub">supabase.com → Settings → API</div></div>
+<div class="ct" style="padding:12px;font-size:.82rem">
+<div style="font-weight:700;margin-bottom:8px">📍 Supabase에서 복사할 것 2가지</div>
+<div style="background:#EFF6FF;border-radius:8px;padding:10px;margin-bottom:8px">
+<div style="font-weight:700;color:#2563EB;margin-bottom:3px">① Project URL</div>
+<div style="font-family:'Courier New',monospace;font-size:.75rem;color:#666;background:#fff;padding:4px 8px;border-radius:4px;margin-top:4px">https://xxx.supabase.co</div>
+<div style="font-size:.72rem;color:#999;margin-top:3px">→ script.js의 SUPABASE_URL에 붙여넣기</div>
+</div>
+<div style="background:#FFF3E8;border-radius:8px;padding:10px">
+<div style="font-weight:700;color:#FF6B00;margin-bottom:3px">② anon public Key</div>
+<div style="font-family:'Courier New',monospace;font-size:.75rem;color:#666;background:#fff;padding:4px 8px;border-radius:4px;margin-top:4px">eyJhbGciOiJIUz... (긴 문자열)</div>
+<div style="font-size:.72rem;color:#999;margin-top:3px">→ script.js의 SUPABASE_KEY에 붙여넣기</div>
+</div>
+</div></div>
+<div class="wc" style="margin-top:10px">
+<div class="wi">💾</div>
+<div><div class="wt">붙여넣기 후 반드시 저장!</div>
+<div class="wd">Windows: <strong>Ctrl+S</strong> / Mac: <strong>Cmd+S</strong></div>
+</div></div>
+</div></div>
+<div class="pn"></div>
+</div>
+
+<div class="s" id="s12">
+<span class="ab" style="margin-bottom:12px">Step 6</span>
+<div class="st">Client Secret 넣기 — <span class="ac">마지막 퍼즐 조각</span></div>
+<div class="row" style="flex:1">
+<div class="c50" style="display:flex;flex-direction:column;justify-content:center">
+<div style="font-size:.95rem;color:#333;line-height:1.7;margin-bottom:14px">첫 번째 테스트에서 에러가 납니다!<br>아직 <span class="ac">Client Secret</span>을 안 넣었기 때문이에요.</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:flex-start;gap:10px"><div class="sc-num" style="width:32px;height:32px;font-size:.85rem">1</div><div style="font-size:.88rem;line-height:1.6"><strong>Google Cloud Console</strong> 접속<br><span style="font-size:.8rem;color:#888">console.cloud.google.com</span></div></div>
+<div style="display:flex;align-items:flex-start;gap:10px"><div class="sc-num" style="width:32px;height:32px;font-size:.85rem">2</div><div style="font-size:.88rem;line-height:1.6">사용자 인증 정보 → <strong>웹 클라이언트</strong> 클릭<br><span style="font-size:.8rem;color:#888">아까 만든 OAuth 클라이언트</span></div></div>
+<div style="display:flex;align-items:flex-start;gap:10px"><div class="sc-num" style="width:32px;height:32px;font-size:.85rem">3</div><div style="font-size:.88rem;line-height:1.6"><strong>Client Secret</strong> 새로 생성 & 복사<br><span style="font-size:.8rem;color:#888">"보안 비밀번호 추가" 버튼</span></div></div>
+<div style="display:flex;align-items:flex-start;gap:10px"><div class="sc-num" style="width:32px;height:32px;font-size:.85rem;background:#3ECF8E">4</div><div style="font-size:.88rem;line-height:1.6"><strong>Supabase</strong> → Google Provider →<br><span class="ac">Client Secret 칸에 붙여넣기</span> → 저장!</div></div>
+</div>
+</div>
+<div class="c50" style="display:flex;flex-direction:column;justify-content:center">
+<svg width="420" height="360" viewBox="0 0 420 360">
+<rect x="20" y="20" width="380" height="130" rx="14" fill="#EFF6FF" stroke="#4285F4" stroke-width="2"/>
+<text x="210" y="50" text-anchor="middle" font-size="13" font-weight="800" fill="#4285F4">Google Cloud Console</text>
+<text x="210" y="80" text-anchor="middle" font-size="11" fill="#666">사용자 인증 정보 → 웹 클라이언트</text>
+<rect x="100" y="95" width="220" height="35" rx="6" fill="#fff" stroke="#4285F4" stroke-width="1.5"/>
+<text x="210" y="117" text-anchor="middle" font-size="10" font-weight="600" fill="#4285F4">🔐 Client Secret: GOCSPX-xxx...</text>
+<text x="360" y="117" text-anchor="middle" font-size="9" fill="#FF6B00" font-weight="700">📋 복사!</text>
+<path d="M210 150 L210 190" stroke="#FF6B00" stroke-width="3" marker-end="url(#aO)"/>
+<text x="240" y="175" font-size="10" font-weight="700" fill="#FF6B00">붙여넣기</text>
+<rect x="20" y="200" width="380" height="130" rx="14" fill="#F0FFF4" stroke="#3ECF8E" stroke-width="2"/>
+<text x="210" y="230" text-anchor="middle" font-size="13" font-weight="800" fill="#3ECF8E">Supabase</text>
+<text x="210" y="255" text-anchor="middle" font-size="11" fill="#666">Authentication → Google → Client Secret</text>
+<rect x="100" y="270" width="220" height="35" rx="6" fill="#fff" stroke="#3ECF8E" stroke-width="1.5"/>
+<text x="210" y="292" text-anchor="middle" font-size="10" font-weight="600" fill="#3ECF8E">🔐 GOCSPX-xxx... ✅ 입력 완료!</text>
+</svg>
+</div></div>
+<div class="pn"></div>
+</div>
+
+<div class="s" id="s13">
+<div class="st" style="text-align:center;margin-bottom:16px">🎉 <span class="ac">구글 로그인</span> 성공!</div>
+<div style="flex:1;display:flex;align-items:center;justify-content:center">
+<div style="text-align:center">
+<div class="br" style="width:600px;margin:0 auto 20px">
+<div class="tl"><div class="ds"><span></span><span></span><span></span></div><div class="ub">localhost:5173</div></div>
+<div class="ct" style="text-align:center;padding:30px">
+<div style="font-size:1.2rem;font-weight:700;color:#333;margin-bottom:16px">내 서비스</div>
+<div style="display:inline-flex;align-items:center;gap:10px;background:#fff;border:2px solid #4285F4;border-radius:8px;padding:12px 28px;margin-bottom:16px">
+<svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.9 33.1 29.4 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6 29.2 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 15.5 18.8 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6 29.2 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5 0 9.6-1.8 13.2-5l-6.1-5.2C29.2 35.2 26.7 36 24 36c-5.4 0-9.9-3.1-11.3-8.2l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.1 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
+<span style="font-weight:700;font-size:1rem;color:#333">Google로 로그인</span>
+</div>
+<div style="font-size:.85rem;color:#FF6B00;font-weight:700;margin-bottom:12px">↓ 클릭! ↓</div>
+<div style="background:#F0FFF4;border:2px solid #22C55E;border-radius:12px;padding:16px;display:inline-block">
+<div style="font-size:1.1rem;font-weight:700;color:#16A34A;margin-bottom:6px">✅ 로그인 성공!</div>
+<div style="font-size:.88rem;color:#555">프로필 사진 | 홍길동 | hong@gmail.com</div>
+</div>
+</div></div>
+<div class="ax" style="max-width:600px;margin:0 auto;display:flex;align-items:center;gap:16px">
+<div style="font-size:2rem">🚀</div>
+<div style="font-size:1rem;color:#333">예전에는 이걸 만드는데 <strong>며칠</strong>이 걸렸는데,<br>Supabase + 안티그래비티 조합이면 <span class="ac">20분</span>이면 완성!</div>
+</div>
+</div></div>
+<div class="pn"></div>
+</div>
+
+<div class="s" id="s14">
+<div class="st"><span class="ac">전체 흐름</span> 한눈에 정리</div>
+<div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+<svg width="1100" height="420" viewBox="0 0 1100 420">
+<rect x="30" y="30" width="500" height="180" rx="16" fill="#FFF8F0" stroke="#FF6B00" stroke-width="2"/>
+<text x="280" y="60" text-anchor="middle" font-size="14" font-weight="800" fill="#FF6B00">🧑 사람이 하는 영역 (세팅)</text>
+<rect x="55" y="80" width="130" height="55" rx="8" fill="#F0FFF4" stroke="#3ECF8E" stroke-width="1.5"/>
+<text x="120" y="102" text-anchor="middle" font-size="9" font-weight="700" fill="#3ECF8E">Supabase</text>
+<text x="120" y="120" text-anchor="middle" font-size="8" fill="#888">구글 Provider ON</text>
+<path d="M185 107 L215 107" stroke="#DDD" stroke-width="1.5" marker-end="url(#aG)"/>
+<defs><marker id="aG" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,6 2.5,0 5" fill="#DDD"/></marker></defs>
+<rect x="220" y="80" width="130" height="55" rx="8" fill="#EFF6FF" stroke="#4285F4" stroke-width="1.5"/>
+<text x="285" y="102" text-anchor="middle" font-size="9" font-weight="700" fill="#4285F4">Google Cloud</text>
+<text x="285" y="120" text-anchor="middle" font-size="8" fill="#888">Client ID 발급</text>
+<path d="M350 107 L380 107" stroke="#DDD" stroke-width="1.5" marker-end="url(#aG)"/>
+<rect x="385" y="80" width="130" height="55" rx="8" fill="#FFFAF5" stroke="#FF6B00" stroke-width="1.5"/>
+<text x="450" y="102" text-anchor="middle" font-size="9" font-weight="700" fill="#FF6B00">키 교환</text>
+<text x="450" y="120" text-anchor="middle" font-size="8" fill="#888">ID+Secret+URI</text>
+<text x="280" y="165" text-anchor="middle" font-size="10" fill="#FF6B00" font-weight="600">⏱️ 약 15분</text>
+<rect x="570" y="30" width="500" height="180" rx="16" fill="#F0FFF4" stroke="#22C55E" stroke-width="2"/>
+<text x="820" y="60" text-anchor="middle" font-size="14" font-weight="800" fill="#22C55E">🤖 AI가 하는 영역 (코딩)</text>
+<rect x="595" y="80" width="130" height="55" rx="8" fill="#FAFAFA" stroke="#DDD" stroke-width="1.5"/>
+<text x="660" y="102" text-anchor="middle" font-size="9" font-weight="700" fill="#333">안티그래비티</text>
+<text x="660" y="120" text-anchor="middle" font-size="8" fill="#888">프롬프트 입력</text>
+<path d="M725 107 L755 107" stroke="#DDD" stroke-width="1.5" marker-end="url(#aG)"/>
+<rect x="760" y="80" width="130" height="55" rx="8" fill="#FAFAFA" stroke="#DDD" stroke-width="1.5"/>
+<text x="825" y="102" text-anchor="middle" font-size="9" font-weight="700" fill="#333">코드 생성</text>
+<text x="825" y="120" text-anchor="middle" font-size="8" fill="#888">HTML+JS+CSS</text>
+<path d="M890 107 L920 107" stroke="#DDD" stroke-width="1.5" marker-end="url(#aG)"/>
+<rect x="925" y="80" width="130" height="55" rx="8" fill="#F0FFF4" stroke="#22C55E" stroke-width="1.5"/>
+<text x="990" y="102" text-anchor="middle" font-size="9" font-weight="700" fill="#22C55E">API 키 입력</text>
+<text x="990" y="120" text-anchor="middle" font-size="8" fill="#888">URL + Key 설정</text>
+<text x="820" y="165" text-anchor="middle" font-size="10" fill="#22C55E" font-weight="600">⏱️ 약 5분</text>
+<rect x="350" y="260" width="400" height="100" rx="16" fill="#FF6B00"/>
+<text x="550" y="300" text-anchor="middle" font-size="18" font-weight="800" fill="white">🎉 구글 로그인 완성!</text>
+<text x="550" y="330" text-anchor="middle" font-size="12" fill="#FFD9B3">사람의 세팅 + AI의 코딩 = 20분이면 끝!</text>
+<path d="M280 210 L450 260" stroke="#FF6B00" stroke-width="2" stroke-dasharray="6,3"/>
+<path d="M820 210 L650 260" stroke="#22C55E" stroke-width="2" stroke-dasharray="6,3"/>
+</svg>
+</div>
+<div class="pn"></div>
+</div>
+
+<div class="s" id="s15">
+<div class="st"><span class="ac">핵심 요약</span> — 구글 로그인 연동 체크리스트</div>
+<div class="g2" style="flex:1;align-items:stretch">
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="font-weight:700;font-size:1rem;color:#FF6B00;margin-bottom:4px">🧑 세팅 (사람이 하는 것)</div>
+<div class="card" style="padding:14px;display:flex;align-items:center;gap:12px"><div class="sc-num" style="width:32px;height:32px;font-size:.85rem">1</div><div><div style="font-weight:700;font-size:.9rem">Supabase 구글 Provider 켜기</div><div style="font-size:.75rem;color:#888">Authentication → Providers → Google</div></div></div>
+<div class="card" style="padding:14px;display:flex;align-items:center;gap:12px"><div class="sc-num" style="width:32px;height:32px;font-size:.85rem">2</div><div><div style="font-weight:700;font-size:.9rem">Google Cloud에서 Client ID 발급</div><div style="font-size:.75rem;color:#888">OAuth 2.0 → 웹 앱 → 만들기</div></div></div>
+<div class="card" style="padding:14px;display:flex;align-items:center;gap:12px"><div class="sc-num" style="width:32px;height:32px;font-size:.85rem">3</div><div><div style="font-weight:700;font-size:.9rem">Redirect URI 연결</div><div style="font-size:.75rem;color:#888">Supabase → 복사 → Google에 붙여넣기</div></div></div>
+<div class="card" style="padding:14px;display:flex;align-items:center;gap:12px"><div class="sc-num" style="width:32px;height:32px;font-size:.85rem">4</div><div><div style="font-weight:700;font-size:.9rem">Client ID + Secret → Supabase 입력</div><div style="font-size:.75rem;color:#888">복사 → 붙여넣기 → 저장</div></div></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="font-weight:700;font-size:1rem;color:#22C55E;margin-bottom:4px">🤖 구현 (AI가 하는 것)</div>
+<div class="card" style="padding:14px;display:flex;align-items:center;gap:12px"><div class="sc-num" style="width:32px;height:32px;font-size:.85rem;background:#22C55E">5</div><div><div style="font-weight:700;font-size:.9rem">안티그래비티에서 프롬프트 입력</div><div style="font-size:.75rem;color:#888">"Supabase로 구글 로그인 만들어줘"</div></div></div>
+<div class="card" style="padding:14px;display:flex;align-items:center;gap:12px"><div class="sc-num" style="width:32px;height:32px;font-size:.85rem;background:#22C55E">6</div><div><div style="font-weight:700;font-size:.9rem">AI가 만든 코드 수락</div><div style="font-size:.75rem;color:#888">HTML + JS + CSS 파일 Accept</div></div></div>
+<div class="card" style="padding:14px;display:flex;align-items:center;gap:12px"><div class="sc-num" style="width:32px;height:32px;font-size:.85rem;background:#22C55E">7</div><div><div style="font-weight:700;font-size:.9rem">API URL + Key 입력</div><div style="font-size:.75rem;color:#888">script.js에 Supabase 정보 넣기</div></div></div>
+<div class="card" style="padding:14px;display:flex;align-items:center;gap:12px;background:#F0FFF4;border-color:#22C55E"><div class="sc-num" style="width:32px;height:32px;font-size:.85rem;background:#22C55E">✅</div><div><div style="font-weight:700;font-size:.9rem;color:#16A34A">구글 로그인 완성!</div><div style="font-size:.75rem;color:#888">테스트 → 구글 계정으로 로그인 성공 🎉</div></div></div>
+</div>
+</div>
+<div class="ax" style="margin-top:12px;display:flex;align-items:center;gap:14px">
+<div style="font-size:2rem">💡</div>
+<div style="font-size:.95rem;color:#333"><strong>코드는 AI가, 세팅은 내가!</strong> 이 원칙만 기억하면 어떤 소셜 로그인이든 붙일 수 있어요.</div>
+</div>
+<div class="pn"></div>
+</div>
+
+<button class="nav-btn nav-prev" onclick="prevSlide()">&#8249;</button>
+<button class="nav-btn nav-next" onclick="nextSlide()">&#8250;</button>
+</div>
+<script>
+let c=0;const ss=document.querySelectorAll('.s'),t=ss.length,p=document.getElementById('progressBar');
+function show(n){ss.forEach(s=>s.classList.remove('active'));c=((n%t)+t)%t;ss[c].classList.add('active');p.style.width=((c+1)/t*100)+'%';document.querySelectorAll('.pn').forEach(e=>{e.textContent=(c+1)+' / '+t})}
+function nextSlide(){show(c+1)}function prevSlide(){show(c-1)}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nextSlide()}if(e.key==='ArrowLeft'){e.preventDefault();prevSlide()}});
+let tx=0;document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX});document.addEventListener('touchend',e=>{const d=tx-e.changedTouches[0].clientX;if(Math.abs(d)>50){d>0?nextSlide():prevSlide()}});
+show(0);
+</script>
+</body>
+</html>

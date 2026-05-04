@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>네이버 플레이스 진단</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+.form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #005a9e;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .checkbox-item:hover {
+            background: #e9ecef;
+        }
+
+        .checkbox-item input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #005a9e 0%, #003d6b 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 90, 158, 0.4);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            transform: none;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .search-results {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .search-item {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .search-item:hover {
+            border-color: #005a9e;
+            background: #f8f9fa;
+        }
+
+        .search-item.selected {
+            border-color: #005a9e;
+            background: #e3f2fd;
+        }
+
+        .search-item h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .search-item p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .result-section {
+            margin-top: 40px;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .score-display {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            color: white;
+        }
+
+        .score-display .score {
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .score-display .grade {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .grade.A { background: #00c73c; }
+        .grade.B { background: #4caf50; }
+        .grade.C { background: #ff9800; }
+        .grade.D { background: #f44336; }
+
+        .score-bars {
+            margin-top: 30px;
+        }
+
+        .score-bar-item {
+            margin-bottom: 15px;
+        }
+
+        .score-bar-item .label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .score-bar-item .bar {
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .score-bar-item .bar-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        .bar-fill.high { background: #00c73c; }
+        .bar-fill.medium { background: #ff9800; }
+        .bar-fill.low { background: #f44336; }
+
+        .improvements {
+            margin-top: 30px;
+        }
+
+        .improvement-item {
+            padding: 15px;
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 10px;
+        }
+
+        .download-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn-download {
+            display: inline-block;
+            padding: 16px 40px;
+            background: linear-gradient(135deg, #03c75a 0%, #02a04a 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(3, 199, 90, 0.4);
+        }
+
+        .spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #005a9e;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .progress-status {
+            text-align: center;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .api-link {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .api-link a {
+            color: #005a9e;
+            text-decoration: none;
+        }
+
+        .api-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8rem; }
+            .card { padding: 25px; }
+            .grid-3, .checkbox-group { grid-template-columns: 1fr; }
+            .tabs { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>네이버 플레이스 자동 진단</h1>
+            <p>업체 정보를 분석하고 PPT 제안서를 자동으로 생성합니다</p>
+        </div>
+
+        <div class="card">
+            <!-- 검색 -->
+            <div id="searchTab">
+                <form id="searchForm">
+                    <div class="form-group">
+                        <label for="searchQuery">업체명 검색</label>
+                        <input type="text" id="searchQuery" placeholder="예: 스타벅스 강남점" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="searchBtn">검색</button>
+                </form>
+
+                <div class="spinner" id="searchSpinner"></div>
+
+                <div class="search-results" id="searchResults"></div>
+
+                <div id="crawlSection" style="display: none; margin-top: 20px;">
+                    <div class="form-group">
+                        <label>분석할 키워드 (쉼표로 구분)</label>
+                        <input type="text" id="keywords" placeholder="예: 강남 카페, 강남역 브런치">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="startCrawlBtn">진단 시작</button>
+                </div>
+
+                <div class="spinner" id="crawlSpinner"></div>
+                <div class="progress-status" id="crawlStatus"></div>
+            </div>
+
+            <!-- 결과 섹션 -->
+            <div class="result-section" id="resultSection">
+                <h2 style="margin-bottom: 20px; color: #333;">진단 결과</h2>
+
+                <div class="score-display">
+                    <div class="score" id="totalScore">0</div>
+                    <div>점</div>
+                    <div class="grade" id="gradeDisplay">-</div>
+                </div>
+
+                <div class="score-bars" id="scoreBars"></div>
+
+                <div class="improvements" id="improvements"></div>
+
+                <div class="download-section">
+                    <a href="#" class="btn-download" id="downloadBtn" target="_blank">PPT 제안서 다운로드</a>
+                </div>
+            </div>
+
+            <div class="api-link">
+                <p>개발자용: <a href="/docs" target="_blank">API 문서 (Swagger UI)</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 검색 상태
+        let selectedPlace = null;
+
+        // 검색 폼
+        document.getElementById('searchForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const query = document.getElementById('searchQuery').value;
+            const btn = document.getElementById('searchBtn');
+            const spinner = document.getElementById('searchSpinner');
+            const resultsDiv = document.getElementById('searchResults');
+
+            btn.disabled = true;
+            spinner.style.display = 'block';
+            resultsDiv.innerHTML = '';
+            document.getElementById('crawlSection').style.display = 'none';
+            selectedPlace = null;
+
+            try {
+                const response = await fetch('/search', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.results.length > 0) {
+                    resultsDiv.innerHTML = data.results.map((item, idx) => `
+                        <div class="search-item" data-idx="${idx}">
+                            <h4>${item.name}</h4>
+                            <p>${item.road_address || item.address}</p>
+                            <p style="color: #999; font-size: 12px;">${item.category}</p>
+                        </div>
+                    `).join('');
+
+                    // 검색 결과 클릭 이벤트
+                    document.querySelectorAll('.search-item').forEach((el, idx) => {
+                        el.addEventListener('click', () => {
+                            document.querySelectorAll('.search-item').forEach(e => e.classList.remove('selected'));
+                            el.classList.add('selected');
+                            selectedPlace = data.results[idx];
+                            document.getElementById('crawlSection').style.display = 'block';
+                        });
+                    });
+                } else {
+                    resultsDiv.innerHTML = '<p style="text-align: center; color: #666;">검색 결과가 없습니다</p>';
+                }
+            } catch (err) {
+                resultsDiv.innerHTML = '<p style="text-align: center; color: #f44336;">검색 중 오류가 발생했습니다</p>';
+            } finally {
+                btn.disabled = false;
+                spinner.style.display = 'none';
+            }
+        });
+
+        // 크롤링 시작
+        document.getElementById('startCrawlBtn').addEventListener('click', async () => {
+            if (!selectedPlace) {
+                alert('업체를 선택해주세요');
+                return;
+            }
+
+            const btn = document.getElementById('startCrawlBtn');
+            const spinner = document.getElementById('crawlSpinner');
+            const statusDiv = document.getElementById('crawlStatus');
+
+            btn.disabled = true;
+            spinner.style.display = 'block';
+
+            try {
+                // 크롤링 시작
+                const startResponse = await fetch('/crawl/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        place_id: selectedPlace.place_id || '',
+                        business_name: selectedPlace.name,
+                        address: selectedPlace.road_address || selectedPlace.address,
+                        category: selectedPlace.category,
+                        keywords: []
+                    })
+                });
+
+                const startData = await startResponse.json();
+
+                if (!startData.success) {
+                    throw new Error(startData.detail || '크롤링 시작 실패');
+                }
+
+                const jobId = startData.job_id;
+
+                // 상태 폴링
+                const statusMessages = {
+                    'pending': '대기 중...',
+                    'searching': '업체 검색 중... (20%)',
+                    'crawling': '플레이스 정보 수집 중... (50%)',
+                    'analyzing': '데이터 분석 중... (75%)',
+                    'generating': 'PPT 생성 중... (90%)',
+                    'done': '완료!',
+                    'failed': '실패'
+                };
+
+                const pollStatus = async () => {
+                    const statusResponse = await fetch(`/crawl/status/${jobId}`);
+                    const statusData = await statusResponse.json();
+
+                    statusDiv.textContent = statusMessages[statusData.status] || statusData.status;
+
+                    if (statusData.status === 'done') {
+                        // 결과 조회
+                        const historyResponse = await fetch(`/history/${statusData.result_id}`);
+                        const historyData = await historyResponse.json();
+
+                        if (historyData.success) {
+                            displayResult(historyData.data);
+                        }
+
+                        spinner.style.display = 'none';
+                        btn.disabled = false;
+                    } else if (statusData.status === 'failed') {
+                        const msg = statusData.error_message || '진단 처리 중 오류가 발생했습니다.';
+                        alert('진단 실패: ' + msg);
+                        spinner.style.display = 'none';
+                        btn.disabled = false;
+                    } else {
+                        setTimeout(pollStatus, 1000);
+                    }
+                };
+
+                pollStatus();
+            } catch (err) {
+                alert('오류: ' + err.message);
+                spinner.style.display = 'none';
+                btn.disabled = false;
+            }
+        });
+
+        // 결과 표시
+        function displayResult(data) {
+            const resultSection = document.getElementById('resultSection');
+
+            // 총점
+            document.getElementById('totalScore').textContent = data.total_score.toFixed(1);
+
+            // 등급
+            const gradeEl = document.getElementById('gradeDisplay');
+            gradeEl.textContent = data.grade + '등급';
+            gradeEl.className = 'grade ' + data.grade;
+
+            // 점수 바
+            const scoreBars = [
+                { label: '사진', score: data.photo_score, detail: `${data.photo_count}장` },
+                { label: '리뷰', score: data.review_score, detail: `${data.review_count}개` },
+                { label: '블로그', score: data.blog_score, detail: `${data.blog_review_count}개` },
+                { label: '정보', score: data.info_score, detail: '' },
+                { label: '키워드', score: data.keyword_score, detail: '' }
+            ];
+
+            document.getElementById('scoreBars').innerHTML = scoreBars.map(item => `
+                <div class="score-bar-item">
+                    <div class="label">
+                        <span>${item.label} ${item.detail}</span>
+                        <span>${item.score}점</span>
+                    </div>
+                    <div class="bar">
+                        <div class="bar-fill ${item.score >= 70 ? 'high' : item.score >= 40 ? 'medium' : 'low'}"
+                             style="width: ${item.score}%"></div>
+                    </div>
+                </div>
+            `).join('');
+
+            // 개선 포인트
+            document.getElementById('improvements').innerHTML =
+                '<h3 style="margin-bottom: 15px;">개선 포인트</h3>' +
+                (data.improvement_points || []).map(point => `
+                    <div class="improvement-item">${point.message}</div>
+                `).join('');
+
+            // 다운로드 링크
+            document.getElementById('downloadBtn').href = `/ppt/download/${data.ppt_filename}`;
+
+            resultSection.classList.add('show');
+            resultSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

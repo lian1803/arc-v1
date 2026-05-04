@@ -1,0 +1,5111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>바이브코딩 실전 워크숍</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+body { font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif; color: #333; background: #fff; line-height: 1.6; }
+
+/* Progress Bar */
+#progress { position: fixed; top: 0; left: 0; height: 3px; background: #111; z-index: 1000; transition: width 0.2s; width: 0%; }
+
+/* Slide Counter */
+#counter { position: fixed; bottom: 24px; right: 32px; font-size: 0.85rem; color: #999; z-index: 1000; font-variant-numeric: tabular-nums; }
+
+/* Slides */
+.slide { min-height: 100vh; scroll-snap-align: start; display: flex; align-items: center; justify-content: center; padding: 60px 40px; position: relative; }
+.slide .inner { max-width: 920px; width: 100%; }
+
+/* Divider Slides */
+.divider { background: #000; color: #fff; text-align: center; }
+.divider h1 { font-size: 2.8rem; font-weight: 700; color: #fff; margin-bottom: 16px; letter-spacing: -0.02em; }
+.divider p { color: rgba(255,255,255,0.7); font-size: 1.15rem; }
+.divider .tools { margin-top: 24px; font-size: 0.95rem; color: rgba(255,255,255,0.5); }
+
+/* Typography */
+h1 { font-size: 2.2rem; font-weight: 700; color: #111; margin-bottom: 12px; letter-spacing: -0.02em; }
+h2 { font-size: 1.7rem; font-weight: 700; color: #111; margin-bottom: 10px; letter-spacing: -0.01em; }
+h3 { font-size: 1.2rem; font-weight: 700; color: #111; margin-bottom: 8px; }
+h4 { font-size: 1rem; font-weight: 700; color: #111; margin-bottom: 6px; }
+.subtitle { color: #666; font-size: 1.05rem; margin-bottom: 24px; }
+.secondary { color: #666; font-size: 0.9rem; }
+
+/* Cards */
+.card { background: #fff; border: 1px solid #E5E5E5; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.card-alt { background: #F5F5F5; border: 1px solid #E5E5E5; border-radius: 8px; padding: 20px; }
+
+/* Code Blocks */
+.code-block { background: #F5F5F5; color: #333; font-family: 'SF Mono', 'Fira Code', monospace; padding: 20px; border-radius: 8px; border: 1px solid #E5E5E5; white-space: pre-wrap; font-size: 0.85rem; line-height: 1.7; overflow-x: auto; }
+.code-block .label { display: inline-block; font-family: 'Pretendard Variable', sans-serif; font-size: 0.78rem; font-weight: 600; color: #666; border: 1px solid #ccc; border-radius: 4px; padding: 1px 8px; margin-bottom: 8px; }
+
+/* Pills */
+.pill { display: inline-block; font-size: 0.78rem; font-weight: 600; color: #666; border: 1px solid #ccc; border-radius: 4px; padding: 2px 10px; }
+.pill-black { background: #111; color: #fff; border-color: #111; }
+
+/* Grids */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+
+/* Table */
+.tbl { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.tbl th, .tbl td { padding: 10px 14px; border: 1px solid #E5E5E5; text-align: left; }
+.tbl th { background: #F5F5F5; font-weight: 700; color: #111; }
+
+/* Highlight box */
+.highlight-box { background: #F5F5F5; border: 1px solid #E5E5E5; border-radius: 8px; padding: 16px 20px; text-align: center; font-weight: 600; color: #111; }
+
+/* Numbered steps */
+.step-num { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: #111; color: #fff; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; }
+
+/* Stars */
+.stars { color: #111; font-size: 0.85rem; letter-spacing: 1px; }
+
+/* Spacing */
+.mb-8 { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-20 { margin-bottom: 20px; }
+.mb-24 { margin-bottom: 24px; }
+.mt-16 { margin-top: 16px; }
+.mt-20 { margin-top: 20px; }
+.mt-24 { margin-top: 24px; }
+.gap-12 { gap: 12px; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .slide { padding: 40px 20px; }
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.4rem; }
+  .grid-2, .grid-3, .grid-4, .grid-5 { grid-template-columns: 1fr; }
+  .divider h1 { font-size: 2rem; }
+  .code-block { font-size: 0.78rem; padding: 14px; }
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div id="counter"></div>
+
+<!-- ==================== SLIDE 1: Title ==================== -->
+<section class="slide divider" id="s1">
+<div class="inner">
+<h1 style="font-size:3rem;">바이브코딩 실전 워크숍</h1>
+<p style="font-size:1.3rem; color:rgba(255,255,255,0.8);">AI와 함께 게임부터 풀스택 앱까지</p>
+<div class="tools" style="margin-top:32px;">Google AI Studio · Lovable · Firebase Studio · Google Stitch</div>
+</div>
+</section>
+
+<section class="slide" id="s2">
+<div class="inner">
+<h2>오늘의 로드맵</h2>
+<p class="subtitle">쉬운 것부터 어려운 것까지 — 단계별로 따라하면 누구나 앱을 만들 수 있습니다.</p>
+<div style="display:grid; grid-template-columns:repeat(7, 1fr); gap:10px; font-size:0.82rem; margin-bottom:24px;">
+<div class="card" style="text-align:center; padding:12px 6px;">
+<div class="step-num mb-8" style="width:24px; height:24px; font-size:0.7rem;">0</div>
+<h4 style="font-size:0.8rem;">웹 기초</h4>
+<p class="secondary" style="font-size:0.7rem;">FE · BE 개념</p>
+<div class="stars mt-16" style="font-size:0.65rem;">☆☆☆☆☆</div>
+</div>
+<div class="card" style="text-align:center; padding:12px 6px;">
+<div class="step-num mb-8" style="width:24px; height:24px; font-size:0.7rem;">1</div>
+<h4 style="font-size:0.8rem;">워밍업</h4>
+<p class="secondary" style="font-size:0.7rem;">가위바위보 · 숫자</p>
+<div class="stars mt-16" style="font-size:0.65rem;">★☆☆☆☆</div>
+</div>
+<div class="card" style="text-align:center; padding:12px 6px;">
+<div class="step-num mb-8" style="width:24px; height:24px; font-size:0.7rem;">2</div>
+<h4 style="font-size:0.8rem;">AI Studio</h4>
+<p class="secondary" style="font-size:0.7rem;">프롬프트 + 실습</p>
+<div class="stars mt-16" style="font-size:0.65rem;">★★☆☆☆</div>
+</div>
+<div class="card" style="text-align:center; padding:12px 6px;">
+<div class="step-num mb-8" style="width:24px; height:24px; font-size:0.7rem;">3</div>
+<h4 style="font-size:0.8rem;">기획→프롬프트</h4>
+<p class="secondary" style="font-size:0.7rem;">IA · UJ · PRD</p>
+<div class="stars mt-16" style="font-size:0.65rem;">★★★☆☆</div>
+</div>
+<div class="card" style="text-align:center; padding:12px 6px;">
+<div class="step-num mb-8" style="width:24px; height:24px; font-size:0.7rem;">4</div>
+<h4 style="font-size:0.8rem;">Lovable</h4>
+<p class="secondary" style="font-size:0.7rem;">프론트 → Supabase</p>
+<div class="stars mt-16" style="font-size:0.65rem;">★★★☆☆</div>
+</div>
+<div class="card" style="text-align:center; padding:12px 6px;">
+<div class="step-num mb-8" style="width:24px; height:24px; font-size:0.7rem;">5</div>
+<h4 style="font-size:0.8rem;">Firebase</h4>
+<p class="secondary" style="font-size:0.7rem;">풀스택 + 배포</p>
+<div class="stars mt-16" style="font-size:0.65rem;">★★★★☆</div>
+</div>
+<div class="card" style="text-align:center; padding:12px 6px; border-color:#111;">
+<div class="step-num mb-8" style="width:24px; height:24px; font-size:0.7rem;">6</div>
+<h4 style="font-size:0.8rem;">Stitch 콜라보</h4>
+<p class="secondary" style="font-size:0.7rem;">디자인 + 구현 연동</p>
+<div class="stars mt-16" style="font-size:0.65rem;">★★★★☆</div>
+</div>
+</div>
+<div class="highlight-box">STEP 0~3 프론트엔드 중심 → STEP 4 Supabase 연동 → STEP 5 Firebase 풀스택 → STEP 6 Stitch 콜라보 워크플로우</div>
+</div>
+</section>
+
+<section class="slide" id="s3">
+  <div class="inner">
+    <div class="pill mb-12">핵심 마인드셋</div>
+    <h2>사용자 중심 디자인(UCD)이란?</h2>
+    <p class="subtitle mb-20">"내가 쓰고 싶은 거" 대신 "사용자가 필요한 거"를 만드는 사고방식</p>
+
+    <div class="card mb-16" style="border-left: 3px solid #000;">
+      <p><strong>핵심 질문:</strong> "이 기능이 <em>진짜로</em> 사용자의 문제를 해결하는가?"</p>
+      <p class="secondary mt-8">기능을 많이 넣는 게 좋은 제품이 아닙니다. 사용자의 <strong>불편함</strong>을 정확히 해결하는 게 좋은 제품입니다.</p>
+    </div>
+
+    <div class="grid-3 mb-16">
+      <div class="card" style="text-align:center;">
+        <div class="step-num mb-8">1</div>
+        <h4>공감(Empathize)</h4>
+        <p class="secondary">사용자를 관찰하고 인터뷰합니다.<br>"언제 불편하세요?"</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="step-num mb-8">2</div>
+        <h4>정의(Define)</h4>
+        <p class="secondary">문제를 한 문장으로 정리합니다.<br>"~할 때 ~가 불편하다"</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="step-num mb-8">3</div>
+        <h4>해결(Ideate → Test)</h4>
+        <p class="secondary">아이디어 → 프로토타입 → 테스트.<br>빠르게 만들고 빠르게 검증합니다.</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card-alt">
+        <h4 class="mb-8">❌ UCD 없이 만들면</h4>
+        <p class="secondary">• 기능은 많은데 아무도 안 씀</p>
+        <p class="secondary">• "이거 왜 여기 있어?" 반응</p>
+        <p class="secondary">• 출시 후 전면 재설계</p>
+      </div>
+      <div class="card-alt">
+        <h4 class="mb-8">✅ UCD로 만들면</h4>
+        <p class="secondary">• 핵심 기능만 딱 있어서 편함</p>
+        <p class="secondary">• "이거 내가 원하던 거!" 반응</p>
+        <p class="secondary">• 최소 기능으로 빠르게 검증</p>
+      </div>
+    </div>
+
+    <div class="highlight-box mt-20">우리가 배우는 IA → UJ → PRD 과정이 바로 UCD를 실천하는 방법입니다</div>
+  </div>
+</section>
+
+<section class="slide" id="s4">
+  <div class="inner">
+    <div class="pill mb-12">디자인 감각</div>
+    <h2>좋은 디자인이란? — 프롬프트에 녹여내기</h2>
+    <p class="subtitle mb-20">디자인 = 예쁜 것이 아닙니다. 사용자가 <strong>"생각 없이 쓸 수 있는 것"</strong>이 좋은 디자인입니다.</p>
+
+    <div class="grid-2 mb-16">
+      <div class="card">
+        <h4 class="mb-8">좋은 디자인 4원칙</h4>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div class="step-num" style="width:26px; height:26px; font-size:0.75rem;">1</div>
+            <div><strong>명확성</strong> <span class="secondary">— 보자마자 뭘 해야 하는지 안다</span></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div class="step-num" style="width:26px; height:26px; font-size:0.75rem;">2</div>
+            <div><strong>일관성</strong> <span class="secondary">— 같은 동작은 같은 모양</span></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div class="step-num" style="width:26px; height:26px; font-size:0.75rem;">3</div>
+            <div><strong>피드백</strong> <span class="secondary">— 누르면 반응이 온다</span></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div class="step-num" style="width:26px; height:26px; font-size:0.75rem;">4</div>
+            <div><strong>단순함</strong> <span class="secondary">— 없어도 되는 건 빼라</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h4 class="mb-8">실제 서비스 예시</h4>
+        <p class="secondary mb-8">📱 <strong>카카오톡 송금</strong> — 금액 입력 → 비밀번호 → 끝. 3단계.</p>
+        <p class="secondary mb-8">🎵 <strong>Spotify</strong> — 재생 버튼이 항상 같은 위치.</p>
+        <p class="secondary mb-8">🛒 <strong>쿠팡</strong> — "장바구니 담김!" 토스트 알림.</p>
+        <p class="secondary">✂️ <strong>구글 검색</strong> — 검색창 하나. 그게 전부.</p>
+      </div>
+    </div>
+
+    <h3 class="mb-12">프롬프트 Before → After</h3>
+    <div class="grid-2 mb-16">
+      <div class="card-alt">
+        <h4 class="mb-8" style="color:#999;">❌ Before: 기능만 나열</h4>
+        <div class="code-block" style="font-size:0.8rem;">투두 앱을 만들어줘.
+할 일을 추가하고 삭제하고
+완료 표시 할 수 있게 해줘.</div>
+      </div>
+      <div class="card" style="border-color:#111;">
+        <h4 class="mb-8">✅ After: UCD 원칙 반영</h4>
+        <div class="code-block" style="font-size:0.8rem;">투두 앱을 만들어줘.
+- 화면 중앙에 입력창, 엔터로 바로 추가
+- 완료 시 체크 애니메이션 + 취소선
+- 삭제는 스와이프 (실수 방지: 되돌리기 3초)
+- 빈 상태: "오늘 할 일을 추가해보세요" 안내
+- 색상: 화이트 배경, 포인트 #4F46E5
+- 모바일 우선, 엄지 닿는 영역에 버튼 배치</div>
+      </div>
+    </div>
+
+    <div class="highlight-box">같은 "투두 앱"이라도 사용자 경험을 고려한 프롬프트가 10배 좋은 결과를 만듭니다</div>
+  </div>
+</section>
+
+<section class="slide" id="s5">
+  <div class="inner">
+    <div class="pill mb-12">개념 정리</div>
+    <h2>프로토타입 · 데모 · MVP · PoC</h2>
+    <p class="subtitle mb-20">"다 비슷해 보이지만 목적이 완전히 다릅니다"</p>
+
+    <div class="grid-2 mb-16" style="gap:12px;">
+      <div class="card">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+          <span class="pill pill-black">프로토타입</span>
+          <span class="secondary">Prototype</span>
+        </div>
+        <p><strong>목적:</strong> 아이디어를 눈에 보이는 형태로 만들기</p>
+        <p class="secondary mt-8">• 동작하는 화면 시안 (클릭 가능)</p>
+        <p class="secondary">• "이런 느낌의 앱이에요" 확인용</p>
+        <p class="secondary">• 오늘 우리가 만드는 것 = <strong>프로토타입</strong></p>
+      </div>
+      <div class="card">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+          <span class="pill pill-black">데모</span>
+          <span class="secondary">Demo</span>
+        </div>
+        <p><strong>목적:</strong> 고객/투자자에게 "이거 됩니다" 보여주기</p>
+        <p class="secondary mt-8">• 프로토타입을 보여주는 <strong>행위</strong></p>
+        <p class="secondary">• "저희 서비스 한번 보세요!" 발표</p>
+        <p class="secondary">• 프로토타입 ≈ 결과물, 데모 ≈ 발표 과정</p>
+      </div>
+      <div class="card">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+          <span class="pill pill-black">MVP</span>
+          <span class="secondary">Minimum Viable Product</span>
+        </div>
+        <p><strong>목적:</strong> 핵심 기능만 넣어 시장에서 <strong>검증</strong></p>
+        <p class="secondary mt-8">• 실제 사용자가 쓸 수 있는 수준</p>
+        <p class="secondary">• 로그인·결제 등 백엔드 포함</p>
+        <p class="secondary">• "사람들이 진짜 쓸까?" 테스트</p>
+      </div>
+      <div class="card">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+          <span class="pill pill-black">PoC</span>
+          <span class="secondary">Proof of Concept</span>
+        </div>
+        <p><strong>목적:</strong> "이 기술/방법이 가능한가?" 증명</p>
+        <p class="secondary mt-8">• 기술적 실현 가능성 확인</p>
+        <p class="secondary">• 디자인·UX는 신경 안 씀</p>
+        <p class="secondary">• 예: "AI가 음식 사진 인식 가능?" 테스트</p>
+      </div>
+    </div>
+
+    <div class="card-alt">
+      <h4 class="mb-8">한눈에 흐름 정리</h4>
+      <div style="display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; font-size:0.9rem;">
+        <span class="pill pill-black">PoC</span>
+        <span class="secondary">→ 기술 검증</span>
+        <span style="color:#ccc;">|</span>
+        <span class="pill pill-black">프로토타입</span>
+        <span class="secondary">→ 형태 확인</span>
+        <span style="color:#ccc;">|</span>
+        <span class="pill pill-black">데모</span>
+        <span class="secondary">→ 발표·설득</span>
+        <span style="color:#ccc;">|</span>
+        <span class="pill pill-black">MVP</span>
+        <span class="secondary">→ 시장 검증</span>
+      </div>
+    </div>
+
+    <div class="highlight-box mt-16">린 스타트업: "빠르게 만들고 → 빠르게 검증 → 빠르게 개선"하는 반복 과정. 이 수업이 첫 걸음입니다!</div>
+  </div>
+</section>
+
+<section class="slide" id="s6">
+  <div class="inner">
+    <div class="pill mb-12">수업 안내</div>
+    <h2>오늘 · 내일, 우리가 할 것</h2>
+    <p class="subtitle mb-20">지금은 바이브코딩의 기초를 맛봅니다 — 완성은 천천히!</p>
+
+    <div class="grid-2 mb-16">
+      <div class="card" style="border-color:#111;">
+        <h4 class="mb-12">📌 오늘 ~ 내일 목표</h4>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="pill pill-black" style="font-size:0.7rem;">STEP 0–2</span>
+            <span class="secondary">프론트엔드 기초 + AI Studio 실습</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="pill pill-black" style="font-size:0.7rem;">STEP 3</span>
+            <span class="secondary">기획서(IA→UJ→PRD) → 프롬프트 변환</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="pill pill-black" style="font-size:0.7rem;">STEP 4</span>
+            <span class="secondary">Lovable로 프론트 앱 만들기</span>
+          </div>
+        </div>
+        <p class="secondary mt-16" style="font-size:0.85rem;">→ 여기까지가 <strong>프로토타입</strong> 완성 단계!</p>
+      </div>
+      <div class="card-alt">
+        <h4 class="mb-12">🔮 이후에 할 것</h4>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="pill" style="font-size:0.7rem;">STEP 4+</span>
+            <span class="secondary">Supabase 백엔드 연동</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="pill" style="font-size:0.7rem;">STEP 5</span>
+            <span class="secondary">Firebase Studio 풀스택</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="pill" style="font-size:0.7rem;">STEP 6</span>
+            <span class="secondary">Stitch 콜라보 워크플로우</span>
+          </div>
+        </div>
+        <p class="secondary mt-16" style="font-size:0.85rem;">→ 백엔드 + 배포까지 = <strong>MVP</strong> 단계!</p>
+      </div>
+    </div>
+
+    <div class="card mb-16" style="border-left: 3px solid #000;">
+      <p><strong>💡 백엔드(STEP 5)까지 시간이 부족하면?</strong></p>
+      <p class="secondary mt-8">괜찮습니다! 추후 MVP 빌드 과정에서 백엔드를 붙이게 됩니다. 오늘은 <strong>"사용자 중심으로 기획하고, AI로 빠르게 프로토타입 만드는 법"</strong>에 집중합니다.</p>
+    </div>
+
+    <div class="highlight-box">
+      프로토타입(오늘) → 데모(발표) → MVP(검증) → 개선 반복 — 이것이 린 스타트업의 핵심입니다
+    </div>
+  </div>
+</section>
+
+<section class="slide divider" id="s7">
+  <div class="inner">
+    <p style="color:rgba(255,255,255,0.6); margin-bottom:8px;">STEP 0</p>
+    <h1>웹 개발 기초 이해하기</h1>
+    <p>프론트엔드 · 백엔드 · 데이터베이스 — 30초 만에 이해하기</p>
+  </div>
+</section>
+
+<section class="slide" id="s8">
+  <div class="inner">
+    <div class="pill mb-12">기초 개념</div>
+    <h2>프론트엔드란?</h2>
+    <p class="subtitle mb-20">카페를 생각해보세요 — 손님이 보는 모든 것이 프론트엔드입니다</p>
+    <div class="card mb-16" style="border-left: 3px solid #000;">
+      <p>☕ <strong>카페 비유:</strong> 프론트엔드 = 카페 인테리어, 메뉴판, 카운터<br>
+      <span class="secondary">손님(사용자)이 직접 눈으로 보고 손으로 만지는 모든 것</span></p>
+    </div>
+    <div class="grid-3 mb-16">
+      <div class="card">
+        <div class="step-num">1</div>
+        <h4>HTML</h4>
+        <p class="secondary mb-8">뼈대 · 건물 구조</p>
+        <div class="code-block">&lt;button&gt;주문하기&lt;/button&gt;</div>
+        <p class="secondary mt-16">내용과 구조를 정의합니다</p>
+      </div>
+      <div class="card">
+        <div class="step-num">2</div>
+        <h4>CSS</h4>
+        <p class="secondary mb-8">화장 · 인테리어</p>
+        <div class="code-block">color: #ff0000;</div>
+        <p class="secondary mt-16">색상, 크기, 위치를 꾸밉니다</p>
+      </div>
+      <div class="card">
+        <div class="step-num">3</div>
+        <h4>JavaScript</h4>
+        <p class="secondary mb-8">동작 · 직원</p>
+        <div class="code-block">button.onclick = order;</div>
+        <p class="secondary mt-16">클릭, 움직임, 기능을 만듭니다</p>
+      </div>
+    </div>
+    <div class="highlight-box">여러분이 AI Studio에서 만드는 건 = 프론트엔드! HTML · CSS · JS를 AI가 대신 써줍니다</div>
+  </div>
+</section>
+
+<section class="slide" id="s9">
+  <div class="inner">
+    <div class="pill mb-12">기초 개념</div>
+    <h2>백엔드란?</h2>
+    <p class="subtitle mb-20">카페 주방 — 손님은 안 보지만 없으면 카페가 안 돌아갑니다</p>
+    <div class="grid-2 mb-16">
+      <div class="card">
+        <h4>🍳 서버 = 주방장</h4>
+        <p class="secondary">요청을 받으면 요리(처리)해서 결과를 내보냅니다. 24시간 쉬지 않고 대기 중입니다.</p>
+      </div>
+      <div class="card">
+        <h4>📋 API = 주문서</h4>
+        <p class="secondary">프론트엔드가 백엔드에 요청하는 양식입니다. "아메리카노 1잔"처럼 규격이 정해져 있습니다.</p>
+      </div>
+      <div class="card">
+        <h4>🧊 데이터베이스 = 냉장고/창고</h4>
+        <p class="secondary">재료(데이터)를 체계적으로 보관합니다. 회원 정보, 주문 내역, 상품 목록 등을 저장합니다.</p>
+      </div>
+      <div class="card">
+        <h4>🪪 인증(Auth) = 직원 출입증</h4>
+        <p class="secondary">누가 어느 공간에 접근할 수 있는지 관리합니다. 로그인 · 회원가입이 여기에 해당합니다.</p>
+      </div>
+    </div>
+    <div class="highlight-box">Lovable · Firebase Studio가 이 백엔드를 코딩 없이 자동으로 만들어줍니다!</div>
+  </div>
+</section>
+
+<section class="slide" id="s10">
+  <div class="inner">
+    <div class="pill mb-12">기초 개념</div>
+    <h2>API란? — 배달앱으로 이해하기</h2>
+    <p class="subtitle mb-20">앱과 서버가 대화하는 방법, 그게 API입니다.</p>
+    <div class="card mb-16" style="border-left: 3px solid #000;">
+      <p>🍔 <strong>배달앱 비유:</strong> 여러분이 배달앱에서 "치킨 1마리" 주문하면?</p>
+      <p class="secondary mt-8">→ 앱(프론트)이 <strong>API(주문서)</strong>를 통해 서버(주방)에 요청 → 서버가 DB(냉장고)에서 재료 꺼내 처리 → 결과를 다시 앱에 전달</p>
+    </div>
+    <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin:24px 0; flex-wrap:wrap;">
+      <div class="card" style="text-align:center; padding:14px 18px; min-width:100px;">
+        <h4>📱 프론트</h4>
+        <p class="secondary" style="font-size:0.8rem;">사용자 화면</p>
+      </div>
+      <div style="font-size:1.2rem; color:#999;">→ 요청</div>
+      <div class="card" style="text-align:center; padding:14px 18px; min-width:100px; border-color:#111;">
+        <h4>📋 API</h4>
+        <p class="secondary" style="font-size:0.8rem;">규격화된 주문서</p>
+      </div>
+      <div style="font-size:1.2rem; color:#999;">→ 처리</div>
+      <div class="card" style="text-align:center; padding:14px 18px; min-width:100px;">
+        <h4>🍳 서버</h4>
+        <p class="secondary" style="font-size:0.8rem;">요리(로직 처리)</p>
+      </div>
+      <div style="font-size:1.2rem; color:#999;">→ 저장</div>
+      <div class="card" style="text-align:center; padding:14px 18px; min-width:100px;">
+        <h4>🧊 DB</h4>
+        <p class="secondary" style="font-size:0.8rem;">재료(데이터) 보관</p>
+      </div>
+    </div>
+    <div class="grid-2 mb-16">
+      <div class="card">
+        <h4 class="mb-8">실생활 API 예시</h4>
+        <p class="secondary mb-8">☀️ 날씨앱: "서울 날씨 알려줘" → API → 기상청 서버 → "맑음 15℃"</p>
+        <p class="secondary mb-8">🗺️ 지도앱: "강남역 검색" → API → 네이버 서버 → 위치 데이터</p>
+        <p class="secondary">💳 결제: "5000원 결제" → API → 카드사 서버 → "승인완료"</p>
+      </div>
+      <div class="card-alt">
+        <h4 class="mb-8">오늘 수업에서의 API</h4>
+        <p class="secondary mb-8">🟢 STEP 1~2: API 없이 프론트만 (데이터 저장 ✗)</p>
+        <p class="secondary mb-8">🟡 STEP 4: Supabase API 자동 연결 (저장 ✓)</p>
+        <p class="secondary">🔴 STEP 5: Firebase API 직접 활용 (저장+인증 ✓)</p>
+      </div>
+    </div>
+    <div class="highlight-box">지금은 API를 몰라도 됩니다! Lovable·Firebase가 자동으로 만들어줘요. "아, 앱이 서버랑 대화하는구나" 정도만 기억하세요.</div>
+  </div>
+</section>
+
+<section class="slide" id="s11">
+  <div class="inner">
+    <div class="pill mb-12">한눈에 비교</div>
+    <h2>프론트엔드 vs 백엔드</h2>
+    <p class="subtitle mb-20">두 개를 합치면 완전한 웹 서비스가 됩니다</p>
+    <table class="tbl mb-20">
+      <thead>
+        <tr>
+          <th>구분</th>
+          <th>프론트엔드</th>
+          <th>백엔드</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>비유</td>
+          <td>카페 매장 (보이는 공간)</td>
+          <td>카페 주방 (안 보이는 공간)</td>
+        </tr>
+        <tr>
+          <td>역할</td>
+          <td>사용자가 보는 화면</td>
+          <td>데이터 처리 &amp; 저장</td>
+        </tr>
+        <tr>
+          <td>기술</td>
+          <td>HTML, CSS, JavaScript</td>
+          <td>Node.js, Python, Java</td>
+        </tr>
+        <tr>
+          <td>도구 (오늘)</td>
+          <td>AI Studio</td>
+          <td>Supabase, Firebase</td>
+        </tr>
+        <tr>
+          <td>결과물</td>
+          <td>버튼, 카드, 애니메이션</td>
+          <td>로그인, DB, API</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="highlight-box">풀스택 = 프론트 + 백엔드 모두 만드는 것. Lovable과 Firebase Studio가 이걸 한번에 해결합니다!</div>
+  </div>
+</section>
+
+<section class="slide" id="s12">
+  <div class="inner">
+    <div class="pill mb-12">오늘의 도구</div>
+    <h2>오늘 사용할 도구 총정리</h2>
+    <p class="subtitle mb-20">목적에 따라 도구를 골라 씁니다</p>
+    <div class="grid-3 mb-20">
+      <div class="card">
+        <h4>AI Studio</h4>
+        <p class="secondary mb-8">껍데기를 만드는 도구</p>
+        <p class="secondary mb-8">✔ 프론트엔드만<br>✔ 무료<br>✔ 빠른 프로토타입</p>
+        <div class="code-block">HTML · CSS · JS 생성</div>
+      </div>
+      <div class="card-alt">
+        <h4>Lovable</h4>
+        <p class="secondary mb-8">알맹이가 있는 앱</p>
+        <p class="secondary mb-8">✔ 프론트 + 백엔드<br>✔ 유료 (무료 체험)<br>✔ CRUD 앱 완성</p>
+        <div class="code-block">Supabase 자동 연결</div>
+      </div>
+      <div class="card">
+        <h4>Firebase Studio</h4>
+        <p class="secondary mb-8">구글의 올인원</p>
+        <p class="secondary mb-8">✔ 프론트 + 백엔드<br>✔ 무료<br>✔ 풀스택 배포까지</p>
+        <div class="code-block">Firebase 자동 연결</div>
+      </div>
+    </div>
+    <div class="card">
+      <p class="secondary" style="margin-bottom:8px;"><strong>난이도 흐름</strong></p>
+      <div style="display:flex; gap:24px; align-items:center; flex-wrap:wrap;">
+        <div>AI Studio<br><span class="stars">★☆☆☆☆</span></div>
+        <div style="font-size:1.2rem;">→</div>
+        <div>Lovable<br><span class="stars">★★★☆☆</span></div>
+        <div style="font-size:1.2rem;">→</div>
+        <div>Firebase Studio<br><span class="stars">★★★★☆</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s13">
+  <div class="inner">
+    <div class="pill mb-12">기초 개념</div>
+    <h2>시멘틱(Semantic) HTML이란?</h2>
+    <p class="subtitle mb-20">"의미가 있는 태그"를 쓰면 AI도, 브라우저도, 사람도 코드를 더 잘 이해합니다.</p>
+    <div class="grid-2 mb-16">
+      <div class="card">
+        <h4 class="mb-12">❌ 비시멘틱 (의미 없음)</h4>
+        <div class="code-block" style="font-size:0.82rem;">&lt;div class="header"&gt;
+  &lt;div class="logo"&gt;내 사이트&lt;/div&gt;
+  &lt;div class="nav"&gt;메뉴1 메뉴2&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="main"&gt;
+  &lt;div class="article"&gt;본문 내용&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="footer"&gt;© 2025&lt;/div&gt;</div>
+        <p class="secondary mt-8">전부 &lt;div&gt; — 어디가 머리고 어디가 몸인지 모름</p>
+      </div>
+      <div class="card" style="border-color:#111;">
+        <h4 class="mb-12">✅ 시멘틱 (의미 있음)</h4>
+        <div class="code-block" style="font-size:0.82rem;">&lt;header&gt;
+  &lt;h1&gt;내 사이트&lt;/h1&gt;
+  &lt;nav&gt;메뉴1 메뉴2&lt;/nav&gt;
+&lt;/header&gt;
+&lt;main&gt;
+  &lt;article&gt;본문 내용&lt;/article&gt;
+&lt;/main&gt;
+&lt;footer&gt;© 2025&lt;/footer&gt;</div>
+        <p class="secondary mt-8">태그만 봐도 구조가 바로 보임!</p>
+      </div>
+    </div>
+    <table class="tbl mb-16">
+      <thead><tr><th>시멘틱 태그</th><th>역할</th><th>비유</th></tr></thead>
+      <tbody>
+        <tr><td><code>&lt;header&gt;</code></td><td>페이지 상단 (로고, 메뉴)</td><td>책의 표지</td></tr>
+        <tr><td><code>&lt;nav&gt;</code></td><td>내비게이션 메뉴</td><td>책의 목차</td></tr>
+        <tr><td><code>&lt;main&gt;</code></td><td>핵심 본문 영역</td><td>책의 본문</td></tr>
+        <tr><td><code>&lt;article&gt;</code></td><td>독립적인 콘텐츠</td><td>책의 한 챕터</td></tr>
+        <tr><td><code>&lt;section&gt;</code></td><td>관련 콘텐츠 묶음</td><td>챕터 안의 소단원</td></tr>
+        <tr><td><code>&lt;footer&gt;</code></td><td>페이지 하단 (저작권, 링크)</td><td>책의 뒤표지</td></tr>
+      </tbody>
+    </table>
+    <div class="highlight-box">프롬프트에 "시맨틱 HTML 구조 사용"이라고 쓰면 AI가 알아서 의미 있는 태그로 만들어줍니다. 외울 필요 없어요!</div>
+  </div>
+</section>
+
+<section class="slide" id="s14">
+  <div class="inner">
+    <div class="pill mb-12">기초 개념</div>
+    <h2>React · Angular · Next.js — 뭐가 다른가?</h2>
+    <p class="subtitle mb-20">AI Studio에서 Framework를 고르라고 합니다. 뭘 골라야 할까요?</p>
+    <div class="card mb-16" style="border-left:3px solid #000;">
+      <p>🍳 <strong>요리 비유:</strong> HTML/CSS/JS가 "재료"라면, 프레임워크는 "레시피북"입니다.</p>
+      <p class="secondary mt-8">레시피북 없이도 요리할 수 있지만, 레시피가 있으면 더 빠르고 체계적으로 만들 수 있어요.</p>
+    </div>
+    <table class="tbl mb-16">
+      <thead>
+        <tr><th style="width:18%;">구분</th><th style="width:27%;">React</th><th style="width:27%;">Angular</th><th style="width:28%;">Next.js</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>만든 곳</strong></td><td>Meta (페이스북)</td><td>Google</td><td>Vercel</td></tr>
+        <tr><td><strong>비유</strong></td><td>레고 블록 🧱<br><span class="secondary" style="font-size:0.8rem;">필요한 것만 조립</span></td><td>풀세트 가구 🪑<br><span class="secondary" style="font-size:0.8rem;">전부 포함된 세트</span></td><td>레고 + 설명서 📘<br><span class="secondary" style="font-size:0.8rem;">React + 배포/SEO 추가</span></td></tr>
+        <tr><td><strong>난이도</strong></td><td>★★☆☆☆</td><td>★★★★☆</td><td>★★★☆☆</td></tr>
+        <tr><td><strong>특징</strong></td><td>가볍고 자유로움</td><td>규칙이 많지만 탄탄</td><td>React 기반 + 서버 기능</td></tr>
+        <tr><td><strong>쓰는 곳</strong></td><td>인스타, 넷플릭스</td><td>Gmail, 유튜브</td><td>틱톡, 노션</td></tr>
+      </tbody>
+    </table>
+    <div class="grid-2 mb-16">
+      <div class="card" style="border-color:#111; padding:16px;">
+        <h4 class="mb-8">🎯 AI Studio에서 뭘 고르나요?</h4>
+        <p class="secondary mb-8">→ 대부분 <strong>React</strong> 선택하면 됩니다!</p>
+        <p class="secondary">가장 널리 쓰이고, AI가 가장 잘 만들어주는 프레임워크입니다.</p>
+      </div>
+      <div class="card-alt" style="padding:16px;">
+        <h4 class="mb-8">🔧 도구별 기본 프레임워크</h4>
+        <p class="secondary mb-8"><strong>AI Studio:</strong> React (선택 가능)</p>
+        <p class="secondary mb-8"><strong>Lovable:</strong> React + Tailwind (고정)</p>
+        <p class="secondary"><strong>Firebase:</strong> Next.js (React 기반, 고정)</p>
+      </div>
+    </div>
+    <div class="highlight-box">프레임워크를 몰라도 됩니다! AI가 알아서 써줘요. "React가 레고, Next.js는 레고+설명서" 정도만 기억하세요.</div>
+  </div>
+</section>
+
+<section class="slide divider" id="s15">
+<div class="inner">
+<h1>복습</h1>
+<p>기획에서 바이브코딩까지</p>
+</div>
+</section>
+
+<section class="slide" id="s16">
+<div class="inner">
+<h2>지금까지 우리가 한 것</h2>
+<p class="subtitle">Phase 1-4의 핵심을 한 눈에 정리합니다.</p>
+<div class="grid-4 mb-24">
+<div class="card">
+<div class="pill mb-12">Phase 1</div>
+<h4>공감 &amp; 발견</h4>
+<p class="secondary">공감지도 · 5Whys · HMW · 문제인터뷰</p>
+<p class="mt-16" style="font-weight:600; color:#111;">"진짜 문제 찾기"</p>
+</div>
+<div class="card">
+<div class="pill mb-12">Phase 2</div>
+<h4>사용자 이해</h4>
+<p class="secondary">페르소나 · JTBD · Mom Test</p>
+<p class="mt-16" style="font-weight:600; color:#111;">"사용자 깊이 이해"</p>
+</div>
+<div class="card">
+<div class="pill mb-12">Phase 3</div>
+<h4>시장 검증</h4>
+<p class="secondary">VPC · BMC · 가설검증</p>
+<p class="mt-16" style="font-weight:600; color:#111;">"시장성 확인"</p>
+</div>
+<div class="card">
+<div class="pill mb-12">Phase 4</div>
+<h4>설계 완성</h4>
+<p class="secondary">IA · 와이어프레임 · PRD</p>
+<p class="mt-16" style="font-weight:600; color:#111;">"설계 완성"</p>
+</div>
+</div>
+<div class="highlight-box">PRD가 곧 프롬프트다 — 기획서가 좋으면 바이브코딩 결과도 좋다</div>
+</div>
+</section>
+
+<section class="slide" id="s17">
+<div class="inner">
+<h2>기획 산출물이 곧 프롬프트 재료</h2>
+<p class="subtitle">여러분이 만든 기획 문서 하나하나가 프롬프트의 핵심 재료가 됩니다.</p>
+<div class="grid-2 mb-24">
+<div class="card">
+<h3 class="mb-12">기획 산출물</h3>
+<div style="display:flex; flex-direction:column; gap:10px;">
+<div class="card-alt" style="padding:12px 16px;"><strong>IA (정보구조)</strong> — 화면 목록, 메뉴 구조</div>
+<div class="card-alt" style="padding:12px 16px;"><strong>User Journey</strong> — 사용자 행동 흐름</div>
+<div class="card-alt" style="padding:12px 16px;"><strong>PRD (기획서)</strong> — 기능 명세, 기술 스택</div>
+<div class="card-alt" style="padding:12px 16px;"><strong>와이어프레임</strong> — 화면 레이아웃</div>
+</div>
+</div>
+<div class="card">
+<h3 class="mb-12">프롬프트 요소</h3>
+<div style="display:flex; flex-direction:column; gap:10px;">
+<div class="card-alt" style="padding:12px 16px;">→ <strong>Pages &amp; Sections</strong> (화면 구조)</div>
+<div class="card-alt" style="padding:12px 16px;">→ <strong>Features</strong> (기능 목록)</div>
+<div class="card-alt" style="padding:12px 16px;">→ <strong>Context + Task + Tech</strong></div>
+<div class="card-alt" style="padding:12px 16px;">→ <strong>Design System</strong> (디자인 참고)</div>
+</div>
+</div>
+</div>
+<div class="highlight-box">STEP 3에서 각 산출물별 변환법을 자세히 배웁니다. 우선 바이브코딩부터 체험!</div>
+</div>
+</section>
+
+<section class="slide divider" id="s18">
+<div class="inner">
+<h1>바이브코딩이란?</h1>
+<p>프롬프트로 AI에게 코딩을 시키는 새로운 방법</p>
+</div>
+</section>
+
+<section class="slide" id="s19">
+<div class="inner">
+<h2>바이브코딩 = AI에게 코딩 시키기</h2>
+<p class="subtitle">프롬프트(자연어)로 AI에게 코딩을 지시하여 앱을 만드는 방법</p>
+<div class="grid-3 mb-24">
+<div class="card" style="text-align:center;">
+<h4>코딩 지식 불필요</h4>
+<p class="secondary mt-16">자연어로 설명하면 AI가 코드를 생성합니다</p>
+</div>
+<div class="card" style="text-align:center;">
+<h4>프롬프트 품질 = 결과물 품질</h4>
+<p class="secondary mt-16">구체적일수록 좋은 앱이 나옵니다</p>
+</div>
+<div class="card" style="text-align:center;">
+<h4>UCD 기획이 핵심</h4>
+<p class="secondary mt-16">기획이 좋을수록 결과가 좋습니다</p>
+</div>
+</div>
+<div class="card-alt" style="text-align:center; padding:20px;">
+<p style="font-size:1.1rem; font-style:italic; color:#666;">"바이브를 타면서 코딩한다"</p>
+<p class="secondary mt-16">— Andrej Karpathy</p>
+</div>
+</div>
+</section>
+
+<section class="slide" id="s20">
+<div class="inner">
+<h2>오늘 사용할 도구</h2>
+<p class="subtitle">각 도구의 특성을 이해하고 상황에 맞게 선택하세요.</p>
+<div class="grid-3 mb-24">
+<div class="card">
+<h3>AI Studio</h3>
+<p class="secondary mb-12">aistudio.google.com</p>
+<p>무료 · 프론트엔드 중심 · 프롬프트 실험실</p>
+</div>
+<div class="card">
+<h3>Lovable</h3>
+<p class="secondary mb-12">lovable.dev</p>
+<p>유료(무료 체험) · 풀스택 CRUD 앱</p>
+</div>
+<div class="card">
+<h3>Firebase Studio</h3>
+<p class="secondary mb-12">firebase.studio</p>
+<p>Google 풀스택 · DB + 인증 + 배포</p>
+</div>
+</div>
+<table class="tbl">
+<thead><tr><th>항목</th><th>AI Studio</th><th>Lovable</th><th>Firebase Studio</th></tr></thead>
+<tbody>
+<tr><td>비용</td><td>무료</td><td>유료 (무료 체험)</td><td>무료</td></tr>
+<tr><td>난이도</td><td>★☆☆☆☆</td><td>★★★☆☆</td><td>★★★★☆</td></tr>
+<tr><td>DB 지원</td><td>없음</td><td>Supabase</td><td>Firestore</td></tr>
+<tr><td>배포</td><td>수동</td><td>자동 URL</td><td>자동 URL</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="slide divider" id="s21">
+<div class="inner">
+<p style="color:rgba(255,255,255,0.6); margin-bottom:8px;">STEP 1</p>
+<h1>워밍업: 게임으로 시작하기</h1>
+<p>★☆☆☆☆ · 5분 · AI Studio</p>
+</div>
+</section>
+
+<section class="slide" id="s22">
+<div class="inner">
+<div class="pill mb-12">실습 1 · 2분 · AI Studio</div>
+<h2>30초 만에 가위바위보 게임 만들기</h2>
+<p class="subtitle">AI Studio Build 모드에서 아래 프롬프트를 그대로 입력하세요.</p>
+<div class="grid-2 mb-24">
+<div>
+<h4 class="mb-12">따라하기</h4>
+<div style="display:flex; gap:12px; align-items:flex-start; margin-bottom:14px;">
+<div class="step-num" style="width:28px; height:28px; font-size:0.8rem;">1</div>
+<div><p style="font-weight:700;">aistudio.google.com 접속</p><p class="secondary">구글 계정으로 로그인</p></div>
+</div>
+<div style="display:flex; gap:12px; align-items:flex-start; margin-bottom:14px;">
+<div class="step-num" style="width:28px; height:28px; font-size:0.8rem;">2</div>
+<div><p style="font-weight:700;">좌측 메뉴 → "Build" 클릭</p><p class="secondary">앱 생성 모드로 진입</p></div>
+</div>
+<div style="display:flex; gap:12px; align-items:flex-start; margin-bottom:14px;">
+<div class="step-num" style="width:28px; height:28px; font-size:0.8rem;">3</div>
+<div><p style="font-weight:700;">오른쪽 프롬프트 붙여넣기 → Enter</p></div>
+</div>
+<div style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="width:28px; height:28px; font-size:0.8rem;">4</div>
+<div><p style="font-weight:700;">30초 기다리기 → 게임 완성!</p></div>
+</div>
+</div>
+<div>
+<h4 class="mb-8">입력할 프롬프트</h4>
+<div class="code-block">가위바위보 게임을 만들어줘.
+
+기능:
+- 가위, 바위, 보 3개 버튼
+- 버튼을 누르면 컴퓨터가 랜덤으로 선택
+- 결과를 "승리! 🎉" / "패배 😢" / "무승부 🤝"로 표시
+- 전적 (승/패/무)을 화면 상단에 표시
+- "초기화" 버튼으로 전적 리셋
+
+디자인:
+- 가위✌️ 바위✊ 보🖐️ 이모지를 크게 표시 (80px)
+- 배경: 흰색, 포인트: #111111
+- 둥근 카드 UI, 깔끔한 미니멀 디자인
+- 결과 나올 때 간단한 애니메이션
+
+한국어 UI로 만들어줘.</div>
+</div>
+</div>
+<div class="highlight-box">게임이 나타났다면 성공! 프롬프트 한 번으로 작동하는 게임을 만들었습니다.</div>
+</div>
+</section>
+
+<section class="slide" id="s23">
+<div class="inner">
+<div class="pill mb-12">실습 2 · 3분 · AI Studio</div>
+<h2>숫자 맞추기 게임 + 수정 요청 연습</h2>
+<p class="subtitle">게임을 먼저 만들고, 채팅으로 기능을 추가하는 연습을 합니다.</p>
+<div class="grid-2">
+<div>
+<h4 class="mb-8">① 먼저 이 프롬프트로 게임 만들기</h4>
+<div class="code-block mb-16">1~100 사이의 숫자 맞추기 게임을 만들어줘.
+
+기능:
+- 컴퓨터가 1~100 사이 랜덤 숫자 선택
+- 사용자가 숫자를 입력하면 "더 높아요 ⬆️" 또는 "더 낮아요 ⬇️" 힌트
+- 정답 맞추면 "🎉 정답! N번 만에 맞추셨어요!" 표시
+- 시도 횟수 카운트
+- "다시 하기" 버튼
+
+디자인:
+- 큰 숫자 입력창 (가운데 정렬)
+- 힌트 텍스트가 크게 표시
+- 미니멀 흑백 디자인
+- 배경: #ffffff, 포인트: #111
+
+한국어 UI로 만들어줘.</div>
+<h4 class="mb-8">② 만들어진 후, 채팅으로 기능 추가</h4>
+<div class="card-alt" style="padding:14px; font-size:0.88rem;">
+<p class="mb-8" style="font-weight:700;">수정 요청 1:</p>
+<p>"시도 횟수에 따라 등급을 매겨줘. 5번 이내: 천재, 10번 이내: 고수, 15번 이내: 보통, 그 이상: 분발하세요"</p>
+<p class="mb-8 mt-16" style="font-weight:700;">수정 요청 2:</p>
+<p>"난이도 선택 기능을 추가해줘. 쉬움(1~50), 보통(1~100), 어려움(1~500)"</p>
+</div>
+</div>
+<div>
+<h4 class="mb-8">학습 포인트</h4>
+<div style="display:flex; flex-direction:column; gap:12px;">
+<div class="card" style="padding:16px;">
+<h4>처음부터 완벽하지 않아도 OK</h4>
+<p class="secondary mt-16">먼저 핵심 기능만 만들고, 수정 요청으로 하나씩 추가</p>
+</div>
+<div class="card" style="padding:16px;">
+<h4>수정 요청 = 한 번에 하나</h4>
+<p class="secondary mt-16">여러 기능을 동시에 요청하면 AI가 혼란. 하나씩 추가!</p>
+</div>
+<div class="card" style="padding:16px;">
+<h4>구체적으로 요청</h4>
+<p class="secondary mt-16">"더 재밌게" ✗ → "등급 시스템 추가" ✓</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="slide" id="s24">
+<div class="inner">
+<h2>같은 앱, 다른 프롬프트 — 이렇게 달라집니다</h2>
+<p class="subtitle">프롬프트 품질 = 결과물 품질. 3단계 진화를 비교해보세요.</p>
+<div class="grid-3 mb-24">
+<div class="card">
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+<h4>V1: 초보</h4><span class="stars">★☆☆☆☆</span>
+</div>
+<div class="code-block mb-12">자기소개 페이지 만들어줘</div>
+<p class="secondary" style="font-style:italic; margin-bottom:8px;">→ 기본 레이아웃, 영어 UI</p>
+<p class="secondary">✗ 역할 없음<br>✗ 맥락 없음<br>✗ 디자인 없음</p>
+</div>
+<div class="card">
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+<h4>V2: 구조화</h4><span class="stars">★★★☆☆</span>
+</div>
+<div class="code-block mb-12">너는 웹 디자이너야.
+28세 직장인 김민수의 자기소개 페이지를 만들어줘.
+취미: 요리, 자전거
+스타일: 미니멀, 다크 테마
+한국어 UI로 만들어줘.</div>
+<p class="secondary" style="font-style:italic; margin-bottom:8px;">→ 한국어 UI, 다크 테마</p>
+<p class="secondary">✓ 역할 부여<br>✓ 맥락 제공<br>△ 디자인 애매</p>
+</div>
+<div class="card" style="border-color:#111;">
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+<h4>V3: 고도화</h4><span class="stars">★★★★★</span>
+</div>
+<div class="code-block mb-12">Role: 시니어 프론트엔드 개발자
+Task: 포트폴리오 자기소개 SPA 제작
+Context: 28세 UX 디자이너 김민수
+Design:
+- 참고: Apple.com 미니멀 스타일
+- Color: #0f172a + #10b981
+- Font: Pretendard
+- 반응형 (모바일 최적화)
+Sections: Hero, About, Skills, Contact
+Tech: React + Tailwind CSS</div>
+<p class="secondary" style="font-style:italic; margin-bottom:8px;">→ 프로페셔널 퀄리티</p>
+<p class="secondary">✓ 역할 ✓ 맥락 ✓ 디자인 ✓ 기술</p>
+</div>
+</div>
+<div class="highlight-box">Role → Context → Design → Tech 순서로 정보를 추가할수록 결과물이 정교해집니다.</div>
+</div>
+</section>
+
+<section class="slide divider" id="s25">
+<div class="inner">
+<p style="color:rgba(255,255,255,0.6); margin-bottom:8px;">STEP 2</p>
+<h1>AI Studio 프롬프트 고도화</h1>
+<p>★★☆☆☆ · 15분</p>
+</div>
+</section>
+
+<section class="slide" id="s26">
+<div class="inner">
+<h2>프롬프트 엔지니어링 5원칙</h2>
+<p class="subtitle">AI에게 일을 잘 시키는 5가지 핵심 원칙</p>
+<div style="display:flex; flex-direction:column; gap:14px;">
+<div class="card" style="display:flex; gap:16px; align-items:center;">
+<div class="step-num">1</div>
+<div><h4>역할(Role) 부여</h4><p class="secondary">"너는 시니어 프론트엔드 개발자야" — AI에게 전문성을 부여</p></div>
+</div>
+<div class="card" style="display:flex; gap:16px; align-items:center;">
+<div class="step-num">2</div>
+<div><h4>맥락(Context) 제공</h4><p class="secondary">누구를 위한, 어떤 상황인지 배경 정보를 제공</p></div>
+</div>
+<div class="card" style="display:flex; gap:16px; align-items:center;">
+<div class="step-num">3</div>
+<div><h4>구체적 지시(Task)</h4><p class="secondary">기능, 섹션, 동작을 구체적으로 명시</p></div>
+</div>
+<div class="card" style="display:flex; gap:16px; align-items:center;">
+<div class="step-num">4</div>
+<div><h4>디자인 시스템(Design)</h4><p class="secondary">컬러, 폰트, 레퍼런스 사이트를 지정</p></div>
+</div>
+<div class="card" style="display:flex; gap:16px; align-items:center;">
+<div class="step-num">5</div>
+<div><h4>제약 조건(Constraints)</h4><p class="secondary">금지사항과 필수사항을 명확히 설정</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="slide" id="s27">
+<div class="inner">
+<h2>System Instructions — AI Studio만의 무기</h2>
+<p class="subtitle mb-20">AI에게 역할과 규칙을 한번만 설정하면 대화 내내 유지됩니다. <strong>AI Studio에만</strong> 있는 기능!</p>
+<div class="grid-2 mb-16">
+<div>
+<div class="card mb-12" style="border-color:#111; padding:0; overflow:hidden;">
+<div style="background:#1a1a2e; color:#fff; padding:8px 12px; font-size:0.75rem; display:flex; align-items:center; gap:8px;">
+<span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#ff5f56;"></span>
+<span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#ffbd2e;"></span>
+<span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#27c93f;"></span>
+<span style="margin-left:8px; color:rgba(255,255,255,0.6);">Google AI Studio</span>
+</div>
+<div style="display:flex; min-height:180px;">
+<div style="flex:1; background:#f8f9fa; padding:12px; border-right:1px solid #e5e5e5;">
+<div style="font-size:0.7rem; color:#999; margin-bottom:6px;">💬 Chat</div>
+<div style="background:#fff; border:1px solid #e5e5e5; border-radius:6px; padding:8px; font-size:0.75rem; color:#666;">뽀모도로 타이머를 만들어줘...</div>
+</div>
+<div style="width:45%; background:#fff; padding:12px;">
+<div style="font-size:0.7rem; color:#999; margin-bottom:4px;">⚙️ Advanced settings</div>
+<div style="font-size:0.7rem; font-weight:700; color:#111; margin-bottom:4px;">System Instructions</div>
+<div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:4px; padding:6px 8px; font-size:0.68rem; color:#166534; line-height:1.5;">너는 시니어 프론트엔드 개발자야.<br>1. 한국어 주석 포함<br>2. 반응형 디자인 필수<br>3. 시맨틱 HTML 사용</div>
+<div style="font-size:0.7rem; font-weight:700; color:#111; margin:8px 0 4px;">Output</div>
+<div style="display:flex; gap:4px;">
+<span style="font-size:0.65rem; background:#e5e5e5; padding:2px 8px; border-radius:3px; color:#333;">UI</span>
+<span style="font-size:0.65rem; background:#111; color:#fff; padding:2px 8px; border-radius:3px;">Code</span>
+</div>
+</div>
+</div>
+</div>
+<p class="secondary mt-8" style="font-size:0.8rem;">오른쪽 패널 → System Instructions에 역할·규칙 입력 → 대화 내내 유지</p>
+</div>
+<div>
+<div class="card mb-12">
+<h4 class="mb-8">System Instructions 예시</h4>
+<div class="code-block" style="font-size:0.82rem;">너는 시니어 프론트엔드 개발자야.
+다음 규칙을 항상 따라:
+1. 모든 코드는 한국어 주석 포함
+2. 반응형 디자인 필수 (모바일 우선)
+3. 색상은 #0f172a (메인) + #10b981 (포인트)만 사용
+4. Pretendard 폰트 사용
+5. 시맨틱 HTML 구조 사용</div>
+</div>
+<div class="card-alt" style="padding:14px;">
+<h4 class="mb-8">🔑 설정 위치</h4>
+<p class="secondary">AI Studio → 화면 오른쪽 패널 → <strong>Advanced settings</strong> → System Instructions 입력</p>
+</div>
+</div>
+</div>
+<table class="tbl mb-16">
+<thead><tr><th>도구</th><th>System Instructions</th><th>역할 설정 방법</th></tr></thead>
+<tbody>
+<tr><td><strong>AI Studio</strong></td><td style="color:#111;">✅ 있음 (별도 필드)</td><td>Advanced Settings 패널에 입력</td></tr>
+<tr><td><strong>Lovable</strong></td><td style="color:#999;">❌ 없음</td><td>프롬프트 안에 <code>Role:</code> 직접 작성</td></tr>
+<tr><td><strong>Firebase Studio</strong></td><td style="color:#999;">❌ 없음</td><td>프롬프트 안에 역할/기술스택 명시</td></tr>
+</tbody>
+</table>
+<div class="highlight-box">AI Studio는 System Instructions로 역할을 "고정"할 수 있어서 일관된 결과가 나옵니다. Lovable/Firebase는 프롬프트 자체에 모든 걸 담아야 해요!</div>
+</div>
+</section>
+
+<section class="slide" id="s28">
+<div class="inner">
+<div class="pill mb-12">실습 3 · 5분 · AI Studio</div>
+<h2>내 자기소개 페이지 만들기</h2>
+<p class="subtitle">5원칙을 적용한 고도화 프롬프트로 자기소개 페이지를 만듭니다.</p>
+<div class="grid-2">
+<div>
+<div class="code-block">
+<div class="label">CASE A: 아이디어가 있는 경우</div>
+Role: 시니어 프론트엔드 개발자
+Task: '프레시키퍼' 앱의 메인 대시보드 웹페이지 제작
+
+Context:
+- 서비스: 냉장고 식재료 유통기한을 AI로 관리하고, 남은 재료로 레시피 추천
+- 타겟: 25-35세 1인 가구 직장인
+- 핵심 기능: 식재료 목록, 레시피 추천 버튼, 알림 설정
+
+Design:
+- 스타일: 깔끔한 카드 UI, 친환경 느낌
+- 메인 컬러: #10b981 (초록), 배경: #ffffff
+- 폰트: Pretendard
+- 모바일 반응형
+
+Sections:
+1. 헤더: 로고 + 알림 아이콘
+2. 식재료 카드 리스트 (이름, D-day, 상태 색상)
+3. 하단 탭바: 홈, 스캔, 레시피, 설정
+
+샘플 데이터 5개를 포함. 한국어 UI.</div>
+</div>
+<div>
+<div class="code-block">
+<div class="label">CASE B: 아이디어가 없는 경우</div>
+Role: 시니어 프론트엔드 개발자
+Task: '하루습관' 습관 트래커 앱의 메인 화면 제작
+
+Context:
+- 서비스: 매일 실천할 습관을 체크하고 주간 통계를 보여주는 앱
+- 타겟: 자기계발에 관심 있는 20대
+- 핵심 기능: 습관 체크리스트, 주간 달성률 차트, 동기부여 문구
+
+Design:
+- 스타일: 미니멀, 부드러운 느낌
+- 메인 컬러: #8b5cf6 (보라), 배경: #ffffff
+- 폰트: Pretendard
+- 모바일 반응형
+
+Sections:
+1. 헤더: 날짜 + 인사말
+2. 오늘의 습관 카드 (토글 체크, 아이콘)
+3. 주간 달성률 바 차트
+4. 하단 탭바: 오늘, 통계, 설정
+
+샘플 습관 5개 포함. 한국어 UI.</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="slide" id="s29">
+<div class="inner">
+<div class="pill mb-12">실습 4 · 5분 · AI Studio</div>
+<h2>뽀모도로 타이머 앱 만들기</h2>
+<p class="subtitle">인터랙티브한 유틸리티 앱을 구조화된 프롬프트로 만듭니다.</p>
+<div class="code-block mb-24">Role: 시니어 프론트엔드 개발자
+Task: 뽀모도로 타이머 웹앱 제작
+
+Context:
+- 용도: 집중력 향상을 위한 타이머
+- 타겟: 시험 공부하는 대학생
+- 핵심 개념: 25분 집중 → 5분 휴식 → 4세트 후 15분 긴 휴식
+
+Features:
+1. 원형 타이머 (남은 시간을 원형 프로그레스로 표시)
+2. 시작 / 일시정지 / 리셋 버튼
+3. 모드 표시: "집중 🔥" / "휴식 ☕" / "긴 휴식 🌴"
+4. 자동으로 집중 → 휴식 전환 (알림 소리)
+5. 오늘 완료한 세트 수 표시
+6. 집중 시간 커스텀 설정 (15/25/30/45분)
+
+Design:
+- 스타일 참고: 미니멀 시계 앱
+- 배경: #0f172a (다크), 텍스트: #ffffff
+- 포인트 컬러: 집중=#ef4444 (빨강), 휴식=#10b981 (초록)
+- 원형 타이머 크기: 화면 중앙, 300px
+- 폰트: Pretendard, 숫자는 모노스페이스
+
+Constraints:
+- 모바일에서도 사용 가능 (반응형)
+- 한국어 UI
+- 브라우저 알림 퍼미션 요청</div>
+<div class="highlight-box">5원칙이 모두 적용된 프롬프트입니다. Role · Context · Task · Design · Constraints 확인!</div>
+</div>
+</section>
+
+<section class="slide" id="s30">
+<div class="inner">
+<h2>수정 요청 잘 하는 법</h2>
+<p class="subtitle">AI에게 수정을 요청할 때 구체적일수록 결과가 좋습니다.</p>
+<div class="grid-2 mb-24">
+<div class="card">
+<h4 class="mb-8">나쁜 수정 요청</h4>
+<div class="code-block">"더 예쁘게 해줘"
+"색깔 좀 바꿔줘"
+"전체적으로 수정해줘"</div>
+<p class="secondary mt-16">→ 모호해서 AI가 엉뚱하게 수정</p>
+</div>
+<div class="card" style="border-color:#111;">
+<h4 class="mb-8">좋은 수정 요청</h4>
+<div class="code-block">"헤더의 배경색을 #1e293b로 바꾸고,
+카드 간격을 24px로 늘려줘"
+
+"하단 탭바에 '알림' 탭을 추가하고
+아이콘은 종 모양으로 해줘"</div>
+<p class="secondary mt-16">→ 위치 + 속성 + 값이 명확</p>
+</div>
+</div>
+<div style="display:flex; flex-direction:column; gap:10px;">
+<div class="card-alt" style="padding:14px 20px;"><strong>Tip 1:</strong> 한 번에 하나씩 수정 요청 — 여러 개를 한꺼번에 하면 AI가 혼란</div>
+<div class="card-alt" style="padding:14px 20px;"><strong>Tip 2:</strong> 위치 + 속성 + 값을 명시 — "어디의 무엇을 어떻게"</div>
+<div class="card-alt" style="padding:14px 20px;"><strong>Tip 3:</strong> 변경 전/후를 비교 확인 — 의도대로 바뀌었는지 검증</div>
+</div>
+</div>
+</section>
+
+<section class="slide" id="s31">
+  <div class="inner">
+    <div class="pill mb-12">실습 · 5분 · AI Studio</div>
+    <h2>미니 체스 게임 만들기</h2>
+    <p class="subtitle">AI Studio로 2인 플레이 체스 게임을 만듭니다.</p>
+    <div class="grid-2 mt-16">
+      <div class="card">
+        <h4>따라하기</h4>
+        <div class="mb-8" style="display:flex;align-items:center;gap:8px;"><div class="step-num">1</div><span>AI Studio 접속 후 새 채팅 시작</span></div>
+        <div class="mb-8" style="display:flex;align-items:center;gap:8px;"><div class="step-num">2</div><span>아래 프롬프트 전체 복사</span></div>
+        <div class="mb-8" style="display:flex;align-items:center;gap:8px;"><div class="step-num">3</div><span>생성된 코드 → 우측 상단 <strong>Run</strong> 클릭</span></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div class="step-num">4</div><span>체스판에서 말을 클릭해 이동 확인</span></div>
+        <div class="highlight-box mt-16">체스는 규칙이 복잡하지만, 프롬프트에 규칙을 상세히 적으면 AI가 구현합니다!</div>
+      </div>
+      <div>
+        <h4 class="mb-8">프롬프트 복사하기</h4>
+        <div class="code-block">체스 게임을 만들어줘.
+
+기능:
+- 8x8 체스판에 모든 말 배치 (킹, 퀸, 룩, 비숍, 나이트, 폰)
+- 2인 플레이 (흑/백 번갈아 턴)
+- 말을 클릭하면 이동 가능한 칸을 하이라이트
+- 각 말의 이동 규칙 구현 (폰: 전진, 첫수 2칸 / 나이트: L자 / 비숍: 대각선 등)
+- 잡은 말 목록 표시
+- 현재 턴 표시 ("흰색 차례" / "검은색 차례")
+- 체크 상태 경고 표시
+
+디자인:
+- 체스판: 밝은칸 #f0d9b5, 어두운칸 #b58863
+- 말: 유니코드 체스 문자 사용 (♔♕♖♗♘♙ / ♚♛♜♝♞♟)
+- 선택한 말: 노란 테두리
+- 이동 가능 칸: 반투명 초록 동그라미
+- 배경: #1a1a2e (다크), 사이드 패널: 잡은 말 + 턴 정보
+
+한국어 UI로 만들어줘.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s32">
+  <div class="inner">
+    <div class="pill mb-12">실습 · 5분 · AI Studio</div>
+    <h2>MBTI 스타일 심리 테스트 만들기</h2>
+    <p class="subtitle">질문에 답하면 성격 유형을 알려주는 심리 테스트 앱</p>
+    <div class="grid-2 mt-16">
+      <div class="code-block">MBTI 스타일 심리 테스트 웹앱을 만들어줘.
+
+기능:
+- 10개의 2지선다 질문 (A or B)
+- 각 질문은 카드 형태로 한 장씩 표시
+- 프로그레스 바 (1/10, 2/10...)
+- 답변에 따라 4가지 유형 중 하나로 분류
+- 결과 화면: 유형 이름 + 특징 설명 + 어울리는 직업/취미
+- 결과 공유 버튼 (링크 복사)
+- "다시 하기" 버튼
+
+유형 4가지:
+1. 🔥 열정적인 리더: 도전적이고 추진력 강한 타입
+2. 🎨 창의적인 예술가: 감성적이고 독창적인 타입
+3. 🧠 분석적인 전략가: 논리적이고 체계적인 타입
+4. 🤝 따뜻한 조력자: 공감능력 높고 협력적인 타입
+
+질문 예시:
+Q1. 주말에 뭘 하고 싶나요?
+  A: 새로운 곳 탐험 / B: 집에서 쉬기
+Q2. 결정할 때 뭘 따르나요?
+  A: 논리와 데이터 / B: 직감과 느낌
+(나머지 8개도 만들어줘)
+
+디자인:
+- 배경: 그라데이션 파스텔 (민트 #e0f7fa → 라벤더 #f3e5f5)
+- 카드: 흰색, 큰 글씨, 둥근 모서리 (16px)
+- 선택 버튼: 넓고 터치하기 좋은 크기
+- 결과 화면: 유형별 다른 색상 배경
+- 모바일 최적화
+
+한국어 UI로 만들어줘.</div>
+      <div class="card">
+        <h4 class="mb-12">이런 게 만들어져요</h4>
+        <p class="secondary mb-8">✅ 10문항 순서대로 카드 전환</p>
+        <p class="secondary mb-8">✅ 진행률 바 자동 증가</p>
+        <p class="secondary mb-8">✅ 4가지 결과 페이지</p>
+        <p class="secondary mb-20">✅ 링크 복사 공유</p>
+        <div class="highlight-box">심리 테스트는 SNS에서 인기 폭발! 실제로 공유되는 앱을 만들어보세요.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s33">
+  <div class="inner">
+    <div class="pill mb-12">실습 · 3분 · AI Studio</div>
+    <h2>점심 뭐 먹지? 메뉴 추천기</h2>
+    <p class="subtitle">룰렛 돌리면 오늘의 점심 메뉴를 추천해주는 앱</p>
+    <div class="grid-2 mt-16">
+      <div class="card">
+        <h4 class="mb-12">왜 이 앱이 좋은가요?</h4>
+        <p class="secondary mb-8">🎯 실제로 매일 쓸 수 있는 실용 앱</p>
+        <p class="secondary mb-8">🎨 애니메이션 구현 연습</p>
+        <p class="secondary mb-8">⚙️ 커스텀 데이터 추가/삭제 UX</p>
+        <p class="secondary mb-20">📱 모바일 최적화 패턴 학습</p>
+        <div class="highlight-box">실용적이고 재미있는 앱 — 친구들에게 바로 보여줄 수 있어요!</div>
+      </div>
+      <div class="code-block">점심 메뉴 추천 룰렛 웹앱을 만들어줘.
+
+기능:
+- 원형 룰렛에 메뉴 8개 표시
+- "돌려!" 버튼: 룰렛 회전 (3-5초 스핀 애니메이션)
+- 당첨 메뉴를 크게 표시 + 🎉 효과
+- 기본 메뉴: 김치찌개, 돈까스, 비빔밥, 파스타,
+  짜장면, 초밥, 삼겹살, 햄버거
+- 메뉴 추가/삭제 기능 (커스텀 룰렛)
+- "이건 싫어!" 버튼: 해당 메뉴 제외 후 재돌리기
+- 오늘의 추천 히스토리 표시
+
+디자인:
+- 룰렛: 각 메뉴마다 다른 파스텔 색상
+- 중앙에 삼각형 화살표 (당첨 포인터)
+- 버튼: 크고 둥근 빨간 버튼 ("돌려!")
+- 당첨 시 confetti 애니메이션
+- 배경: #fff5f5 (따뜻한 느낌)
+- 모바일 최적화
+
+한국어 UI로 만들어줘.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s34">
+  <div class="inner">
+    <div class="pill mb-12">실습 · 5분 · AI Studio</div>
+    <h2>오늘의 운세 타로 카드 앱</h2>
+    <p class="subtitle">카드를 뒤집으면 오늘의 운세를 알려주는 신비로운 앱</p>
+    <div class="grid-2 mt-16">
+      <div class="code-block">오늘의 운세를 알려주는 타로 카드 웹앱을 만들어줘.
+
+기능:
+- 뒤집어진 카드 5장이 나란히 배치
+- 카드 클릭 시 3D 플립 애니메이션
+- 카드마다 다른 운세 (연애운, 금전운, 건강운,
+  학업운, 행운의 숫자)
+- 각 카드: 이모지 + 제목 + 상세 운세 문구 3-4줄
+- 5장 모두 열면 "오늘의 종합 운세" 표시 (상/중/하)
+- 하루 한 번만 열람 (localStorage로 체크)
+- 자정에 리셋 ("내일 다시 와주세요!")
+- "친구에게 공유하기" 버튼
+
+디자인:
+- 배경: #0f0f23 (짙은 남색, 신비로운 느낌)
+- 카드 뒷면: 보라색 그라데이션 + 별/달 패턴
+- 카드 앞면: 짙은 보라 배경 + 금색 텍스트
+- 별이 반짝이는 배경 애니메이션
+- 폰트: 세리프 계열 (궁서체 느낌)
+- 모바일 최적화
+
+한국어 UI로 만들어줘.</div>
+      <div class="card">
+        <h4 class="mb-12">구현 포인트</h4>
+        <div class="mb-8" style="display:flex;align-items:center;gap:8px;"><div class="step-num">1</div><span>CSS 3D transform으로 카드 플립</span></div>
+        <div class="mb-8" style="display:flex;align-items:center;gap:8px;"><div class="step-num">2</div><span>localStorage로 하루 제한 체크</span></div>
+        <div class="mb-8" style="display:flex;align-items:center;gap:8px;"><div class="step-num">3</div><span>별 반짝임 CSS keyframe 애니메이션</span></div>
+        <div style="display:flex;align-items:center;gap:8px;"><div class="step-num">4</div><span>5장 모두 공개 시 종합 결과 계산</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s35">
+  <div class="inner">
+    <div class="pill mb-12">실습 · 3분 · AI Studio</div>
+    <h2>AI 컬러 팔레트 생성기</h2>
+    <p class="subtitle">키워드를 입력하면 어울리는 색상 조합을 추천해주는 디자인 도구</p>
+    <div class="grid-2 mt-16">
+      <div class="card">
+        <h4 class="mb-12">키워드 → 팔레트 예시</h4>
+        <div class="mb-8">
+          <p class="secondary mb-8"><strong>봄</strong></p>
+          <div style="display:flex;gap:6px;margin-bottom:12px;">
+            <div style="width:36px;height:36px;border-radius:6px;background:#FFB7C5;"></div>
+            <div style="width:36px;height:36px;border-radius:6px;background:#FFDAB9;"></div>
+            <div style="width:36px;height:36px;border-radius:6px;background:#98FB98;"></div>
+            <div style="width:36px;height:36px;border-radius:6px;background:#87CEEB;"></div>
+            <div style="width:36px;height:36px;border-radius:6px;background:#E6E6FA;"></div>
+          </div>
+          <p class="secondary mb-8"><strong>바다</strong></p>
+          <div style="display:flex;gap:6px;">
+            <div style="width:36px;height:36px;border-radius:6px;background:#001F3F;"></div>
+            <div style="width:36px;height:36px;border-radius:6px;background:#0074D9;"></div>
+            <div style="width:36px;height:36px;border-radius:6px;background:#39CCCC;"></div>
+            <div style="width:36px;height:36px;border-radius:6px;background:#7FDBFF;"></div>
+            <div style="width:36px;height:36px;border-radius:6px;background:#F0F8FF;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="code-block">컬러 팔레트 생성기 웹앱을 만들어줘.
+
+기능:
+- 키워드 입력 (예: "봄", "카페", "바다", "크리스마스")
+- 키워드에 어울리는 5색 팔레트 생성
+- 각 색상: HEX 코드 + 큰 색상 블록
+- 색상 블록 클릭 시 HEX 코드 복사 (클립보드)
+- "복사됨!" 토스트 메시지
+- 스페이스바로 새 팔레트 생성
+- 팔레트 잠금: 원하는 색상 고정 후 나머지만 변경
+- 팔레트 히스토리 (최근 5개)
+
+미리 만들어둘 키워드별 팔레트:
+- "봄": #FFB7C5, #FFDAB9, #98FB98, #87CEEB, #E6E6FA
+- "바다": #001F3F, #0074D9, #39CCCC, #7FDBFF, #F0F8FF
+- "카페": #3C1518, #69140E, #A44200, #D58936, #F2F0E4
+- 그 외 키워드: 랜덤 조화 색상 생성 알고리즘
+
+디자인:
+- 배경: #ffffff
+- 색상 블록: 정사각형 큰 사이즈 (200px)
+- 미니멀하고 깔끔한 레이아웃
+- 모바일 반응형
+
+한국어 UI로 만들어줘.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s36">
+  <div class="inner">
+    <div class="pill mb-12">실습 · 3분 · AI Studio</div>
+    <h2>D-Day 카운터 앱 만들기</h2>
+    <p class="subtitle">시험, 여행, 기념일까지 남은 날을 세어주는 실용 앱</p>
+    <div class="grid-2 mt-16">
+      <div class="code-block">D-Day 카운터 웹앱을 만들어줘.
+
+기능:
+- D-Day 추가 (제목, 날짜, 카테고리, 이모지 선택)
+- 카테고리: 시험📚, 여행✈️, 기념일💝, 약속📅, 기타⭐
+- 메인 화면: 카드 리스트로 모든 D-Day 표시
+- 각 카드: 이모지 + 제목 + "D-32" 큰 숫자 + 날짜
+- 지난 D-Day는 "D+N" 으로 표시 (회색 처리)
+- 가장 가까운 D-Day가 맨 위에 (자동 정렬)
+- D-Day 수정/삭제
+- 로컬 저장 (localStorage)
+
+디자인:
+- 배경: #ffffff
+- 카드: 카테고리별 왼쪽 색상 바
+  (시험: 파랑, 여행: 초록, 기념일: 분홍)
+- D-숫자: 아주 크게 (2.5rem), 굵게
+- 추가 버튼: 하단 고정 둥근 + 버튼
+- 미니멀 흑백 기반
+- 모바일 최적화
+
+한국어 UI, 샘플 D-Day 5개 포함.</div>
+      <div class="card">
+        <h4 class="mb-12">샘플 D-Day 예시</h4>
+        <p class="secondary mb-8">📚 기말고사 — <strong>D-12</strong></p>
+        <p class="secondary mb-8">✈️ 제주도 여행 — <strong>D-28</strong></p>
+        <p class="secondary mb-8">💝 100일 기념일 — <strong>D-5</strong></p>
+        <p class="secondary mb-8">📅 팀 프로젝트 발표 — <strong>D-3</strong></p>
+        <p class="secondary mb-20">⭐ 취업 면접 — <strong>D-1</strong></p>
+        <div class="highlight-box">가장 실용적인 앱! localStorage로 새로고침해도 데이터가 유지됩니다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s37">
+  <div class="inner">
+    <div class="pill mb-12">실습 · 3분 · AI Studio</div>
+    <h2>밸런스 게임 앱 만들기</h2>
+    <p class="subtitle">이거 vs 저거! 선택하면 실시간 통계를 보여주는 인터랙티브 게임</p>
+    <div class="grid-2 mt-16">
+      <div class="card">
+        <h4 class="mb-12">질문 목록 미리보기</h4>
+        <p class="secondary mb-8">1. 짜장면 vs 짬뽕</p>
+        <p class="secondary mb-8">2. 여름 vs 겨울</p>
+        <p class="secondary mb-8">3. 강아지 vs 고양이</p>
+        <p class="secondary mb-8">4. 현금 100만원 vs 내일 하루 쉬기</p>
+        <p class="secondary mb-8">5. 시간여행 vs 독심술</p>
+        <p class="secondary mb-20">... 총 10문항</p>
+        <div class="highlight-box">결과 화면: "당신은 N% 소수파입니다!" — 친구와 비교해보세요.</div>
+      </div>
+      <div class="code-block">밸런스 게임 웹앱을 만들어줘.
+
+기능:
+- "A vs B" 2지선다 질문 10개
+- 양쪽 버튼이 화면을 반으로 나눠서 크게 표시
+- 선택 후 그 자리에서 비율 통계 표시
+  (예: A 67% vs B 33%)
+- 통계 바 애니메이션으로 채워지기
+- "다음 질문" 자동 전환 (2초 후)
+- 진행률 프로그레스 바 (1/10)
+- 결과 화면: 내 선택 요약 + "N% 소수파" 멘트
+
+질문 목록:
+1. 짜장면 vs 짬뽕  2. 여름 vs 겨울
+3. 아침형 vs 저녁형  4. 강아지 vs 고양이
+5. 산 vs 바다  6. 떡볶이 vs 치킨
+7. 영화 vs 드라마
+8. 현금 100만원 vs 내일 하루 쉬기
+9. 시간여행 vs 독심술  10. 혼밥 vs 혼술
+
+디자인:
+- 화면 좌우 split-screen 레이아웃
+- A쪽: #3b82f6 (파랑), B쪽: #ef4444 (빨강)
+- 선택 후 숫자 카운트업 애니메이션
+- 모바일에서는 상하 분할
+- 글씨 크게, 터치하기 쉽게
+
+한국어 UI로 만들어줘.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s38">
+  <div class="inner">
+    <h2>AI Studio 실습 — 이것만 기억하세요!</h2>
+    <p class="subtitle mb-20">지금까지 배운 프롬프트 패턴을 정리합니다.</p>
+    <div class="grid-2">
+      <div class="card">
+        <h4 class="mb-12">잘 되는 프롬프트 패턴</h4>
+        <p class="secondary mb-8">✅ 기능을 번호 매겨서 나열하기</p>
+        <p class="secondary mb-8">✅ 디자인에 구체적 색상 코드 포함 (예: #3b82f6)</p>
+        <p class="secondary mb-8">✅ "모바일 최적화" 명시하기</p>
+        <p class="secondary mb-8">✅ "한국어 UI로 만들어줘" 마지막에 추가</p>
+        <p class="secondary">✅ "샘플 데이터 N개 포함" 요청하기</p>
+      </div>
+      <div class="card-alt">
+        <h4 class="mb-12">안 되면 이렇게</h4>
+        <p class="secondary mb-8">🔄 새로고침 후 다시 시도</p>
+        <p class="secondary mb-8">✂️ 프롬프트를 더 짧게 줄여보기</p>
+        <p class="secondary mb-8">🎯 기능을 3개로 줄이고 나중에 추가 요청</p>
+        <p class="secondary">📋 에러 메시지를 그대로 복사해서 채팅에 붙여넣기</p>
+      </div>
+    </div>
+    <div class="highlight-box mt-16">AI Studio는 연습장입니다. 마음껏 실험하세요 — 무료니까!</div>
+  </div>
+</section>
+
+<section class="slide" id="s39">
+  <div class="inner">
+    <div class="pill mb-12">🎉 STEP 2 마무리</div>
+    <h2>프론트엔드만으로 여기까지 만들었습니다!</h2>
+    <p class="subtitle mb-20">서버 없이, DB 없이 — 프롬프트와 프론트엔드만으로 이 모든 게 가능합니다.</p>
+    <div class="grid-3 mb-16">
+      <div class="card" style="text-align:center;">
+        <h4>✊✌️✋</h4>
+        <p class="secondary">가위바위보 게임</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <h4>🎯</h4>
+        <p class="secondary">숫자 맞추기</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <h4>♟️</h4>
+        <p class="secondary">체스 게임</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <h4>🧠</h4>
+        <p class="secondary">MBTI 심리테스트</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <h4>🍜</h4>
+        <p class="secondary">점심메뉴 추천기</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <h4>⚖️</h4>
+        <p class="secondary">밸런스 게임</p>
+      </div>
+    </div>
+    <div class="card-alt mb-16" style="border: 2px solid #111; padding:20px;">
+      <h4 class="mb-8">🕐 자유실습 시간 (10분)</h4>
+      <p class="secondary mb-8">지금까지 배운 프롬프트 패턴으로 <strong>나만의 아이디어</strong>를 AI Studio에서 만들어보세요!</p>
+      <div class="grid-2">
+        <div>
+          <p class="secondary mb-8">💡 아이디어 예시:</p>
+          <p class="secondary mb-8">• 오늘의 운세 생성기</p>
+          <p class="secondary mb-8">• 이름 궁합 테스트</p>
+          <p class="secondary">• 나만의 퀴즈 게임</p>
+        </div>
+        <div>
+          <p class="secondary mb-8">📝 프롬프트 구조 (복습):</p>
+          <p class="secondary mb-8">1. 뭘 만들지 한 줄 설명</p>
+          <p class="secondary mb-8">2. 기능 3~5개 나열</p>
+          <p class="secondary">3. 디자인 + "한국어 UI"</p>
+        </div>
+      </div>
+    </div>
+    <div class="highlight-box">지금 만든 건 "워킹 프로토타입" — 움직이지만 데이터는 저장 안 됩니다. 뒤에서 백엔드를 붙이면 진짜 앱이 됩니다!</div>
+  </div>
+</section>
+
+<section class="slide divider" id="s40">
+<div class="inner">
+<p style="color:rgba(255,255,255,0.6); margin-bottom:8px;">STEP 3</p>
+<h1>기획서 만들고 프롬프트로 변환하기</h1>
+<p>★★★☆☆ · IA → User Journey → PRD → 프롬프트</p>
+<p style="color:rgba(255,255,255,0.5); margin-top:16px; font-size:0.9rem;">직접 기획서를 만들고, 그걸 도구별 프롬프트로 변환하는 실습</p>
+</div>
+</section>
+
+<section class="slide" id="s41">
+<div class="inner">
+<div class="pill mb-12">실습 · 5분 · 기획</div>
+<h2>실습: IA(정보구조) 직접 만들기</h2>
+<p class="subtitle">내 앱의 화면 목록과 메뉴 구조를 트리 형태로 직접 작성합니다.</p>
+<div class="grid-2 mb-24">
+<div>
+<h4 class="mb-8">IA란?</h4>
+<p style="font-size:0.9rem; margin-bottom:16px;">앱에 어떤 화면이 있고, 각 화면에 어떤 요소가 들어가는지 정리한 구조도입니다.</p>
+<h4 class="mb-8">작성법 (3단계)</h4>
+<div style="display:flex; flex-direction:column; gap:10px;">
+<div class="card" style="display:flex; gap:12px; align-items:center; padding:14px;">
+<div class="step-num" style="width:28px; height:28px; font-size:0.8rem;">1</div>
+<div><strong>메인 화면 나열</strong><br><span class="secondary">앱에 필요한 주요 화면(탭)을 적기</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:center; padding:14px;">
+<div class="step-num" style="width:28px; height:28px; font-size:0.8rem;">2</div>
+<div><strong>하위 요소 추가</strong><br><span class="secondary">각 화면에 들어갈 UI 요소 나열</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:center; padding:14px;">
+<div class="step-num" style="width:28px; height:28px; font-size:0.8rem;">3</div>
+<div><strong>네비게이션 결정</strong><br><span class="secondary">화면 간 이동 방법 (탭바/햄버거 등)</span></div>
+</div>
+</div>
+</div>
+<div>
+<div class="code-block" style="font-size:0.85rem;">
+<div class="label">예시: 프레시키퍼 IA</div>
+📱 메인 (홈)
+  ├ 식재료 카드 리스트
+  ├ 통계 요약 바 (전체/임박/만료)
+  └ 빠른 추가 버튼 (+)
+
+📷 스캔
+  └ 카메라 촬영 / 수동 입력 폼
+
+🍳 레시피
+  ├ 임박 재료 기반 추천
+  └ 카테고리별 브라우징
+
+⚙️ 설정
+  ├ 알림 설정
+  └ 프로필
+
+Navigation: 하단 탭바 4개</div>
+<div class="card-alt mt-16" style="padding:14px; font-size:0.88rem;">
+<strong>지금 해보세요!</strong> 메모장이나 노트에 내 서비스의 IA를 위 형식대로 작성해보세요. 아이디어 없으면 프레시키퍼를 그대로 따라 쓰세요.
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="slide" id="s42">
+<div class="inner">
+<div class="pill mb-12">실습 · 5분 · 기획</div>
+<h2>실습: User Journey 작성하기</h2>
+<p class="subtitle">방금 만든 IA를 바탕으로, 사용자가 앱을 처음 만나서 습관화하기까지의 여정을 작성합니다.</p>
+<div class="grid-2 mb-24">
+<div>
+<h4 class="mb-8">User Journey란?</h4>
+<p style="font-size:0.9rem; margin-bottom:16px;">사용자가 서비스를 발견 → 사용 → 재방문하는 전체 흐름. 이 흐름의 각 단계가 나중에 <strong>기능 목록(Features)</strong>이 됩니다.</p>
+<h4 class="mb-8">작성법</h4>
+<div style="display:flex; flex-direction:column; gap:10px;">
+<div class="card" style="padding:14px;">
+<strong>1. 발견/인지</strong> — 사용자가 문제를 느끼는 순간
+</div>
+<div class="card" style="padding:14px;">
+<strong>2. 진입</strong> — 앱 설치, 가입
+</div>
+<div class="card" style="padding:14px;">
+<strong>3. 핵심 경험</strong> — 메인 기능을 처음 사용하는 순간
+</div>
+<div class="card" style="padding:14px;">
+<strong>4. 일상 사용</strong> — 반복적으로 사용하는 패턴
+</div>
+<div class="card" style="padding:14px;">
+<strong>5. 확장/습관화</strong> — 고급 기능 발견, 재방문
+</div>
+</div>
+</div>
+<div>
+<div class="code-block" style="font-size:0.85rem;">
+<div class="label">예시: 프레시키퍼 User Journey</div>
+1. 발견: "냉장고에 뭐 있었지... 또 버리게 생겼네"
+   → 감정: 짜증, 죄책감
+
+2. 진입: 앱 설치 → Google 로그인
+   → 필요 기능: 회원가입/로그인
+
+3. 첫 등록: 냉장고 식재료 사진 촬영 → 자동 인식
+   → 필요 기능: 식재료 등록 (CRUD - Create)
+
+4. 일상 관리: D-day 알림 확인 → 임박 재료 확인
+   → 필요 기능: 알림, 목록 조회 (Read)
+
+5. 활용: 임박 재료로 레시피 검색
+   → 필요 기능: 레시피 추천
+
+6. 소비: 사용 완료 체크 / 폐기 처리
+   → 필요 기능: 수정/삭제 (Update/Delete)
+
+7. 습관화: 주간 절약 리포트 확인
+   → 필요 기능: 통계</div>
+<div class="card-alt mt-16" style="padding:14px; font-size:0.88rem;">
+<strong>지금 해보세요!</strong> 내 서비스의 User Journey를 위 형식대로 작성하세요. 각 단계마다 <strong>→ 필요 기능:</strong>을 꼭 적으세요!
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="slide" id="s43">
+<div class="inner">
+<div class="pill mb-12">실습 · 7분 · 기획</div>
+<h2>실습: 서비스 기획서(PRD) 작성하기</h2>
+<p class="subtitle">IA + User Journey를 합쳐서 하나의 서비스 기획서로 정리합니다. 이게 곧 프롬프트의 원본!</p>
+<div class="grid-2">
+<div>
+<h4 class="mb-8">PRD 작성 템플릿</h4>
+<div class="code-block" style="font-size:0.82rem;">
+<div class="label">이 템플릿을 채우세요</div>
+[서비스 기획서]
+
+1. 서비스명: _____________
+2. 한 줄 설명: _____________
+3. 타겟 유저: _____________ (나이, 직업, 상황)
+4. 핵심 가치: _____________ (사용자가 얻는 것)
+
+5. 핵심 기능 (User Journey에서 가져오기):
+   ① _____________
+   ② _____________
+   ③ _____________
+   ④ _____________
+   ⑤ _____________
+
+6. 화면 목록 (IA에서 가져오기):
+   - 메인: _____________
+   - 2페이지: _____________
+   - 3페이지: _____________
+   - 네비게이션: _____________
+
+7. 디자인:
+   - 스타일: _____________
+   - 메인컬러: #_____________
+   - 레퍼런스: _____________
+
+8. 기술 스택: _____________</div>
+</div>
+<div>
+<div class="code-block" style="font-size:0.82rem;">
+<div class="label">예시: 프레시키퍼 PRD</div>
+[서비스 기획서]
+
+1. 서비스명: 프레시키퍼 (FreshKeeper)
+2. 한 줄 설명: 냉장고 식재료 유통기한을 관리하고
+   임박 재료로 레시피를 추천하는 앱
+3. 타겟 유저: 25-35세 1인 가구 직장인
+4. 핵심 가치: 식재료 낭비 최소화, 간편한 관리
+
+5. 핵심 기능:
+   ① 식재료 등록 (이름, 카테고리, 유통기한)
+   ② 목록 조회 + D-day 색상 표시
+   ③ 유통기한 임박 알림
+   ④ 임박 재료 기반 레시피 추천
+   ⑤ 소비완료/폐기 처리
+
+6. 화면 목록:
+   - 메인: 식재료 카드 리스트 + 통계바
+   - 스캔: 카메라/수동 입력
+   - 레시피: 추천 리스트 + 카테고리 탭
+   - 설정: 알림 + 프로필
+   - 네비게이션: 하단 탭바 4개
+
+7. 디자인:
+   - 스타일: 깔끔한 카드 UI, 친환경
+   - 메인컬러: #10b981 (초록)
+   - 레퍼런스: 마켓컬리, 쿡앱
+
+8. 기술 스택: React + Supabase</div>
+<div class="highlight-box mt-16">IA의 화면 → PRD의 6번, Journey의 기능 → PRD의 5번. 다 연결됩니다!</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="slide" id="s44">
+<div class="inner">
+<div class="pill mb-12">실습 · 5분 · AI Studio</div>
+<h2>실습: 내 기획서 → AI Studio 프롬프트</h2>
+<p class="subtitle">방금 작성한 PRD를 AI Studio용 프롬프트로 변환합니다. UI 디자인에 집중!</p>
+<div class="grid-2">
+<div>
+<h4 class="mb-8">변환 규칙</h4>
+<table class="tbl mb-16">
+<thead><tr><th>PRD 항목</th><th>프롬프트 요소</th></tr></thead>
+<tbody>
+<tr><td>서비스명 + 한줄설명</td><td>Task</td></tr>
+<tr><td>타겟 유저</td><td>Context</td></tr>
+<tr><td>화면 목록 (IA)</td><td>Sections (화면 요소)</td></tr>
+<tr><td>디자인</td><td>Design (컬러, 스타일)</td></tr>
+</tbody>
+</table>
+<div class="card-alt" style="padding:14px; font-size:0.88rem;">
+<strong>AI Studio 핵심:</strong> DB가 없으므로 CRUD 기능 대신 <strong>UI 디자인과 샘플 데이터</strong>에 집중합니다. 화면이 어떻게 보이는지를 상세히 설명하세요.
+</div>
+<div class="card-alt mt-16" style="padding:14px; font-size:0.88rem;">
+<strong>지금 해보세요!</strong> 내 PRD를 오른쪽 형식으로 변환해서 AI Studio에 입력하세요!
+</div>
+</div>
+<div>
+<div class="code-block" style="font-size:0.82rem;">
+<div class="label">예시: 프레시키퍼 → AI Studio</div>
+Role: 시니어 프론트엔드 개발자
+Task: '프레시키퍼' 식재료 관리 앱의
+     메인 대시보드 UI를 만들어줘.
+
+Context:
+- 서비스: 냉장고 식재료 유통기한 관리 앱
+- 타겟: 25-35세 1인 가구 직장인
+
+Sections:  ← PRD 6번(IA)에서 가져옴
+1. 헤더: 로고 + 알림 아이콘
+2. 식재료 카드 리스트
+   (이름, D-day, 상태 색상: 초록/노랑/빨강)
+3. 상단 통계 요약바 (전체/임박/만료 개수)
+4. 하단 탭바: 홈, 스캔, 레시피, 설정
+
+Design:  ← PRD 7번에서 가져옴
+- 스타일: 깔끔한 카드 UI, 친환경 느낌
+- 메인 컬러: #10b981 (초록)
+- 배경: #ffffff
+- 폰트: Pretendard
+- 모바일 반응형
+
+샘플 데이터 5개 포함 (다양한 D-day 상태)
+한국어 UI</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="slide" id="s45">
+<div class="inner">
+<div class="pill mb-12">실습 · 5분 · Lovable</div>
+<h2>실습: 내 기획서 → Lovable 프롬프트</h2>
+<p class="subtitle">같은 PRD를 Lovable용 프롬프트로 변환합니다. CRUD 기능 명세가 핵심!</p>
+<div class="grid-2">
+<div>
+<h4 class="mb-8">변환 규칙</h4>
+<table class="tbl mb-16">
+<thead><tr><th>PRD 항목</th><th>프롬프트 요소</th></tr></thead>
+<tbody>
+<tr><td>서비스명 + 한줄설명</td><td>Task</td></tr>
+<tr><td>타겟 유저 + 핵심가치</td><td>Context</td></tr>
+<tr><td>핵심 기능 (Journey)</td><td><strong>Features (CRUD)</strong></td></tr>
+<tr><td>화면 목록 (IA)</td><td>Pages</td></tr>
+<tr><td>디자인 + 기술스택</td><td>Design + Tech</td></tr>
+</tbody>
+</table>
+<div class="card-alt" style="padding:14px; font-size:0.88rem;">
+<strong>Lovable 핵심:</strong> AI Studio와 달리 DB가 있으므로 <strong>CRUD(추가/조회/수정/삭제)</strong>를 명확히 써야 합니다. "Features (CRUD):" 섹션이 필수!
+</div>
+<div class="card-alt mt-16" style="padding:14px; font-size:0.88rem;">
+<strong>지금 해보세요!</strong> 같은 PRD를 오른쪽 형식으로 변환해서 Lovable에 입력하세요!
+</div>
+</div>
+<div>
+<div class="code-block" style="font-size:0.82rem;">
+<div class="label">예시: 프레시키퍼 → Lovable</div>
+Role: 풀스택 웹 개발자
+Task: '프레시키퍼' 식재료 관리 웹앱 MVP 제작
+
+Context:
+- 서비스: 냉장고 식재료 유통기한 관리 앱
+- 타겟: 25-35세 1인 가구 직장인
+- 핵심 가치: 식재료 낭비 최소화
+
+Features (CRUD):  ← PRD 5번(Journey)에서 가져옴
+1. 식재료 추가 (이름, 카테고리, 유통기한)
+   → Create
+2. 식재료 목록 조회 (D-day 표시, 색상코딩)
+   → Read
+3. 식재료 수정 (수량 변경, 날짜 수정)
+   → Update
+4. 식재료 삭제 (소비완료/폐기 구분)
+   → Delete
+5. 카테고리별 필터
+
+Pages:  ← PRD 6번(IA)에서 가져옴
+1. 메인 대시보드 (카드 리스트 + 통계)
+2. 식재료 추가/수정 폼 (모달)
+3. 상세 보기
+
+Design: 카드 UI, #10b981, 모바일 반응형
+Tech: React + Tailwind + Supabase
+한국어 UI, 샘플 데이터 5개</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="slide" id="s46">
+<div class="inner">
+<h2>기획 → 프롬프트 전체 흐름 정리</h2>
+<p class="subtitle">여러분이 방금 실습한 전체 과정을 한눈에 봅니다.</p>
+<div style="display:flex; align-items:center; justify-content:center; gap:16px; margin:32px 0; flex-wrap:wrap;">
+<div class="card" style="text-align:center; padding:16px 20px; min-width:120px;">
+<h4>IA</h4>
+<p class="secondary" style="font-size:0.8rem;">화면 구조</p>
+</div>
+<div style="font-size:1.5rem; color:#999;">→</div>
+<div class="card" style="text-align:center; padding:16px 20px; min-width:120px;">
+<h4>User Journey</h4>
+<p class="secondary" style="font-size:0.8rem;">사용자 흐름</p>
+</div>
+<div style="font-size:1.5rem; color:#999;">→</div>
+<div class="card" style="text-align:center; padding:16px 20px; min-width:120px; border-color:#111;">
+<h4>PRD</h4>
+<p class="secondary" style="font-size:0.8rem;">기획서 통합</p>
+</div>
+<div style="font-size:1.5rem; color:#999;">→</div>
+<div class="card" style="text-align:center; padding:16px 20px; min-width:120px;">
+<h4>프롬프트</h4>
+<p class="secondary" style="font-size:0.8rem;">도구별 변환</p>
+</div>
+</div>
+<table class="tbl mb-24">
+<thead><tr><th style="width:25%;">기획 산출물</th><th style="width:25%;">프롬프트에서의 역할</th><th style="width:25%;">AI Studio</th><th style="width:25%;">Lovable / Firebase</th></tr></thead>
+<tbody>
+<tr><td><strong>IA</strong> (화면구조)</td><td>Pages &amp; Sections</td><td>Sections 항목</td><td>Pages 항목</td></tr>
+<tr><td><strong>User Journey</strong> (흐름)</td><td>Features 목록</td><td>주요 기능 나열</td><td>Features (CRUD) 상세</td></tr>
+<tr><td><strong>PRD</strong> (타겟/가치)</td><td>Context</td><td>Context 섹션</td><td>Context 섹션</td></tr>
+<tr><td><strong>PRD</strong> (디자인)</td><td>Design System</td><td>Design 상세</td><td>Design + Tech</td></tr>
+<tr><td><strong>PRD</strong> (기술)</td><td>Tech Stack</td><td>불필요</td><td>Tech 필수 명시</td></tr>
+</tbody>
+</table>
+<div class="highlight-box">기획을 잘 할수록 프롬프트가 좋아지고, 프롬프트가 좋을수록 결과물이 좋아집니다. PRD가 곧 프롬프트!</div>
+</div>
+</section>
+
+<section class="slide" id="s47">
+  <div class="inner">
+    <div class="pill mb-12">🎯 STEP 3 마무리 · 미니 기획 실습</div>
+    <h2>내 아이디어로 IA → UJ → PRD 써보기</h2>
+    <p class="subtitle mb-20">방금 배운 기획 과정을 내 아이디어에 직접 적용해봅니다. (10분)</p>
+    <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
+      <div class="card" style="text-align:center; padding:12px 16px; min-width:90px; border-color:#111;">
+        <h4>① IA</h4>
+        <p class="secondary" style="font-size:0.75rem;">3분</p>
+      </div>
+      <div style="font-size:1.2rem; color:#999;">→</div>
+      <div class="card" style="text-align:center; padding:12px 16px; min-width:90px; border-color:#111;">
+        <h4>② UJ</h4>
+        <p class="secondary" style="font-size:0.75rem;">3분</p>
+      </div>
+      <div style="font-size:1.2rem; color:#999;">→</div>
+      <div class="card" style="text-align:center; padding:12px 16px; min-width:90px; border-color:#111;">
+        <h4>③ PRD</h4>
+        <p class="secondary" style="font-size:0.75rem;">4분</p>
+      </div>
+    </div>
+    <div class="grid-2 mb-16">
+      <div class="card">
+        <h4 class="mb-8">📝 빈칸 채우기 템플릿</h4>
+        <div class="code-block" style="font-size:0.82rem;">[IA] 내 앱 이름: _______________
+화면 목록:
+1. 메인 화면 — _______________
+2. ___ 화면 — _______________
+3. ___ 화면 — _______________
+
+[UJ] 사용자 흐름:
+1단계: ___ → 2단계: ___ → 3단계: ___
+
+[PRD]
+서비스명: ___  / 한줄설명: ___
+타겟: ___
+핵심기능: ①___ ②___ ③___
+디자인: ___</div>
+      </div>
+      <div class="card-alt">
+        <h4 class="mb-8">💡 아이디어가 안 떠오르면?</h4>
+        <p class="secondary mb-8">• 내가 매일 불편한 것 1개 → 앱으로 해결</p>
+        <p class="secondary mb-8">• 좋아하는 앱의 미니 버전 만들기</p>
+        <p class="secondary mb-12">• 친구/가족이 쓸 만한 도구 만들기</p>
+        <h4 class="mb-8">⏰ 다 못 써도 괜찮아요!</h4>
+        <p class="secondary">핵심은 "기획 → 프롬프트" 파이프라인을 경험하는 것. 이 기획서는 뒤 실습에서 계속 씁니다!</p>
+      </div>
+    </div>
+    <div class="highlight-box">이 기획서를 잘 갖고 계세요! STEP 4(Lovable), STEP 5(Firebase)에서 이걸 프롬프트로 변환합니다.</div>
+  </div>
+</section>
+
+<!-- ==================== Git / GitHub 기초 (STEP 4 진입 전) ==================== -->
+<section class="slide divider" id="s48-git-intro">
+<div class="inner">
+<p style="color:rgba(255,255,255,0.6); margin-bottom:8px;">STEP 4 들어가기 전에</p>
+<h1>Git &amp; GitHub 기초</h1>
+<p>앱을 만들면 코드를 저장하고 관리해야 합니다</p>
+</div>
+</section>
+
+<section class="slide" id="s48-git-what">
+<div class="inner">
+<div class="pill mb-12">개념 이해</div>
+<h2>Git이 뭔가요?</h2>
+<p class="subtitle mb-20">코드의 "타임머신" — 언제든 과거로 돌아갈 수 있습니다</p>
+
+<div class="grid-2 mb-16">
+<div class="card" style="text-align:center;">
+<h4 class="mb-8">Git 없이</h4>
+<div class="code-block" style="text-align:left; font-size:0.82rem;">내프로젝트_최종.zip
+내프로젝트_최종_진짜최종.zip
+내프로젝트_최종_진짜최종_수정.zip
+내프로젝트_최종_제출용.zip
+내프로젝트_최종_제출용_v2.zip</div>
+<p class="secondary mt-12">파일이 점점 늘어나고 뭐가 뭔지 모름</p>
+</div>
+<div class="card" style="text-align:center;">
+<h4 class="mb-8">Git 사용 시</h4>
+<div class="code-block" style="text-align:left; font-size:0.82rem;">📁 내프로젝트/
+  ├── 버전 1: 로그인 기능 추가
+  ├── 버전 2: 디자인 수정
+  ├── 버전 3: 버그 수정
+  └── 버전 4: 배포 준비 ← 지금</div>
+<p class="secondary mt-12">하나의 폴더에서 모든 변경 기록이 자동 관리</p>
+</div>
+</div>
+
+<div class="highlight-box">Git = 코드 변경 기록을 자동으로 관리해주는 도구. "저장"의 상위 버전이라고 생각하세요!</div>
+</div>
+</section>
+
+<section class="slide" id="s48-git-commands">
+<div class="inner">
+<div class="pill mb-12">핵심 명령어 4가지</div>
+<h2>Git 핵심 개념 — 쉽게 이해하기</h2>
+<p class="subtitle mb-20">택배 보내기에 비유하면 이해가 쉽습니다</p>
+
+<div style="display:flex; flex-direction:column; gap:14px; margin-bottom:20px;">
+
+<div class="card" style="display:flex; align-items:flex-start; gap:16px;">
+<div class="step-num" style="flex-shrink:0; background:#2563EB;">1</div>
+<div style="flex:1;">
+<h4>commit (커밋) = "박스에 담기"</h4>
+<p class="secondary">변경한 코드를 하나의 박스에 묶어서 설명 메모를 붙이는 것</p>
+<div class="code-block" style="margin-top:8px; font-size:0.8rem; padding:10px 14px;">
+<span style="color:#666;"># 예시: "로그인 기능 추가" 라고 메모를 남기며 저장</span>
+git commit -m "로그인 기능 추가"</div>
+</div>
+</div>
+
+<div class="card" style="display:flex; align-items:flex-start; gap:16px;">
+<div class="step-num" style="flex-shrink:0; background:#16A34A;">2</div>
+<div style="flex:1;">
+<h4>push (푸시) = "택배 보내기"</h4>
+<p class="secondary">내 컴퓨터의 코드 박스를 GitHub(인터넷 창고)에 보내는 것</p>
+<div class="code-block" style="margin-top:8px; font-size:0.8rem; padding:10px 14px;">
+<span style="color:#666;"># 내 코드를 GitHub에 업로드</span>
+git push</div>
+</div>
+</div>
+
+<div class="card" style="display:flex; align-items:flex-start; gap:16px;">
+<div class="step-num" style="flex-shrink:0; background:#DC2626;">3</div>
+<div style="flex:1;">
+<h4>pull (풀) = "택배 받기"</h4>
+<p class="secondary">GitHub에 있는 최신 코드를 내 컴퓨터로 가져오는 것</p>
+<div class="code-block" style="margin-top:8px; font-size:0.8rem; padding:10px 14px;">
+<span style="color:#666;"># 팀원이 올린 최신 코드를 내려받기</span>
+git pull</div>
+</div>
+</div>
+
+<div class="card" style="display:flex; align-items:flex-start; gap:16px;">
+<div class="step-num" style="flex-shrink:0; background:#9333EA;">4</div>
+<div style="flex:1;">
+<h4>clone (클론) = "복사해오기"</h4>
+<p class="secondary">GitHub에 있는 프로젝트를 처음으로 내 컴퓨터에 통째로 복사하는 것</p>
+<div class="code-block" style="margin-top:8px; font-size:0.8rem; padding:10px 14px;">
+<span style="color:#666;"># GitHub의 프로젝트를 내 컴퓨터로 복제</span>
+git clone https://github.com/유저이름/프로젝트이름</div>
+</div>
+</div>
+
+</div>
+</div>
+</section>
+
+<section class="slide" id="s48-git-flow">
+<div class="inner">
+<div class="pill mb-12">전체 흐름</div>
+<h2>Git 작업 흐름 한눈에 보기</h2>
+<p class="subtitle mb-24">코드를 수정하고 저장하고 공유하는 과정</p>
+
+<!-- Visual Git Flow Diagram -->
+<div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:32px; flex-wrap:wrap;">
+<div class="card" style="text-align:center; padding:16px 20px; min-width:140px; border:2px solid #2563EB;">
+<div style="font-size:1.4rem; margin-bottom:4px;">💻</div>
+<h4 style="font-size:0.85rem;">내 컴퓨터</h4>
+<p class="secondary" style="font-size:0.75rem;">코드 수정</p>
+</div>
+<div style="font-size:1.5rem; color:#666;">→</div>
+<div class="card" style="text-align:center; padding:16px 20px; min-width:140px; border:2px solid #16A34A;">
+<div style="font-size:1.4rem; margin-bottom:4px;">📦</div>
+<h4 style="font-size:0.85rem;">git add + commit</h4>
+<p class="secondary" style="font-size:0.75rem;">박스에 담기</p>
+</div>
+<div style="font-size:1.5rem; color:#666;">→</div>
+<div class="card" style="text-align:center; padding:16px 20px; min-width:140px; border:2px solid #9333EA;">
+<div style="font-size:1.4rem; margin-bottom:4px;">☁️</div>
+<h4 style="font-size:0.85rem;">git push</h4>
+<p class="secondary" style="font-size:0.75rem;">GitHub에 보내기</p>
+</div>
+</div>
+
+<div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:24px; flex-wrap:wrap;">
+<div class="card" style="text-align:center; padding:16px 20px; min-width:140px; border:2px solid #9333EA;">
+<div style="font-size:1.4rem; margin-bottom:4px;">☁️</div>
+<h4 style="font-size:0.85rem;">GitHub</h4>
+<p class="secondary" style="font-size:0.75rem;">코드 저장소</p>
+</div>
+<div style="font-size:1.5rem; color:#666;">→</div>
+<div class="card" style="text-align:center; padding:16px 20px; min-width:140px; border:2px solid #DC2626;">
+<div style="font-size:1.4rem; margin-bottom:4px;">📥</div>
+<h4 style="font-size:0.85rem;">git pull</h4>
+<p class="secondary" style="font-size:0.75rem;">최신 코드 받기</p>
+</div>
+<div style="font-size:1.5rem; color:#666;">→</div>
+<div class="card" style="text-align:center; padding:16px 20px; min-width:140px; border:2px solid #2563EB;">
+<div style="font-size:1.4rem; margin-bottom:4px;">💻</div>
+<h4 style="font-size:0.85rem;">내 컴퓨터</h4>
+<p class="secondary" style="font-size:0.75rem;">업데이트된 코드</p>
+</div>
+</div>
+
+<div class="highlight-box">수정 → commit(박스 담기) → push(보내기) → pull(받기). 이 사이클의 반복이 개발의 전부입니다!</div>
+</div>
+</section>
+
+<section class="slide" id="s48-github">
+<div class="inner">
+<div class="pill mb-12">도구 소개</div>
+<h2>GitHub가 뭔가요?</h2>
+<p class="subtitle mb-20">코드를 저장하는 인터넷 창고 — 전 세계 개발자가 사용합니다</p>
+
+<!-- GitHub Visual Diagram -->
+<div style="background:#0D1117; border-radius:12px; padding:24px; color:#fff; margin-bottom:20px;">
+<div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+<svg height="32" viewBox="0 0 16 16" width="32" style="fill:#fff;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+<h3 style="color:#fff; margin:0;">GitHub</h3>
+</div>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+<div style="background:rgba(255,255,255,0.1); border-radius:8px; padding:14px;">
+<h4 style="color:#58A6FF; margin-bottom:8px; font-size:0.9rem;">Repository (저장소)</h4>
+<p style="color:rgba(255,255,255,0.7); font-size:0.82rem;">프로젝트 하나 = 저장소 하나. 코드 + 변경기록이 모두 여기에 보관됩니다.</p>
+</div>
+<div style="background:rgba(255,255,255,0.1); border-radius:8px; padding:14px;">
+<h4 style="color:#58A6FF; margin-bottom:8px; font-size:0.9rem;">Branch (가지)</h4>
+<p style="color:rgba(255,255,255,0.7); font-size:0.82rem;">원본을 건드리지 않고 새 기능을 따로 개발. 완성되면 합침(merge).</p>
+</div>
+<div style="background:rgba(255,255,255,0.1); border-radius:8px; padding:14px;">
+<h4 style="color:#58A6FF; margin-bottom:8px; font-size:0.9rem;">공개 / 비공개</h4>
+<p style="color:rgba(255,255,255,0.7); font-size:0.82rem;">Public(오픈소스) 또는 Private(나만 보기) 선택 가능. 무료!</p>
+</div>
+<div style="background:rgba(255,255,255,0.1); border-radius:8px; padding:14px;">
+<h4 style="color:#58A6FF; margin-bottom:8px; font-size:0.9rem;">배포 연동</h4>
+<p style="color:rgba(255,255,255,0.7); font-size:0.82rem;">GitHub에 push하면 Vercel, Netlify 등이 자동으로 웹사이트를 업데이트!</p>
+</div>
+</div>
+</div>
+
+<div class="highlight-box">GitHub = 코드의 구글 드라이브. 저장 + 버전관리 + 공유 + 배포를 한번에!</div>
+</div>
+</section>
+
+<section class="slide" id="s48-github-setup">
+<div class="inner">
+<div class="pill mb-12">도구 설치</div>
+<h2>GitHub 가입 &amp; Antigravity 설치</h2>
+<p class="subtitle mb-20">오늘 실습에 필요한 두 가지 도구를 준비합니다 (각 2분)</p>
+<div class="grid-2 mb-16">
+<div>
+<h4 class="mb-12" style="display:flex; align-items:center; gap:8px;">
+<svg height="20" viewBox="0 0 16 16" width="20" style="fill:#111;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+GitHub 가입하기</h4>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">1</div>
+<div><strong>github.com 접속</strong><br><span class="secondary">우측 상단 "Sign up" 클릭</span></div>
+</div>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">2</div>
+<div><strong>이메일 · 비밀번호 · 사용자명 입력</strong><br><span class="secondary">사용자명 = 나의 개발자 닉네임</span></div>
+</div>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">3</div>
+<div><strong>이메일 인증 코드 입력</strong><br><span class="secondary">받은 편지함에서 6자리 코드 확인</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">4</div>
+<div><strong>가입 완료! 무료 계정으로 충분</strong><br><span class="secondary">Public/Private 저장소 무제한 사용 가능</span></div>
+</div>
+</div>
+<div>
+<h4 class="mb-12" style="display:flex; align-items:center; gap:8px;">
+<span style="font-size:1.1rem;">&#9650;</span>
+Antigravity 설치하기</h4>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">1</div>
+<div><strong>antigravity.google 접속</strong><br><span class="secondary">Download 버튼 클릭 (Mac / Windows / Linux)</span></div>
+</div>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">2</div>
+<div><strong>설치 파일 실행 → 다음, 다음, 완료</strong><br><span class="secondary">기본 설정 그대로 설치하면 됩니다</span></div>
+</div>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">3</div>
+<div><strong>Google 계정으로 로그인</strong><br><span class="secondary">구글 로그인 한 번이면 바로 사용 가능</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">4</div>
+<div><strong>Open Folder로 프로젝트 열기</strong><br><span class="secondary">빈 폴더 또는 GitHub 클론 폴더를 엽니다</span></div>
+</div>
+</div>
+</div>
+<div class="highlight-box">둘 다 무료! GitHub 계정은 Lovable 연동에도 필요하고, Antigravity는 나중에 코드를 직접 수정할 때 씁니다.</div>
+</div>
+</section>
+
+<section class="slide" id="s48-github-deploy">
+<div class="inner">
+<div class="pill mb-12">배포 흐름</div>
+<h2>GitHub → Vercel → 웹사이트 자동 배포</h2>
+<p class="subtitle mb-20">코드를 push하면 실제 웹사이트가 자동으로 업데이트됩니다</p>
+
+<div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:28px; flex-wrap:wrap;">
+<div class="card" style="text-align:center; padding:14px 16px; min-width:120px;">
+<div style="font-size:1.3rem; margin-bottom:4px;">👨‍💻</div>
+<h4 style="font-size:0.8rem;">VS Code에서<br>코드 수정</h4>
+</div>
+<div style="font-size:1.2rem; color:#666;">→</div>
+<div class="card" style="text-align:center; padding:14px 16px; min-width:120px;">
+<div style="font-size:1.3rem; margin-bottom:4px;">📦</div>
+<h4 style="font-size:0.8rem;">git push</h4>
+</div>
+<div style="font-size:1.2rem; color:#666;">→</div>
+<div class="card" style="text-align:center; padding:14px 16px; min-width:120px; background:#0D1117; color:#fff;">
+<div style="font-size:1.3rem; margin-bottom:4px;">🐙</div>
+<h4 style="font-size:0.8rem; color:#fff;">GitHub</h4>
+</div>
+<div style="font-size:1.2rem; color:#666;">→</div>
+<div class="card" style="text-align:center; padding:14px 16px; min-width:120px; background:#000; color:#fff;">
+<div style="font-size:1.3rem; margin-bottom:4px;">▲</div>
+<h4 style="font-size:0.8rem; color:#fff;">Vercel<br>자동 감지</h4>
+</div>
+<div style="font-size:1.2rem; color:#666;">→</div>
+<div class="card" style="text-align:center; padding:14px 16px; min-width:120px; border:2px solid #16A34A;">
+<div style="font-size:1.3rem; margin-bottom:4px;">🌐</div>
+<h4 style="font-size:0.8rem;">실제 웹사이트<br>업데이트!</h4>
+</div>
+</div>
+
+<div class="grid-2">
+<div class="card-alt">
+<h4 class="mb-8">Lovable 사용 시</h4>
+<p class="secondary">Lovable이 자체적으로 자동 배포해줌. Git/GitHub를 몰라도 OK! 배포 버튼만 누르면 URL이 생성됩니다.</p>
+</div>
+<div class="card-alt">
+<h4 class="mb-8">Claude Code 사용 시</h4>
+<p class="secondary">코드를 직접 만들어서 GitHub에 push → Vercel이 자동 배포. Git 기본 개념을 알면 훨씬 유리!</p>
+</div>
+</div>
+
+<div class="highlight-box mt-16">Lovable은 이 과정을 자동으로 해줍니다. 하지만 개념을 알면 문제가 생겼을 때 해결할 수 있어요!</div>
+</div>
+</section>
+
+<section class="slide" id="s48-supabase-intro">
+<div class="inner">
+<div class="pill mb-12">백엔드 기초</div>
+<h2>Supabase — 3분 만에 이해하기</h2>
+<p class="subtitle mb-20">앱의 데이터를 저장하는 "온라인 엑셀" + 로그인 기능</p>
+
+<!-- Visual Supabase Diagram -->
+<div style="background:linear-gradient(135deg, #1C1C1C 0%, #2D2D2D 100%); border-radius:12px; padding:24px; color:#fff; margin-bottom:20px;">
+<div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+<div style="background:#3ECF8E; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.1rem;">S</div>
+<h3 style="color:#fff; margin:0;">Supabase</h3>
+<span style="color:rgba(255,255,255,0.5); font-size:0.82rem;">— 백엔드를 코딩 없이</span>
+</div>
+
+<div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:20px; flex-wrap:wrap;">
+<div style="background:rgba(62,207,142,0.15); border:1px solid rgba(62,207,142,0.3); border-radius:8px; padding:14px; text-align:center; min-width:110px;">
+<div style="font-size:1.2rem; margin-bottom:4px;">📊</div>
+<p style="font-size:0.82rem; color:#3ECF8E; font-weight:600;">Database</p>
+<p style="font-size:0.72rem; color:rgba(255,255,255,0.6);">엑셀처럼<br>데이터 저장</p>
+</div>
+<div style="color:rgba(255,255,255,0.3); font-size:1rem;">+</div>
+<div style="background:rgba(62,207,142,0.15); border:1px solid rgba(62,207,142,0.3); border-radius:8px; padding:14px; text-align:center; min-width:110px;">
+<div style="font-size:1.2rem; margin-bottom:4px;">🔐</div>
+<p style="font-size:0.82rem; color:#3ECF8E; font-weight:600;">Auth</p>
+<p style="font-size:0.72rem; color:rgba(255,255,255,0.6);">로그인<br>회원가입</p>
+</div>
+<div style="color:rgba(255,255,255,0.3); font-size:1rem;">+</div>
+<div style="background:rgba(62,207,142,0.15); border:1px solid rgba(62,207,142,0.3); border-radius:8px; padding:14px; text-align:center; min-width:110px;">
+<div style="font-size:1.2rem; margin-bottom:4px;">📁</div>
+<p style="font-size:0.82rem; color:#3ECF8E; font-weight:600;">Storage</p>
+<p style="font-size:0.72rem; color:rgba(255,255,255,0.6);">이미지<br>파일 저장</p>
+</div>
+<div style="color:rgba(255,255,255,0.3); font-size:1rem;">+</div>
+<div style="background:rgba(62,207,142,0.15); border:1px solid rgba(62,207,142,0.3); border-radius:8px; padding:14px; text-align:center; min-width:110px;">
+<div style="font-size:1.2rem; margin-bottom:4px;">⚡</div>
+<p style="font-size:0.82rem; color:#3ECF8E; font-weight:600;">Realtime</p>
+<p style="font-size:0.72rem; color:rgba(255,255,255,0.6);">실시간<br>업데이트</p>
+</div>
+</div>
+</div>
+
+<div class="grid-2 mb-16">
+<div class="card">
+<h4 class="mb-8">비유: 앱 = 식당</h4>
+<p class="secondary">프론트엔드 = 식당 인테리어 (손님이 보는 것)</p>
+<p class="secondary">Supabase = 주방 + 냉장고 + 금고</p>
+<p class="secondary" style="margin-top:8px;">주방(서버)에서 요리하고, 냉장고(DB)에 재료를 보관하고, 금고(Auth)가 출입을 관리합니다.</p>
+</div>
+<div class="card">
+<h4 class="mb-8">왜 Supabase?</h4>
+<p class="secondary">무료 플랜으로 충분히 시작 가능</p>
+<p class="secondary">Lovable이 자동으로 연결해줌</p>
+<p class="secondary">SQL 몰라도 Table Editor로 관리</p>
+<p class="secondary">구글 로그인 등 간단히 설정</p>
+</div>
+</div>
+
+<div class="highlight-box">지금은 이해만 하면 됩니다! Lovable이 Supabase를 자동으로 연결해줘요.</div>
+</div>
+</section>
+
+<!-- ==================== CRUD 개념 설명 ==================== -->
+<section class="slide" id="s48-crud">
+<div class="inner">
+    <div class="pill mb-12">핵심 개념</div>
+    <h2>CRUD란? — 모든 앱의 기본 동작 4가지</h2>
+    <p class="subtitle mb-20">인스타그램, 당근마켓, 노션 — 모든 앱은 이 4가지로 돌아갑니다.</p>
+
+    <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-bottom:24px;">
+      <div class="card" style="text-align:center; border-top:3px solid #22c55e;">
+        <div style="font-size:2rem; margin-bottom:8px;">➕</div>
+        <h4 style="color:#22c55e;">C · Create</h4>
+        <p style="font-size:0.95rem; font-weight:600;">생성(추가)</p>
+        <p class="secondary" style="font-size:0.82rem; margin-top:6px;">새 글 쓰기<br>회원가입<br>상품 등록</p>
+      </div>
+      <div class="card" style="text-align:center; border-top:3px solid #3b82f6;">
+        <div style="font-size:2rem; margin-bottom:8px;">👁️</div>
+        <h4 style="color:#3b82f6;">R · Read</h4>
+        <p style="font-size:0.95rem; font-weight:600;">조회(읽기)</p>
+        <p class="secondary" style="font-size:0.82rem; margin-top:6px;">피드 보기<br>검색 결과<br>상품 목록</p>
+      </div>
+      <div class="card" style="text-align:center; border-top:3px solid #f59e0b;">
+        <div style="font-size:2rem; margin-bottom:8px;">✏️</div>
+        <h4 style="color:#f59e0b;">U · Update</h4>
+        <p style="font-size:0.95rem; font-weight:600;">수정(변경)</p>
+        <p class="secondary" style="font-size:0.82rem; margin-top:6px;">글 수정<br>프로필 변경<br>수량 변경</p>
+      </div>
+      <div class="card" style="text-align:center; border-top:3px solid #ef4444;">
+        <div style="font-size:2rem; margin-bottom:8px;">🗑️</div>
+        <h4 style="color:#ef4444;">D · Delete</h4>
+        <p style="font-size:0.95rem; font-weight:600;">삭제</p>
+        <p class="secondary" style="font-size:0.82rem; margin-top:6px;">글 삭제<br>회원 탈퇴<br>장바구니 비우기</p>
+      </div>
+    </div>
+
+    <div class="card-alt mb-16">
+      <h4 class="mb-8">실생활 CRUD 예시</h4>
+      <table class="tbl">
+        <thead><tr><th>서비스</th><th>Create</th><th>Read</th><th>Update</th><th>Delete</th></tr></thead>
+        <tbody>
+          <tr><td><strong>인스타그램</strong></td><td>사진 올리기</td><td>피드 보기</td><td>캡션 수정</td><td>게시물 삭제</td></tr>
+          <tr><td><strong>당근마켓</strong></td><td>물건 등록</td><td>상품 검색</td><td>가격 변경</td><td>판매 완료 삭제</td></tr>
+          <tr><td><strong>메모앱</strong></td><td>메모 작성</td><td>메모 목록</td><td>내용 수정</td><td>메모 삭제</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="highlight-box">앱을 기획할 때 "이 앱의 CRUD가 뭐지?"를 먼저 정리하면, AI에게 줄 프롬프트가 훨씬 명확해집니다!</div>
+</div>
+</section>
+
+<section class="slide" id="s48-crud2">
+<div class="inner">
+    <div class="pill mb-12">핵심 개념</div>
+    <h2>CRUD를 프롬프트에 쓰는 법</h2>
+    <p class="subtitle mb-20">AI한테 앱을 만들어달라고 할 때, CRUD를 명확히 써주면 결과가 확 달라집니다.</p>
+
+    <div class="grid-2 mb-16">
+      <div class="card" style="border-left:3px solid #ef4444;">
+        <h4 style="color:#ef4444;">❌ 모호한 프롬프트</h4>
+        <div class="code-block" style="margin-top:12px; font-size:0.82rem;">
+할 일 관리 앱 만들어줘.
+예쁘게 만들어줘.
+        </div>
+        <p class="secondary" style="margin-top:8px; font-size:0.82rem;">→ AI가 어떤 기능을 넣어야 할지 모름. 결과가 들쭉날쭉.</p>
+      </div>
+      <div class="card" style="border-left:3px solid #22c55e;">
+        <h4 style="color:#22c55e;">✅ CRUD가 명확한 프롬프트</h4>
+        <div class="code-block" style="margin-top:12px; font-size:0.82rem;">
+할 일 관리 앱을 만들어줘.
+
+Features (CRUD):
+- Create: 새 할 일 추가 (제목, 마감일)
+- Read: 할 일 목록 보기 (완료/미완료 필터)
+- Update: 완료 체크, 제목 수정
+- Delete: 할 일 삭제 (확인 팝업)
+        </div>
+        <p class="secondary" style="margin-top:8px; font-size:0.82rem;">→ AI가 정확히 4가지 기능을 모두 구현!</p>
+      </div>
+    </div>
+
+    <div class="card mb-16" style="background:#f0fdf4; border:1px solid #bbf7d0;">
+      <h4 class="mb-8">CRUD 프롬프트 공식</h4>
+      <div class="code-block" style="font-size:0.85rem;">
+[앱 이름]을 만들어줘.
+
+Features (CRUD):
+- Create: [무엇]을 [어떻게] 추가
+- Read: [무엇]을 [어떤 형태]로 보기
+- Update: [무엇]을 [어떻게] 수정
+- Delete: [무엇]을 삭제 (+ 확인 팝업)
+      </div>
+    </div>
+
+    <div class="highlight-box">이 CRUD 공식을 외워두세요! Lovable, Firebase Studio 어디서든 통합니다. 다음 STEP 4에서 바로 써봅니다!</div>
+</div>
+</section>
+
+<!-- ==================== STEP 4: Lovable ==================== -->
+<section class="slide divider" id="s48">
+<div class="inner">
+<p style="color:rgba(255,255,255,0.6); margin-bottom:8px;">STEP 4</p>
+<h1>Lovable CRUD 앱</h1>
+<p>★★★☆☆ · 25분</p>
+</div>
+</section>
+
+<section class="slide" id="s49">
+<div class="inner">
+<h2>AI Studio vs Lovable 비교</h2>
+<p class="subtitle">AI Studio는 껍데기, Lovable은 알맹이가 있는 앱입니다.</p>
+<table class="tbl mb-24">
+<thead><tr><th>항목</th><th>AI Studio</th><th>Lovable</th></tr></thead>
+<tbody>
+<tr><td>가격</td><td>무료</td><td>유료 (무료 체험)</td></tr>
+<tr><td>범위</td><td>프론트엔드만</td><td>풀스택 (프론트+백엔드)</td></tr>
+<tr><td>데이터 저장</td><td>불가</td><td>Supabase DB</td></tr>
+<tr><td>CRUD</td><td>불가</td><td>가능</td></tr>
+<tr><td>배포</td><td>수동</td><td>자동 (URL 제공)</td></tr>
+<tr><td>적합한 용도</td><td>빠른 프로토타입, 실험</td><td>실제 작동하는 MVP</td></tr>
+</tbody>
+</table>
+<div class="highlight-box">CRUD = Create(생성) · Read(읽기) · Update(수정) · Delete(삭제) — 앱의 기본 4기능</div>
+</div>
+</section>
+
+<section class="slide" id="s50">
+<div class="inner">
+<h2>Lovable 시작하기</h2>
+<p class="subtitle">lovable.dev에서 프롬프트 하나로 풀스택 앱을 만듭니다.</p>
+<div style="display:flex; flex-direction:column; gap:14px; margin-bottom:24px;">
+<div class="card" style="display:flex; gap:16px; align-items:center;">
+<div class="step-num">1</div>
+<div><h4>lovable.dev 접속</h4><p class="secondary">구글 계정으로 로그인</p></div>
+</div>
+<div class="card" style="display:flex; gap:16px; align-items:center;">
+<div class="step-num">2</div>
+<div><h4>"New Project" 클릭</h4><p class="secondary">새 프로젝트 생성</p></div>
+</div>
+<div class="card" style="display:flex; gap:16px; align-items:center;">
+<div class="step-num">3</div>
+<div><h4>프롬프트 입력</h4><p class="secondary">다음 슬라이드의 프롬프트를 붙여넣기</p></div>
+</div>
+<div class="card" style="display:flex; gap:16px; align-items:center;">
+<div class="step-num">4</div>
+<div><h4>2-3분 기다리기 → 전체 앱 생성!</h4><p class="secondary">프론트엔드 + 백엔드 + DB까지 한번에</p></div>
+</div>
+</div>
+<div class="card-alt" style="text-align:center; padding:14px;">무료 체험으로 5개 프로젝트 생성 가능</div>
+</div>
+</section>
+
+<!-- ==================== Lovable 실전 케이스: 1시간 챌린지 ==================== -->
+<section class="slide" id="s50-case-intro">
+<div class="inner">
+<div class="pill pill-black mb-12">실전 케이스 스터디</div>
+<h2>1시간 안에 앱 완성하기 — 러버블 챌린지</h2>
+<p class="subtitle mb-20">"위시투게더" 커플 위시리스트 공유 앱을 60분 안에 기획→개발→배포한 실제 사례</p>
+
+<div class="grid-2 mb-16">
+<div class="card" style="border-left:3px solid #111;">
+<h4 class="mb-8">완성된 앱 기능</h4>
+<p class="secondary">회원가입 + 로그인</p>
+<p class="secondary">커플 초대 코드로 연결</p>
+<p class="secondary">위시리스트 CRUD (추가/수정/삭제)</p>
+<p class="secondary">상대방 위시리스트 조회</p>
+<p class="secondary">기념일 관리 + D-day 카운터</p>
+<p class="secondary">모바일 반응형 디자인</p>
+</div>
+<div class="card-alt">
+<h4 class="mb-8">60분 타임라인</h4>
+<div style="font-size:0.85rem;">
+<p class="secondary"><strong>0~2분</strong> — 아이디어 선정 (AI에게 추천 요청)</p>
+<p class="secondary"><strong>2~8분</strong> — 기획 + 디자인 시스템 설정</p>
+<p class="secondary"><strong>8~20분</strong> — 첫 번째 프롬프트 → 기본 앱 생성</p>
+<p class="secondary"><strong>20~40분</strong> — 기능 추가 + 에러 수정</p>
+<p class="secondary"><strong>40~55분</strong> — 디자인 업그레이드 + 모바일 최적화</p>
+<p class="secondary"><strong>55~60분</strong> — 보안 스캔 + 배포</p>
+</div>
+</div>
+</div>
+
+<div class="highlight-box">핵심: 한 번에 완벽하게 만드는 게 아니라, 빠르게 만들고 반복적으로 수정합니다!</div>
+</div>
+</section>
+
+<section class="slide" id="s50-case-process">
+<div class="inner">
+<div class="pill mb-12">프로세스</div>
+<h2>Lovable 실전 워크플로우 7단계</h2>
+<p class="subtitle mb-20">아이디어 → 기획 → 생성 → 수정 → 디자인 → 보안 → 배포</p>
+
+<div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
+
+<div class="card" style="display:flex; align-items:flex-start; gap:14px;">
+<div class="step-num" style="flex-shrink:0;">1</div>
+<div>
+<h4>아이디어 선정 — AI한테 물어보기</h4>
+<p class="secondary">"1시간 안에 만들 수 있는 앱 아이디어 10가지 추천해줘" → 마음에 드는 것 선택</p>
+</div>
+</div>
+
+<div class="card" style="display:flex; align-items:flex-start; gap:14px;">
+<div class="step-num" style="flex-shrink:0;">2</div>
+<div>
+<h4>기획 질문에 대답하기</h4>
+<p class="secondary">Lovable이 물어보는 질문들 (앱 종류, 목적, 데이터 저장 방식 등)에 하나씩 답변</p>
+</div>
+</div>
+
+<div class="card" style="display:flex; align-items:flex-start; gap:14px;">
+<div class="step-num" style="flex-shrink:0;">3</div>
+<div>
+<h4>첫 번째 프롬프트 → 앱 생성 (가장 오래 걸림)</h4>
+<p class="secondary">첫 프롬프트가 1~3분으로 가장 오래 걸림. 한번에 안 끝나도 정상! 나머지 작업은 추가 프롬프트로 이어서 진행.</p>
+</div>
+</div>
+
+<div class="card" style="display:flex; align-items:flex-start; gap:14px;">
+<div class="step-num" style="flex-shrink:0;">4</div>
+<div>
+<h4>빠진 기능 확인 + 하나씩 추가</h4>
+<p class="secondary">"MVP 기능 중 빠진 게 뭐야?" 물어보고, <strong>한 번에 하나씩</strong> 기능 추가 요청</p>
+</div>
+</div>
+
+<div class="card" style="display:flex; align-items:flex-start; gap:14px;">
+<div class="step-num" style="flex-shrink:0;">5</div>
+<div>
+<h4>에러 발생 → 스크린샷으로 디버깅</h4>
+<p class="secondary">에러가 나면 <strong>스크린샷 찍어서 Lovable 채팅에 붙여넣기</strong>. "이 에러가 뜨고 있어, 수정해줘"</p>
+</div>
+</div>
+
+<div class="card" style="display:flex; align-items:flex-start; gap:14px;">
+<div class="step-num" style="flex-shrink:0;">6</div>
+<div>
+<h4>디자인 업그레이드 + 모바일 최적화</h4>
+<p class="secondary">디자인 텀(예: "미니멀 엘레강스")을 사용. 모바일 뷰에서 확인 후 "모바일 최적화 해줘"</p>
+</div>
+</div>
+
+<div class="card" style="display:flex; align-items:flex-start; gap:14px;">
+<div class="step-num" style="flex-shrink:0;">7</div>
+<div>
+<h4>보안 스캔 + Publish 배포</h4>
+<p class="secondary">Security 탭에서 무료 보안 스캔 실행 → 문제 확인 → Publish 버튼으로 배포 완료!</p>
+</div>
+</div>
+
+</div>
+</div>
+</section>
+
+<section class="slide" id="s50-case-tips">
+<div class="inner">
+<div class="pill mb-12">핵심 팁 5가지</div>
+<h2>Lovable 잘 쓰는 비법</h2>
+<p class="subtitle mb-20">실전에서 얻은 노하우 — 이것만 기억하세요</p>
+
+<div class="grid-2 mb-16">
+
+<div class="card" style="border-top:3px solid #2563EB;">
+<h4 class="mb-8">1. Plan 모드 활용하기</h4>
+<p class="secondary">채팅창 옆의 <strong>Plan 모드(파란색)</strong>를 켜면 AI가 먼저 계획을 세운 후 코딩합니다. 크레딧 1개 추가 소모되지만, 더 좋은 결과물이 나옵니다.</p>
+<div class="code-block mt-8" style="font-size:0.8rem; padding:10px;">"바로 코딩"이 아니라 "계획 → 코딩" 순서로 진행됨</div>
+</div>
+
+<div class="card" style="border-top:3px solid #16A34A;">
+<h4 class="mb-8">2. 한 번에 하나씩 요청</h4>
+<p class="secondary">여러 기능을 한꺼번에 요청하면 AI가 혼란스러워하거나 빠뜨립니다. <strong>하나의 요청 = 하나의 기능 변경</strong>이 원칙!</p>
+<div class="code-block mt-8" style="font-size:0.8rem; padding:10px;">❌ "수정 버튼 넣고 디자인도 바꾸고 DB도 연결해줘"
+✅ "수정 버튼을 넣어줘"  →  (완료 후)  →  "디자인 바꿔줘"</div>
+</div>
+
+<div class="card" style="border-top:3px solid #DC2626;">
+<h4 class="mb-8">3. 에러 = 스크린샷 디버깅</h4>
+<p class="secondary">에러가 나면 당황하지 말고 그 화면을 <strong>스크린샷</strong>으로 찍어서 Lovable 채팅에 붙여넣기. AI가 에러를 보고 직접 수정합니다.</p>
+<div class="code-block mt-8" style="font-size:0.8rem; padding:10px;">"초대 코드를 입력했는데 이 에러가 떠 [스크린샷 첨부]. 수정해줘"</div>
+</div>
+
+<div class="card" style="border-top:3px solid #9333EA;">
+<h4 class="mb-8">4. 모바일 뷰 꼭 확인</h4>
+<p class="secondary">오른쪽 위 <strong>디바이스 전환 버튼</strong>(랩탑→태블릿→모바일)으로 항상 모바일 뷰를 확인하세요. 대부분의 사용자는 모바일입니다!</p>
+<div class="code-block mt-8" style="font-size:0.8rem; padding:10px;">"모바일 화면에서 레이아웃이 깨져 있어 [스크린샷 첨부]. 최적화해줘"</div>
+</div>
+
+</div>
+
+<div class="card" style="border-top:3px solid #F59E0B; margin-bottom:16px;">
+<h4 class="mb-8">5. Visual Edit 모드 — 특정 영역만 수정</h4>
+<p class="secondary">채팅 대신 <strong>Visual Edit 버튼</strong>을 누르면 화면에서 직접 요소를 클릭해서 그 부분만 수정 요청을 할 수 있습니다. 작은 디자인 수정에 매우 편리!</p>
+</div>
+
+<div class="highlight-box">Publish(배포) 전에 꼭 Security 탭에서 무료 보안 스캔을 실행하세요. 실제 사용자에게 배포하기 전 필수!</div>
+</div>
+</section>
+
+<section class="slide" id="s50-case-design">
+<div class="inner">
+<div class="pill mb-12">디자인 업그레이드</div>
+<h2>Lovable에서 디자인 바꾸는 법</h2>
+<p class="subtitle mb-20">디자인 용어(텀)를 프롬프트에 사용하면 AI가 정확하게 이해합니다</p>
+
+<div class="grid-3 mb-16">
+<div class="card" style="text-align:center; padding:16px;">
+<h4 style="font-size:0.9rem; margin-bottom:8px;">Liquid Glass</h4>
+<p class="secondary" style="font-size:0.78rem;">투명 유리 느낌의 반투명 카드. Apple iOS 스타일.</p>
+</div>
+<div class="card" style="text-align:center; padding:16px;">
+<h4 style="font-size:0.9rem; margin-bottom:8px;">Minimal Elegance</h4>
+<p class="secondary" style="font-size:0.78rem;">깔끔하고 고급스러운 미니멀 디자인. 여백 많이, 색상 절제.</p>
+</div>
+<div class="card" style="text-align:center; padding:16px;">
+<h4 style="font-size:0.9rem; margin-bottom:8px;">Neumorphism</h4>
+<p class="secondary" style="font-size:0.78rem;">부드러운 그림자로 볼록/오목한 3D 느낌. 부드러운 UI.</p>
+</div>
+<div class="card" style="text-align:center; padding:16px;">
+<h4 style="font-size:0.9rem; margin-bottom:8px;">Glassmorphism</h4>
+<p class="secondary" style="font-size:0.78rem;">배경이 비치는 반투명 카드 + 블러 효과.</p>
+</div>
+<div class="card" style="text-align:center; padding:16px;">
+<h4 style="font-size:0.9rem; margin-bottom:8px;">Editorial</h4>
+<p class="secondary" style="font-size:0.78rem;">잡지 같은 타이포그래피 중심 레이아웃.</p>
+</div>
+<div class="card" style="text-align:center; padding:16px;">
+<h4 style="font-size:0.9rem; margin-bottom:8px;">Monochrome Luxury</h4>
+<p class="secondary" style="font-size:0.78rem;">흑백 + 고급스러운 분위기. 브랜딩에 적합.</p>
+</div>
+</div>
+
+<div class="card mb-16">
+<h4 class="mb-8">프롬프트 예시</h4>
+<div class="code-block" style="font-size:0.85rem;">"전체적인 디자인을 Minimal Elegance 스타일로 바꿔줘.
+그레이디언트를 줄이고 고급스럽고 깔끔한 느낌으로."</div>
+</div>
+
+<div class="highlight-box">디자인 텀을 모르겠으면 ChatGPT나 Gemini에게 "앱 디자인 스타일 추천해줘"라고 물어보세요!</div>
+</div>
+</section>
+
+<section class="slide" id="s50-case-publish">
+<div class="inner">
+<div class="pill mb-12">배포</div>
+<h2>Lovable에서 앱 배포하기</h2>
+<p class="subtitle mb-20">Publish 버튼 2번이면 전 세계에서 접속 가능한 URL이 생깁니다</p>
+
+<div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:24px; flex-wrap:wrap;">
+<div class="card" style="text-align:center; padding:14px 18px; min-width:130px;">
+<div style="font-size:1.2rem; margin-bottom:4px;">🔨</div>
+<h4 style="font-size:0.82rem;">개발 완료</h4>
+</div>
+<div style="font-size:1.2rem; color:#666;">→</div>
+<div class="card" style="text-align:center; padding:14px 18px; min-width:130px;">
+<div style="font-size:1.2rem; margin-bottom:4px;">🔒</div>
+<h4 style="font-size:0.82rem;">Security 스캔<br>(무료)</h4>
+</div>
+<div style="font-size:1.2rem; color:#666;">→</div>
+<div class="card" style="text-align:center; padding:14px 18px; min-width:130px; border:2px solid #16A34A;">
+<div style="font-size:1.2rem; margin-bottom:4px;">🚀</div>
+<h4 style="font-size:0.82rem;">Publish 클릭<br>(2번)</h4>
+</div>
+<div style="font-size:1.2rem; color:#666;">→</div>
+<div class="card" style="text-align:center; padding:14px 18px; min-width:130px; border:2px solid #2563EB;">
+<div style="font-size:1.2rem; margin-bottom:4px;">🌐</div>
+<h4 style="font-size:0.82rem;">xxx.lovable.app<br>URL 생성!</h4>
+</div>
+</div>
+
+<div class="grid-2 mb-16">
+<div class="card">
+<h4 class="mb-8">Preview vs Publish</h4>
+<p class="secondary"><strong>Preview:</strong> 개발 중 미리보기. Lovable 안에서만 확인 가능. 일부 기능이 작동하지 않을 수 있음.</p>
+<p class="secondary mt-8"><strong>Publish:</strong> 실제 배포. 고유 URL이 생기고 누구나 접속 가능. DB 연동도 이때 정상 작동.</p>
+</div>
+<div class="card-alt">
+<h4 class="mb-8">배포 후 수정하면?</h4>
+<p class="secondary">코드 수정 후 다시 Publish를 누르면 최신 버전으로 자동 업데이트됩니다.</p>
+<p class="secondary mt-8">이전 버전은 History에서 확인 가능!</p>
+</div>
+</div>
+
+<div class="highlight-box">Preview에서 안 되던 기능이 Publish 후에는 작동하는 경우가 많아요. 에러가 나면 Publish 먼저 해보세요!</div>
+</div>
+</section>
+
+<section class="slide" id="s51">
+  <div class="inner">
+    <div class="pill mb-12">STEP 4 · 기획 먼저!</div>
+    <h2>Lovable 실습 전에 — 30초 기획</h2>
+    <p class="subtitle mb-20">실습마다 기획을 먼저 하면 결과물이 10배 좋아집니다.</p>
+    <div class="card mb-16" style="border: 2px solid #111; padding:20px;">
+      <h4 class="mb-12">⚡ 30초 미니 기획 체크리스트</h4>
+      <p class="secondary mb-8">Lovable 실습 시작 전에 이 3가지만 빠르게 적어보세요:</p>
+      <div class="grid-3">
+        <div class="card-alt" style="text-align:center; padding:14px;">
+          <h4>① 화면 구조</h4>
+          <p class="secondary" style="font-size:0.8rem;">IA 축약</p>
+          <p class="secondary mt-8" style="font-size:0.85rem;">이 앱에 화면이<br>몇 개 필요한가?</p>
+        </div>
+        <div class="card-alt" style="text-align:center; padding:14px;">
+          <h4>② 사용 흐름</h4>
+          <p class="secondary" style="font-size:0.8rem;">UJ 축약</p>
+          <p class="secondary mt-8" style="font-size:0.85rem;">사용자가 어떤<br>순서로 쓰는가?</p>
+        </div>
+        <div class="card-alt" style="text-align:center; padding:14px;">
+          <h4>③ 핵심 기능</h4>
+          <p class="secondary" style="font-size:0.8rem;">PRD 축약</p>
+          <p class="secondary mt-8" style="font-size:0.85rem;">CRUD 중<br>뭐가 필요한가?</p>
+        </div>
+      </div>
+    </div>
+    <div class="grid-2 mb-16">
+      <div class="card">
+        <h4 class="mb-8">❌ 기획 없이 만들면</h4>
+        <p class="secondary mb-8">"퀴즈 앱 만들어줘"</p>
+        <p class="secondary">→ AI가 알아서 만듦 → 내가 원하던 게 아님 → 수정 반복 → 시간 낭비</p>
+      </div>
+      <div class="card-alt">
+        <h4 class="mb-8">✅ 30초 기획 후 만들면</h4>
+        <p class="secondary mb-8">"3화면, 추가→풀기→결과 흐름, CRUD 전부"</p>
+        <p class="secondary">→ 프롬프트가 구체적 → 한 번에 원하는 결과 → 수정 최소화</p>
+      </div>
+    </div>
+    <div class="highlight-box">다음 실습부터 프롬프트 입력 전에 30초만 기획해보세요. 습관이 됩니다!</div>
+  </div>
+</section>
+
+<section class="slide" id="s52-easy1">
+<div class="inner">
+<div class="pill mb-12">실습 · 5분 · Lovable · ★☆☆☆☆</div>
+<h2>나만의 링크 모음 페이지 만들기</h2>
+<p class="subtitle">Lovable 입문 — 데이터베이스 없이 예쁜 프로필 페이지를 만듭니다.</p>
+<div class="code-block mb-24">Role: 웹 디자이너 겸 프론트엔드 개발자
+Task: 'Link in Bio' 프로필 링크 모음 페이지 제작
+
+Context:
+- 서비스: 인스타그램 프로필에 넣을 나만의 링크 모음 페이지
+- 타겟: SNS를 활발히 하는 20대
+- 핵심 가치: 한 페이지에서 내 모든 링크 확인
+
+Features:
+1. 프로필 영역 (사진 + 이름 + 한줄 소개)
+2. SNS 링크 버튼 4개 (인스타, 유튜브, 블로그, 깃허브)
+3. 각 버튼 클릭 시 새 탭에서 URL 열기
+4. 다크모드/라이트모드 토글 버튼
+5. 하단에 "Made with Lovable" 텍스트
+
+Design:
+- 스타일: 미니멀, 세로 중앙 정렬
+- 배경: 그라디언트 (보라 #6366f1 → 파랑 #3b82f6)
+- 버튼: 흰색 둥근 필 버튼, 호버 시 살짝 커짐
+- 프로필 사진: 원형 (120px)
+- 모바일 최적화
+
+Tech: React + Tailwind (DB 없음)
+Language: 한국어 UI
+Sample Data: 이름, 소개, SNS 링크 4개 포함</div>
+<div class="highlight-box">데이터베이스 없이 디자인만! Lovable이 얼마나 예쁘게 만드는지 체험하세요.</div>
+</div>
+</section>
+
+<section class="slide" id="s52-easy2">
+<div class="inner">
+<div class="pill mb-12">실습 · 8분 · Lovable · ★★☆☆☆</div>
+<h2>오늘의 기분 일기 만들기</h2>
+<p class="subtitle">이모지로 오늘의 기분을 기록하는 간단한 CRUD 앱입니다.</p>
+<div class="code-block mb-24">Role: 풀스택 웹 개발자
+Task: '무드 다이어리' 기분 일기 웹앱 MVP 제작
+
+Context:
+- 서비스: 매일 이모지로 기분을 기록하고 한줄 메모를 남기는 일기장
+- 타겟: 감정 관리에 관심 있는 20대
+- 핵심 가치: 3초 만에 오늘의 기분 기록
+
+Features (CRUD):
+1. 기분 기록 추가 (이모지 5개 중 선택 + 한줄 메모 + 날짜 자동)
+   이모지 옵션: 아주 좋아 / 좋아 / 보통 / 슬퍼 / 화나
+2. 이번 주 기분 목록 조회 (이모지 + 메모 + 날짜)
+3. 기분 기록 삭제
+4. 이번 달 기분 통계 (이모지별 카운트, 간단한 바 차트)
+
+Design:
+- 스타일: 부드럽고 따뜻한 파스텔톤
+- 메인 컬러: #f472b6 (핑크)
+- 이모지 선택: 큰 사이즈 버튼 (터치하기 쉽게)
+- 카드 UI, 둥근 모서리 (16px)
+- 모바일 반응형
+
+Pages:
+1. 메인 — 오늘 기분 기록 (이모지 선택 + 메모 입력)
+2. 히스토리 — 최근 7일 기분 리스트
+
+Tech: React + Tailwind (로컬 스토리지 사용)
+Language: 한국어 UI
+Sample Data: 최근 5일 기분 기록 포함</div>
+<div class="highlight-box">이모지 선택 → 메모 입력 → 저장! 가장 기본적인 CRUD를 체험합니다.</div>
+</div>
+</section>
+
+<section class="slide" id="s52">
+<div class="inner">
+<div class="pill mb-12">실습 5 · 10분 · Lovable</div>
+<h2>OX 퀴즈 앱 만들기 (Lovable)</h2>
+<p class="subtitle">Lovable 첫 실습 — 간단한 CRUD로 퀴즈 앱을 만듭니다.</p>
+<div class="code-block mb-24">Role: 풀스택 웹 개발자
+Task: 'OX 퀴즈' 웹앱 MVP 제작
+
+Context:
+- 서비스: 상식 퀴즈를 풀고 점수를 기록하는 앱
+- 타겟: 퀴즈를 좋아하는 모든 연령대
+- 핵심 가치: 재미있는 학습, 성취감
+
+Features (CRUD):
+1. 퀴즈 추가 (질문, 정답 O/X, 카테고리, 해설)
+2. 퀴즈 풀기 모드 (랜덤 10문제, O/X 버튼으로 답변)
+3. 결과 화면 (정답률, 틀린 문제 해설)
+4. 퀴즈 목록 조회 (카테고리별 필터)
+5. 퀴즈 수정/삭제 (관리 모드)
+6. 역대 최고 점수 기록 (로컬 저장)
+
+Design:
+- 스타일: 활기차고 깔끔한 카드 UI
+- 메인 컬러: #3b82f6 (파랑)
+- O 버튼: #10b981 (초록), X 버튼: #ef4444 (빨강)
+- 큰 O/X 버튼 (터치 편한 크기)
+- 모바일 반응형
+
+Pages:
+1. 홈 (퀴즈 시작 버튼 + 최고 점수)
+2. 퀴즈 풀기 (문제 카드 + O/X 버튼)
+3. 결과 (점수 + 오답 해설)
+4. 퀴즈 관리 (추가/수정/삭제)
+
+Tech: React + Tailwind + Supabase
+Language: 한국어 UI
+Sample Data: 상식 퀴즈 10개 포함 (과학, 역사, 일반상식)</div>
+<div class="highlight-box">간단하지만 CRUD가 모두 들어간 앱 — Lovable 입문에 딱!</div>
+</div>
+</section>
+
+<section class="slide" id="s53">
+<div class="inner">
+<div class="pill mb-12">실습 6 · 15분 · Lovable</div>
+<h2>프레시키퍼 — 식재료 관리 앱 (Lovable)</h2>
+<p class="subtitle">아이디어가 있는 경우 — 아래 프롬프트를 Lovable에 그대로 붙여넣기.</p>
+<div class="code-block">Role: 풀스택 웹 개발자
+Task: '프레시키퍼' 식재료 관리 웹앱 MVP 제작
+
+Context:
+- 서비스 설명: 냉장고 식재료의 유통기한을 관리하고, 임박한 재료로 레시피를 추천하는 1인 가구 맞춤 앱
+- 타겟 유저: 25-35세 1인 가구 직장인
+- 핵심 가치: 식재료 낭비 최소화, 간편한 관리
+
+Features (CRUD):
+1. 식재료 추가 (이름, 카테고리, 유통기한, 수량)
+2. 식재료 목록 조회 (D-day 표시, 색상 코딩: 초록/노랑/빨강)
+3. 식재료 수정 (수량 변경, 날짜 수정)
+4. 식재료 삭제 (소비완료/폐기 구분)
+5. 카테고리별 필터 (채소/과일/유제품/육류/기타)
+
+Design:
+- 스타일: 깔끔한 카드 UI, 친환경 느낌
+- 메인 컬러: #10b981 (초록)
+- 폰트: Pretendard 또는 시스템 폰트
+- 반응형 (모바일 우선) / 다크모드 지원
+
+Pages:
+1. 메인 대시보드 (식재료 카드 리스트 + 통계 요약)
+2. 식재료 추가/수정 폼 (모달)
+3. 상세 보기 페이지
+
+Tech: React + Tailwind + Supabase (DB/Auth)
+Language: 한국어 UI
+Sample Data: 식재료 5개 포함 (다양한 D-day 상태)</div>
+</div>
+</section>
+
+<section class="slide" id="s54">
+<div class="inner">
+<div class="pill mb-12">실습 6 대안 · 15분 · Lovable</div>
+<h2>하루습관 — 습관 트래커 (Lovable)</h2>
+<p class="subtitle">아이디어가 없는 경우 — 아래 프롬프트를 사용하세요.</p>
+<div class="code-block">Role: 풀스택 웹 개발자
+Task: '하루습관' 습관 트래커 웹앱 MVP 제작
+
+Context:
+- 서비스: 매일 실천할 습관을 체크하고 통계를 보여주는 앱
+- 타겟: 자기계발에 관심 있는 20대
+- 핵심 가치: 작은 습관의 복리 효과 시각화
+
+Features (CRUD):
+1. 습관 추가 (이름, 아이콘, 목표 빈도, 카테고리)
+2. 오늘의 습관 체크 (토글로 완료/미완료)
+3. 습관 수정 (이름, 빈도 변경)
+4. 습관 삭제 (확인 모달)
+5. 주간/월간 달성률 통계 (차트)
+6. 연속 달성일(Streak) 표시
+
+Design:
+- 스타일: 미니멀, 부드러운 느낌
+- 메인 컬러: #8b5cf6 (보라)
+- 반응형 (모바일 우선)
+
+Pages:
+1. 오늘 화면 (체크리스트 + 달성률)
+2. 통계 화면 (주간 바 차트)
+3. 습관 추가/수정 폼
+
+Tech: React + Tailwind + Supabase
+Language: 한국어 UI
+Sample Data: 습관 5개 포함</div>
+</div>
+</section>
+
+<section class="slide" id="s55">
+<div class="inner">
+<div class="pill mb-12">실습 7 · 10분 · Lovable</div>
+<h2>미니 가계부 앱 만들기 (Lovable)</h2>
+<p class="subtitle">수입/지출을 기록하고 통계를 보여주는 실용적인 CRUD 앱입니다.</p>
+<div class="code-block mb-24">Role: 풀스택 웹 개발자
+Task: '머니로그' 미니 가계부 웹앱 MVP 제작
+
+Context:
+- 서비스: 수입/지출을 간편하게 기록하고 월별 통계를 보여주는 가계부
+- 타겟: 돈 관리를 시작하고 싶은 사회초년생 (22-28세)
+- 핵심 가치: 복잡한 가계부 NO, 3초 만에 기록
+
+Features (CRUD):
+1. 거래 추가 (금액, 카테고리, 메모, 날짜, 수입/지출 구분)
+2. 거래 목록 조회 (날짜순, 최신 먼저)
+3. 거래 수정 (금액, 카테고리 변경)
+4. 거래 삭제 (스와이프 또는 버튼)
+5. 월별 수입/지출 요약 (총수입, 총지출, 잔액)
+6. 카테고리별 지출 비율 (도넛 차트)
+7. 카테고리: 식비, 교통, 쇼핑, 카페, 문화, 기타
+
+Design:
+- 스타일: 깔끔하고 직관적인 카드 UI
+- 메인 컬러: #f59e0b (주황), 수입: #10b981 (초록), 지출: #ef4444 (빨강)
+- 금액은 큰 숫자로 눈에 띄게
+- 모바일 반응형
+
+Pages:
+1. 홈 (이번 달 요약 + 최근 거래 리스트)
+2. 거래 추가 폼 (바텀 시트 or 모달)
+3. 통계 (월별 차트 + 카테고리 비율)
+
+Tech: React + Tailwind + Supabase
+Language: 한국어 UI
+Sample Data: 이번 달 거래 10건 포함 (다양한 카테고리)</div>
+</div>
+</section>
+
+<section class="slide" id="s56">
+<div class="inner">
+<h2>Lovable 수정 요청 팁</h2>
+<p class="subtitle">Lovable 채팅에서 수정 요청하는 4가지 패턴</p>
+<div style="display:flex; flex-direction:column; gap:14px; margin-bottom:24px;">
+<div class="card">
+<h4 class="mb-8">UI 수정</h4>
+<div class="code-block">"카드 디자인을 더 둥글게 (border-radius: 16px)로 바꾸고, 그림자를 부드럽게 해줘"</div>
+</div>
+<div class="card">
+<h4 class="mb-8">기능 추가</h4>
+<div class="code-block">"식재료 추가할 때 카테고리를 선택할 수 있는 드롭다운 메뉴를 넣어줘. 카테고리: 채소, 과일, 유제품, 육류, 기타"</div>
+</div>
+<div class="card">
+<h4 class="mb-8">버그 수정</h4>
+<div class="code-block">"삭제 버튼을 누르면 바로 삭제되지 않고, '정말 삭제하시겠습니까?' 확인 모달이 먼저 뜨도록 해줘"</div>
+</div>
+<div class="card">
+<h4 class="mb-8">데이터 변경</h4>
+<div class="code-block">"카테고리 목록에 '냉동식품'과 '음료'를 추가해줘"</div>
+</div>
+</div>
+<div class="highlight-box">핵심: 한 번에 하나씩! 여러 요청을 한꺼번에 하면 AI가 혼란스러워합니다.</div>
+</div>
+</section>
+
+<section class="slide" id="s57">
+  <div class="inner">
+    <div class="pill mb-12">🎉 STEP 4 마무리 · 자유실습</div>
+    <h2>내 기획서로 Lovable 앱 만들어보기</h2>
+    <p class="subtitle mb-20">STEP 3에서 작성한 기획서를 Lovable 프롬프트로 변환해서 진짜 앱을 만들어봅니다. (10분)</p>
+    <div class="grid-2 mb-16">
+      <div class="card">
+        <h4 class="mb-8">📋 기획서 → 프롬프트 변환 순서</h4>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="card-alt" style="padding:10px 14px;">
+            <p class="secondary"><strong>1.</strong> STEP 3에서 쓴 기획서 꺼내기</p>
+          </div>
+          <div class="card-alt" style="padding:10px 14px;">
+            <p class="secondary"><strong>2.</strong> s37 Lovable 프롬프트 구조에 맞춰 변환</p>
+          </div>
+          <div class="card-alt" style="padding:10px 14px;">
+            <p class="secondary"><strong>3.</strong> lovable.dev에 붙여넣기 → 앱 생성!</p>
+          </div>
+          <div class="card-alt" style="padding:10px 14px;">
+            <p class="secondary"><strong>4.</strong> 결과 확인 → 수정 요청 1~2개</p>
+          </div>
+        </div>
+      </div>
+      <div class="card-alt">
+        <h4 class="mb-8">💡 기획서 없으면? 지금 빠르게!</h4>
+        <div class="code-block" style="font-size:0.82rem;">앱 이름: _______________
+한줄설명: _______________
+
+화면: ① 메인 ② 상세 ③ 마이페이지
+흐름: 목록보기 → 선택 → 상세보기
+기능: ①추가 ②조회 ③수정 ④삭제
+
+→ 이걸 Lovable 프롬프트로 변환!</div>
+        <p class="secondary mt-12">⏰ 기획 3분 + 프롬프트 변환 2분 + 생성 5분</p>
+      </div>
+    </div>
+    <div class="highlight-box">지금 만든 앱은 프론트엔드만 동작합니다. 다음 STEP에서 Supabase를 연결하면 데이터가 진짜로 저장됩니다!</div>
+  </div>
+</section>
+
+<section class="slide divider" id="s58">
+<div class="inner">
+<p style="color:rgba(255,255,255,0.6); margin-bottom:8px;">STEP 4 — 백엔드 연동</p>
+<h1>이제 백엔드를 붙여봅시다</h1>
+<p>프론트엔드 실습 완료! → Supabase로 데이터 저장하기</p>
+</div>
+</section>
+
+<section class="slide" id="s59">
+  <div class="inner">
+    <div class="pill mb-12">도구 소개</div>
+    <h2>Supabase가 뭔가요?</h2>
+    <p class="subtitle mb-20">백엔드를 코딩 없이 만들어주는 마법 도구</p>
+    <div class="grid-2 mb-16">
+      <div class="card">
+        <div class="step-num">1</div>
+        <h4>Database (PostgreSQL)</h4>
+        <p class="secondary">엑셀 같은 표에 데이터 저장. 식재료 이름, 유통기한 등을 행/열로 관리합니다. SQL로 조회할 수 있습니다.</p>
+      </div>
+      <div class="card">
+        <div class="step-num">2</div>
+        <h4>Authentication</h4>
+        <p class="secondary">회원가입 · 로그인을 단 몇 줄로 구현합니다. 구글 로그인, 이메일 로그인을 지원합니다.</p>
+      </div>
+      <div class="card">
+        <div class="step-num">3</div>
+        <h4>Storage</h4>
+        <p class="secondary">이미지 · 파일을 업로드하고 저장합니다. 프로필 사진, 상품 이미지 등을 보관하는 창고입니다.</p>
+      </div>
+      <div class="card">
+        <div class="step-num">4</div>
+        <h4>Realtime</h4>
+        <p class="secondary">데이터 변경 시 실시간으로 화면에 반영합니다. 채팅 앱처럼 새로고침 없이 업데이트됩니다.</p>
+      </div>
+    </div>
+    <div class="highlight-box">Lovable이 Supabase를 자동으로 연결해줍니다 — 설정 한 번이면 로그인 · DB · 파일 업로드가 완성!</div>
+  </div>
+</section>
+
+<section class="slide" id="s60">
+  <div class="inner">
+    <div class="pill mb-12">참고 · Supabase 기본 사용법</div>
+    <h2>Supabase 실전 사용법</h2>
+    <p class="subtitle mb-20">처음 설정은 6단계면 충분합니다</p>
+    <div class="grid-2">
+      <div>
+        <div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+          <div class="step-num" style="flex-shrink:0;">1</div>
+          <div><strong>supabase.com 접속</strong><br><span class="secondary">구글 계정으로 무료 로그인</span></div>
+        </div>
+        <div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+          <div class="step-num" style="flex-shrink:0;">2</div>
+          <div><strong>New Project 생성</strong><br><span class="secondary">이름 · 비밀번호 · 리전: Northeast Asia</span></div>
+        </div>
+        <div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+          <div class="step-num" style="flex-shrink:0;">3</div>
+          <div><strong>Table Editor → New Table</strong><br><span class="secondary">엑셀처럼 테이블을 만듭니다</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+          <div class="step-num" style="flex-shrink:0;">4</div>
+          <div><strong>컬럼 추가</strong><br><span class="secondary">id(자동) · name(text) · expiry_date(date) · category(text)</span></div>
+        </div>
+        <div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+          <div class="step-num" style="flex-shrink:0;">5</div>
+          <div><strong>Insert Row로 데이터 추가</strong><br><span class="secondary">직접 행을 추가해서 저장을 확인합니다</span></div>
+        </div>
+        <div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+          <div class="step-num" style="flex-shrink:0;">6</div>
+          <div><strong>Authentication → Providers → Google 활성화</strong><br><span class="secondary">구글 로그인을 켭니다</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="highlight-box mt-16">Lovable에서 Supabase 연결 시 이 과정이 자동! 하지만 구조를 이해하면 수정이 훨씬 쉬워집니다</div>
+  </div>
+</section>
+
+<section class="slide" id="s61">
+<div class="inner">
+<div class="pill mb-12">실습 · 기획 · Lovable</div>
+<h2>에어비앤비 클론코딩 — 기획부터 시작</h2>
+<p class="subtitle mb-20">실제 서비스를 클론코딩할 때도 IA → User Journey 순서로 기획합니다.</p>
+<div class="grid-2">
+<div>
+<div class="code-block" style="font-size:0.82rem;">
+<div class="label">에어비앤비 IA</div>
+📱 메인 (홈)
+  ├ 검색바 (지역, 날짜, 인원)
+  ├ 카테고리 필터 (해변, 산, 도시, 풀빌라...)
+  ├ 숙소 카드 리스트 (이미지, 이름, 가격, 별점)
+  └ 하단 탭바: 탐색, 위시리스트, 여행, 프로필
+
+🔍 숙소 상세
+  ├ 이미지 갤러리 (슬라이더)
+  ├ 숙소 정보 (이름, 설명, 호스트)
+  ├ 편의시설 리스트
+  ├ 예약 카드 (날짜 선택, 인원, 가격 계산)
+  └ 리뷰 목록
+
+❤️ 위시리스트
+  └ 저장한 숙소 카드 리스트
+
+👤 프로필
+  ├ 프로필 정보
+  └ 로그아웃</div>
+</div>
+<div>
+<div class="code-block" style="font-size:0.82rem;">
+<div class="label">에어비앤비 User Journey</div>
+1. 발견: "여행 가고 싶다... 숙소 찾아볼까?"
+   → 감정: 설렘, 기대
+
+2. 진입: 앱 접속 → Google 로그인
+   → 필요 기능: 회원가입/로그인 (Auth)
+
+3. 탐색: 지역/날짜 검색 → 숙소 목록 브라우징
+   → 필요 기능: 검색, 필터, 목록 조회 (Read)
+
+4. 비교: 숙소 상세 확인 → 위시리스트 저장
+   → 필요 기능: 상세 보기, 위시리스트 (Create/Delete)
+
+5. 예약: 날짜/인원 선택 → 예약 요청
+   → 필요 기능: 예약 생성 (Create)
+
+6. 관리: 예약 내역 확인 → 리뷰 작성
+   → 필요 기능: 예약 조회, 리뷰 (Read/Create)</div>
+</div>
+</div>
+<div class="highlight-box mt-16">IA로 화면 구조를, User Journey로 필요 기능을 정리했습니다. 다음은 이걸 PRD로!</div>
+</div>
+</section>
+
+<section class="slide" id="s62">
+<div class="inner">
+<div class="pill mb-12">실습 · 기획 · PRD</div>
+<h2>에어비앤비 클론 — 서비스 기획서(PRD)</h2>
+<p class="subtitle mb-20">IA + User Journey를 합쳐서 하나의 기획서로 정리합니다.</p>
+<div class="code-block mb-16" style="font-size:0.82rem;">
+<div class="label">에어비앤비 클론 PRD</div>
+[서비스 기획서]
+
+1. 서비스명: StayKorea (스테이코리아)
+2. 한 줄 설명: 한국 여행자를 위한 숙소 예약 플랫폼
+3. 타겟 유저: 20-30대 국내 여행 좋아하는 직장인
+4. 핵심 가치: 취향에 맞는 특색 있는 숙소 발견
+
+5. 핵심 기능 (User Journey에서 추출):
+   ① 숙소 검색 (지역, 날짜, 인원, 가격 범위)
+   ② 숙소 목록 조회 (카드 리스트, 카테고리 필터)
+   ③ 숙소 상세 보기 (이미지 갤러리, 편의시설, 리뷰)
+   ④ 위시리스트 저장/삭제 (♥ 토글)
+   ⑤ 예약 요청 (날짜/인원 선택, 가격 자동 계산)
+   ⑥ 리뷰 작성 (별점 1-5 + 텍스트)
+   ⑦ 사용자 인증 (Google Auth)
+
+6. 화면 목록 (IA에서 추출):
+   - 메인: 검색 + 카테고리 + 숙소 카드 리스트
+   - 검색 결과: 필터 적용된 리스트
+   - 숙소 상세: 갤러리 + 정보 + 예약 카드
+   - 위시리스트: 저장된 숙소
+   - 프로필: 사용자 정보
+   - 네비게이션: 하단 탭바 4개
+
+7. 디자인:
+   - 스타일: 에어비앤비 참고, 깔끔하고 따뜻한 느낌
+   - 메인컬러: #FF385C (에어비앤비 핑크)
+   - 배경: #ffffff
+   - 레퍼런스: airbnb.com
+
+8. 기술 스택: React + Tailwind + Supabase</div>
+<div class="card" style="border-left: 3px solid #000; padding:16px 20px;">
+<p><strong>IA의 화면</strong> → PRD 6번 (화면 목록) &nbsp;|&nbsp; <strong>Journey의 기능</strong> → PRD 5번 (핵심 기능)</p>
+<p class="secondary mt-16">기획 산출물끼리 연결되어 빈틈 없는 기획서가 완성됩니다!</p>
+</div>
+</div>
+</section>
+
+<section class="slide" id="s63">
+<div class="inner">
+<div class="pill mb-12">실습 · 20분 · Lovable</div>
+<h2>에어비앤비 클론 → Lovable 프롬프트</h2>
+<p class="subtitle mb-20">위 PRD를 Lovable에 넣을 프롬프트로 변환합니다. 그대로 복사해서 사용하세요!</p>
+<div class="code-block" style="font-size:0.82rem;">Role: 시니어 풀스택 웹 개발자
+Task: 'StayKorea' 에어비앤비 스타일 숙소 예약 웹앱 MVP 제작
+
+Context:
+- 서비스: 한국 여행자를 위한 숙소 검색/예약 플랫폼
+- 타겟: 20-30대 국내 여행을 즐기는 직장인
+- 핵심 가치: 취향에 맞는 특색 있는 숙소를 쉽게 발견
+
+Features (CRUD):
+1. 숙소 목록 조회 — 카드 형태 (이미지, 이름, 위치, 가격/박, 별점)
+2. 카테고리 필터 — 해변🏖️, 산⛰️, 도시🏙️, 풀빌라🏊, 한옥🏯
+3. 검색 — 지역명으로 필터링
+4. 숙소 상세 페이지 — 이미지 갤러리(3장), 설명, 편의시설 아이콘, 호스트 정보
+5. 위시리스트 — ♥ 버튼 토글로 숙소 저장/해제 (Create/Delete)
+6. 예약 요청 — 체크인/체크아웃 날짜 선택, 인원수 선택, 총 가격 자동 계산 (Create)
+7. 리뷰 작성 — 별점(1-5) + 텍스트 리뷰 (Create/Read)
+8. 사용자 인증 — Google 로그인 (Supabase Auth)
+
+Pages:
+1. 메인 (검색바 + 카테고리 칩 + 숙소 카드 그리드)
+2. 숙소 상세 (이미지 슬라이더 + 정보 + 예약 사이드바 + 리뷰 섹션)
+3. 위시리스트 (저장한 숙소 카드 리스트)
+4. 예약 내역 (예약한 숙소 목록 + 상태 표시)
+5. 프로필 (사용자 정보 + 로그아웃)
+
+Design:
+- 스타일 참고: airbnb.com
+- 메인 컬러: #FF385C (핑크)
+- 배경: #ffffff
+- 카드: 둥근 모서리 (12px), 부드러운 그림자
+- 이미지: 16:10 비율, object-fit cover
+- 폰트: Pretendard
+- 모바일 반응형
+
+Tech: React + Tailwind CSS + Supabase (DB + Auth)
+Language: 한국어 UI
+Sample Data: 숙소 8개 (다양한 카테고리/지역/가격), 리뷰 5개 포함</div>
+<div class="highlight-box mt-16">PRD의 5번(기능)이 Features로, 6번(화면)이 Pages로 변환! 기획이 곧 프롬프트.</div>
+</div>
+</section>
+
+<section class="slide" id="s64">
+<div class="inner">
+<div class="pill mb-12">가이드 · Lovable + Supabase</div>
+<h2>Lovable에서 Supabase 연동하기</h2>
+<p class="subtitle mb-20">Lovable이 자동으로 Supabase를 연결해줍니다. 수동 설정이 필요한 경우 이 가이드를 따라하세요.</p>
+<div class="grid-2 mb-16">
+<div>
+<h4 class="mb-12">자동 연동 (권장)</h4>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">1</div>
+<div><strong>Lovable 프로젝트에서 좌측 Supabase 아이콘 클릭</strong><br><span class="secondary">초록색 번개 모양 아이콘입니다</span></div>
+</div>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">2</div>
+<div><strong>"Connect to Supabase" 버튼 클릭</strong><br><span class="secondary">Supabase 계정으로 로그인합니다</span></div>
+</div>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">3</div>
+<div><strong>프로젝트 선택 또는 새로 생성</strong><br><span class="secondary">기존 프로젝트가 없으면 자동 생성됩니다</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">4</div>
+<div><strong>자동으로 API 키 연결 + 테이블 생성 완료!</strong><br><span class="secondary">DB 스키마까지 자동으로 만들어줍니다</span></div>
+</div>
+</div>
+<div>
+<h4 class="mb-12">수동 연결 (오류 시)</h4>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">1</div>
+<div><strong>supabase.com → 프로젝트 Settings → API</strong><br><span class="secondary">API 설정 페이지로 이동합니다</span></div>
+</div>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">2</div>
+<div><strong>Project URL 복사</strong><br><span class="secondary">https://xxxxx.supabase.co 형태</span></div>
+</div>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">3</div>
+<div><strong>anon/public key 복사</strong><br><span class="secondary">eyJh... 으로 시작하는 긴 키</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">4</div>
+<div><strong>Lovable 채팅에 입력</strong><br><span class="secondary">"Supabase URL은 [URL]이고 anon key는 [KEY]야"</span></div>
+</div>
+</div>
+</div>
+<div class="highlight-box">대부분 자동 연결됩니다! 수동은 오류가 날 때만 사용하세요.</div>
+</div>
+</section>
+
+<section class="slide" id="s65">
+<div class="inner">
+<div class="pill mb-12">가이드 · Supabase</div>
+<h2>Supabase Table Editor 활용법</h2>
+<p class="subtitle mb-20">Lovable이 만든 테이블을 직접 확인하고 수정하는 방법</p>
+<div class="grid-2 mb-16">
+<div>
+<h4 class="mb-12">Table Editor 기본 사용법</h4>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">1</div>
+<div><strong>supabase.com 로그인 → 프로젝트 선택</strong></div>
+</div>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">2</div>
+<div><strong>좌측 메뉴 → Table Editor 클릭</strong></div>
+</div>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">3</div>
+<div><strong>생성된 테이블 목록 확인</strong><br><span class="secondary">listings, reviews, bookings 등</span></div>
+</div>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">4</div>
+<div><strong>행 클릭 → 데이터 직접 수정 가능</strong></div>
+</div>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">5</div>
+<div><strong>"+ Insert Row" → 새 데이터 직접 추가</strong></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">6</div>
+<div><strong>컬럼 헤더 클릭 → 정렬/필터</strong></div>
+</div>
+</div>
+<div>
+<h4 class="mb-12">자주 쓰는 조작</h4>
+<div class="card mb-8">
+<h4>테이블 구조 보기</h4>
+<p class="secondary">Columns 탭에서 필드명, 타입 확인. 어떤 데이터가 저장되는지 한눈에 볼 수 있습니다.</p>
+</div>
+<div class="card mb-8">
+<h4>RLS (Row Level Security)</h4>
+<p class="secondary">Authentication → Policies에서 보안 설정. "내 데이터만 보기" 같은 규칙을 설정합니다.</p>
+</div>
+<div class="card mb-8">
+<h4>SQL 직접 실행</h4>
+<p class="secondary">SQL Editor에서 쿼리 직접 작성 가능. 복잡한 조회나 데이터 수정에 유용합니다.</p>
+</div>
+<div class="card">
+<h4>데이터 내보내기</h4>
+<p class="secondary">CSV로 다운로드 가능. 엑셀에서 데이터를 확인하거나 백업할 수 있습니다.</p>
+</div>
+</div>
+</div>
+<div class="highlight-box">Lovable이 자동 생성한 테이블을 Table Editor에서 확인하면 DB 구조를 이해할 수 있어요!</div>
+</div>
+</section>
+
+<section class="slide divider" id="s65-ag-divider">
+<div class="inner">
+<p style="color:rgba(255,255,255,0.6); margin-bottom:8px;">STEP 4+ — 코드 직접 수정</p>
+<h1>GitHub 연동 &amp; Antigravity</h1>
+<p>Lovable로 만든 앱의 코드를 직접 수정하고 확장하기</p>
+</div>
+</section>
+
+<section class="slide" id="s65-ag-github">
+<div class="inner">
+<div class="pill mb-12">가이드 · Lovable → GitHub</div>
+<h2>Lovable에서 GitHub 연동하기</h2>
+<p class="subtitle mb-20">Lovable 프로젝트의 코드를 GitHub에 저장하면, 다른 도구에서도 수정할 수 있습니다.</p>
+<div class="grid-2 mb-16">
+<div>
+<h4 class="mb-12">GitHub 연동 3단계</h4>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">1</div>
+<div><strong>Lovable 프로젝트 → 우측 상단 GitHub 아이콘</strong><br><span class="secondary">또는 Settings → GitHub 메뉴</span></div>
+</div>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">2</div>
+<div><strong>"Connect to GitHub" 클릭 → 권한 허용</strong><br><span class="secondary">GitHub 계정으로 로그인합니다</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">3</div>
+<div><strong>자동으로 Repository 생성 + 코드 Push</strong><br><span class="secondary">Lovable이 만든 모든 코드가 GitHub에 올라갑니다</span></div>
+</div>
+</div>
+<div>
+<h4 class="mb-12">왜 GitHub 연동이 필요한가?</h4>
+<div class="card mb-8">
+<h4>코드 백업</h4>
+<p class="secondary">Lovable 프로젝트가 사라져도 코드는 GitHub에 안전하게 보관됩니다.</p>
+</div>
+<div class="card mb-8">
+<h4>다른 에디터에서 수정</h4>
+<p class="secondary">Antigravity, VS Code 등 전문 에디터에서 코드를 직접 수정할 수 있습니다.</p>
+</div>
+<div class="card">
+<h4>자동 배포 (Vercel)</h4>
+<p class="secondary">GitHub에 코드를 올리면 Vercel이 자동으로 웹사이트를 업데이트합니다.</p>
+</div>
+</div>
+</div>
+<div class="highlight-box">Lovable → GitHub 연동 후에는 Antigravity에서 코드를 열어 자유롭게 수정할 수 있습니다!</div>
+</div>
+</section>
+
+<section class="slide" id="s65-ag-intro">
+<div class="inner">
+<div class="pill mb-12">도구 소개</div>
+<h2>Antigravity가 뭔가요?</h2>
+<p class="subtitle mb-20">구글이 만든 AI 코드 에디터 — 대화로 코드를 수정합니다</p>
+<div class="grid-2 mb-16">
+<div class="card" style="background:#1a1a2e; color:#fff; border:none;">
+<h3 style="color:#fff; margin-bottom:16px;">Google Antigravity</h3>
+<p style="color:rgba(255,255,255,0.8); margin-bottom:16px;">AI가 코드를 읽고, 이해하고, 수정해주는 차세대 코드 에디터</p>
+<div style="display:flex; flex-direction:column; gap:8px;">
+<div style="display:flex; align-items:center; gap:8px;">
+<span style="color:#10b981;">&#9679;</span>
+<span style="color:rgba(255,255,255,0.9); font-size:0.9rem;">Gemini 3 Pro / Claude / GPT 모델 선택</span>
+</div>
+<div style="display:flex; align-items:center; gap:8px;">
+<span style="color:#10b981;">&#9679;</span>
+<span style="color:rgba(255,255,255,0.9); font-size:0.9rem;">MCP 서버 연결 (Firebase, PayPal 등)</span>
+</div>
+<div style="display:flex; align-items:center; gap:8px;">
+<span style="color:#10b981;">&#9679;</span>
+<span style="color:rgba(255,255,255,0.9); font-size:0.9rem;">Planning 모드 / Fast 모드</span>
+</div>
+<div style="display:flex; align-items:center; gap:8px;">
+<span style="color:#10b981;">&#9679;</span>
+<span style="color:rgba(255,255,255,0.9); font-size:0.9rem;">무료 사용 가능 (~2시간/일)</span>
+</div>
+</div>
+<p style="color:rgba(255,255,255,0.5); font-size:0.82rem; margin-top:16px;">antigravity.google</p>
+</div>
+<div>
+<h4 class="mb-12">Lovable vs Antigravity</h4>
+<table class="tbl" style="font-size:0.88rem;">
+<thead><tr><th></th><th>Lovable</th><th>Antigravity</th></tr></thead>
+<tbody>
+<tr><td>방식</td><td>대화로 앱 생성</td><td>코드를 직접 수정</td></tr>
+<tr><td>난이도</td><td>★☆☆☆☆</td><td>★★☆☆☆</td></tr>
+<tr><td>자유도</td><td>제한적</td><td>무제한</td></tr>
+<tr><td>코드 접근</td><td>자동 생성</td><td>직접 편집</td></tr>
+<tr><td>배포</td><td>자동 배포</td><td>GitHub → Vercel</td></tr>
+<tr><td>백엔드</td><td>Supabase</td><td>Firebase 등 자유</td></tr>
+<tr><td>비용</td><td>무료 + Pro</td><td>무료 (~2시간)</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="highlight-box">Lovable = 빠르게 프로토타입 / Antigravity = 코드를 세밀하게 수정. 둘 다 쓰면 최강!</div>
+</div>
+</section>
+
+<section class="slide" id="s65-ag-setup">
+<div class="inner">
+<div class="pill mb-12">가이드 · 설치</div>
+<h2>Antigravity 설치 &amp; 시작하기</h2>
+<p class="subtitle mb-20">3분이면 설치 완료! 구글 계정만 있으면 됩니다.</p>
+<div class="grid-2 mb-16">
+<div>
+<h4 class="mb-12">설치 순서</h4>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">1</div>
+<div><strong>antigravity.google 접속</strong><br><span class="secondary">Download 버튼 클릭 (Mac / Windows / Linux)</span></div>
+</div>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">2</div>
+<div><strong>설치 파일 실행 → 다음, 다음, 완료</strong><br><span class="secondary">기본 설정 그대로 설치하면 됩니다</span></div>
+</div>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">3</div>
+<div><strong>Google 계정으로 로그인</strong><br><span class="secondary">구글 로그인 한 번이면 바로 사용 가능</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">4</div>
+<div><strong>폴더 열기 (Open Folder)</strong><br><span class="secondary">빈 폴더를 만들거나, GitHub 클론 폴더를 엽니다</span></div>
+</div>
+</div>
+<div>
+<h4 class="mb-12">인터페이스 구성</h4>
+<div class="card mb-8" style="border-left:3px solid #3b82f6; padding:12px 16px;">
+<strong>왼쪽: 파일 탐색기</strong>
+<p class="secondary">프로젝트 파일/폴더 구조를 볼 수 있습니다</p>
+</div>
+<div class="card mb-8" style="border-left:3px solid #10b981; padding:12px 16px;">
+<strong>중앙: 에디터 (Editor View)</strong>
+<p class="secondary">코드를 직접 보고 편집하는 영역입니다</p>
+</div>
+<div class="card mb-8" style="border-left:3px solid #f59e0b; padding:12px 16px;">
+<strong>오른쪽: 매니저 (Manager View)</strong>
+<p class="secondary">AI와 대화하는 채팅 창 — 여기서 명령합니다</p>
+</div>
+<div class="card" style="border-left:3px solid #ef4444; padding:12px 16px;">
+<strong>오른쪽: 브라우저 (Browser)</strong>
+<p class="secondary">만든 앱을 바로 미리보기하는 내장 브라우저</p>
+</div>
+</div>
+</div>
+<div class="grid-2">
+<div class="card-alt" style="text-align:center; padding:16px;">
+<h4 class="mb-8">Planning 모드</h4>
+<p class="secondary">AI가 먼저 계획을 세운 후 실행</p>
+<p style="font-size:0.85rem; margin-top:8px;">복잡한 작업에 적합 (정확도 높음)</p>
+</div>
+<div class="card-alt" style="text-align:center; padding:16px;">
+<h4 class="mb-8">Fast 모드</h4>
+<p class="secondary">AI가 바로 실행 (빠른 속도)</p>
+<p style="font-size:0.85rem; margin-top:8px;">간단한 수정에 적합 (속도 우선)</p>
+</div>
+</div>
+</div>
+</section>
+
+<section class="slide" id="s65-ag-workflow">
+<div class="inner">
+<h2>Lovable → GitHub → Antigravity 워크플로우</h2>
+<p class="subtitle mb-20">Lovable로 빠르게 만들고, Antigravity로 세밀하게 수정하는 실전 워크플로우</p>
+<div style="display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:24px;">
+<div class="card" style="padding:10px 20px; text-align:center; min-width:120px;"><strong>Lovable</strong><br><span class="secondary" style="font-size:0.8rem;">앱 생성</span></div>
+<span style="font-size:1.5rem;">→</span>
+<div class="card" style="padding:10px 20px; text-align:center; min-width:120px;"><strong>GitHub</strong><br><span class="secondary" style="font-size:0.8rem;">코드 저장</span></div>
+<span style="font-size:1.5rem;">→</span>
+<div class="card" style="padding:10px 20px; text-align:center; min-width:120px; border-color:#111;"><strong>Antigravity</strong><br><span class="secondary" style="font-size:0.8rem;">코드 수정</span></div>
+<span style="font-size:1.5rem;">→</span>
+<div class="card" style="padding:10px 20px; text-align:center; min-width:120px;"><strong>Vercel</strong><br><span class="secondary" style="font-size:0.8rem;">자동 배포</span></div>
+</div>
+<div class="grid-2 mb-16">
+<div>
+<h4 class="mb-12">실전 순서</h4>
+<div style="display:flex; flex-direction:column; gap:10px;">
+<div class="card" style="display:flex; gap:12px; align-items:center; padding:14px;">
+<div class="step-num" style="width:28px; height:28px; font-size:0.8rem;">1</div>
+<div><strong>Lovable에서 앱 만들기</strong><br><span class="secondary">프롬프트로 빠르게 프로토타입 생성</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:center; padding:14px;">
+<div class="step-num" style="width:28px; height:28px; font-size:0.8rem;">2</div>
+<div><strong>GitHub 연동 → 코드 Push</strong><br><span class="secondary">Lovable 설정에서 GitHub 연결</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:center; padding:14px;">
+<div class="step-num" style="width:28px; height:28px; font-size:0.8rem;">3</div>
+<div><strong>Antigravity에서 GitHub 폴더 열기</strong><br><span class="secondary">git clone 후 Open Folder</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:center; padding:14px;">
+<div class="step-num" style="width:28px; height:28px; font-size:0.8rem;">4</div>
+<div><strong>AI에게 수정 지시</strong><br><span class="secondary">"버튼 색상을 파란색으로 바꿔줘"</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:center; padding:14px;">
+<div class="step-num" style="width:28px; height:28px; font-size:0.8rem;">5</div>
+<div><strong>git push → Vercel 자동 배포</strong><br><span class="secondary">수정 사항이 바로 웹사이트에 반영!</span></div>
+</div>
+</div>
+</div>
+<div>
+<h4 class="mb-12">Antigravity에서 자주 하는 수정</h4>
+<div class="card mb-8">
+<h4>디자인 커스터마이징</h4>
+<div class="code-block" style="font-size:0.82rem;">"전체 테마를 다크모드로 바꿔줘.
+배경색은 #1a1a2e, 텍스트는 #e5e5e5"</div>
+</div>
+<div class="card mb-8">
+<h4>새 기능 추가</h4>
+<div class="code-block" style="font-size:0.82rem;">"메인 페이지에 검색 기능을 추가해줘.
+검색어를 입력하면 리스트를 필터링"</div>
+</div>
+<div class="card">
+<h4>외부 API 연동</h4>
+<div class="code-block" style="font-size:0.82rem;">"OpenWeather API를 연동해서
+메인 화면에 현재 날씨를 표시해줘"</div>
+</div>
+</div>
+</div>
+<div class="highlight-box">Lovable으로 80%를 만들고 → Antigravity로 나머지 20%를 완성하면 최고의 결과물!</div>
+</div>
+</section>
+
+<section class="slide" id="s65-ag-exercise1">
+<div class="inner">
+<div class="pill mb-12">실습 · 10분 · Antigravity · ★★★☆☆</div>
+<h2>Lovable 앱을 Antigravity로 수정하기</h2>
+<p class="subtitle mb-20">앞에서 만든 Lovable 앱의 코드를 Antigravity에서 직접 수정합니다.</p>
+<div class="grid-2 mb-16">
+<div>
+<h4 class="mb-12">준비</h4>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">1</div>
+<div><strong>Lovable 프로젝트 GitHub 연동</strong><br><span class="secondary">아직 안 했다면 Settings → GitHub</span></div>
+</div>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">2</div>
+<div><strong>GitHub에서 코드 Clone</strong><br><span class="secondary">Antigravity 터미널: git clone [URL]</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">3</div>
+<div><strong>Antigravity에서 폴더 열기</strong><br><span class="secondary">Open Folder → 클론한 폴더 선택</span></div>
+</div>
+</div>
+<div>
+<h4 class="mb-12">수정 미션 3가지</h4>
+<div class="code-block mb-8" style="font-size:0.85rem;">
+<div class="label">미션 1: 디자인 변경</div>
+"이 앱의 전체 디자인을 다크모드로 바꿔줘.
+배경은 #0f172a, 카드 배경은 #1e293b,
+텍스트는 흰색 계열로."</div>
+<div class="code-block mb-8" style="font-size:0.85rem;">
+<div class="label">미션 2: 기능 추가</div>
+"메인 화면 상단에 '오늘의 명언' 섹션 추가.
+한국어 명언 20개를 랜덤으로 보여주고
+새로고침 버튼으로 다음 명언 표시."</div>
+<div class="code-block" style="font-size:0.85rem;">
+<div class="label">미션 3: 애니메이션</div>
+"카드가 화면에 나타날 때 아래에서 위로
+슬라이드하면서 페이드인 되는
+애니메이션을 넣어줘."</div>
+</div>
+</div>
+<div class="highlight-box">수정 후 git push하면 Vercel이 자동 배포! 실시간으로 변경사항을 확인하세요.</div>
+</div>
+</section>
+
+<section class="slide" id="s65-ag-zenpop">
+<div class="inner">
+<div class="pill mb-12">실습 · 20분 · Antigravity · ★★★★☆</div>
+<h2>ZenPop — 스트레스 해소 게임 만들기</h2>
+<p class="subtitle mb-20">뽀뽀이(뾰뿅이) 터뜨리기에서 영감을 받은 글로벌 웹 게임!</p>
+<div class="grid-2 mb-16">
+<div>
+<div class="card mb-12" style="background:#1a1a2e; color:#fff; border:none; padding:16px;">
+<p style="color:rgba(255,255,255,0.6); font-size:0.8rem; margin-bottom:8px;">영감: 피터 레벨스 (Peter Levels)</p>
+<h4 style="color:#fff; margin-bottom:8px;">직원 0명으로 연매출 40억</h4>
+<p style="color:rgba(255,255,255,0.8); font-size:0.88rem;">"Just Ship It" — 완벽하게 만들지 말고, 빨리 출시하라! 70개 서비스 중 95% 실패 → 나머지가 대박.</p>
+<p style="color:rgba(255,255,255,0.5); font-size:0.82rem; margin-top:8px;">비행기 게임 하나로 3주 만에 9천만 원 수익</p>
+</div>
+<div class="card-alt" style="padding:14px;">
+<h4 class="mb-8">핵심 아이디어</h4>
+<p style="font-size:0.88rem;">포장 뾰뿅이 터뜨리기 → 온라인 버블 터뜨리기 게임</p>
+<p class="secondary mt-8">무료 버전 + 프리미엄 스킨 ($1.99) = 수익 모델</p>
+</div>
+</div>
+<div>
+<div class="code-block" style="font-size:0.82rem;">
+<div class="label">Antigravity 프롬프트</div>
+'ZenPop' 스트레스 해소 버블 게임 웹앱을 만들어줘.
+
+게임 설명:
+- 화면에 컬러풀한 버블이 계속 생성됨
+- 마우스 클릭 또는 터치로 버블을 터뜨림
+- 터질 때 "팡!" 효과 + 파티클 애니메이션
+- 점수 카운터 (터뜨린 버블 수)
+
+기능:
+1. 무한 버블 생성 (다양한 크기, 색상, 속도)
+2. 클릭/터치로 터뜨리기 (물리 효과)
+3. 콤보 시스템 (연속 터뜨리기 시 보너스)
+4. 최고 점수 기록 (로컬 저장)
+5. 릴랙스 모드 (느린 버블) / 미친 모드 (빠른 버블)
+
+디자인:
+- 배경: 그라디언트 (어두운 남색 → 보라)
+- 버블: 반투명, 그라디언트, 빛나는 효과
+- 터짐 효과: 파티클 + 색상 폭발
+- 모바일 터치 최적화
+
+기술: HTML + CSS + JavaScript
+한국어 UI</div>
+</div>
+</div>
+<div class="highlight-box">이 게임을 만드는 데 약 30분! Firebase 인증 + PayPal 결제를 붙이면 글로벌 수익화도 가능합니다.</div>
+</div>
+</section>
+
+<section class="slide" id="s65-ag-solopreneur">
+<div class="inner">
+<h2>1인 기업가의 비밀 — Just Ship It</h2>
+<p class="subtitle mb-20">완벽하게 만들지 말고, 빨리 출시하라. 100개 중 1개만 성공해도 충분하다.</p>
+<div class="grid-3 mb-16">
+<div class="card" style="text-align:center;">
+<p style="font-size:2.5rem; font-weight:700; margin-bottom:8px;">40억</p>
+<p class="secondary">피터 레벨스 연매출</p>
+<p style="font-size:0.82rem; margin-top:4px;">직원 0명, 사무실 0개</p>
+</div>
+<div class="card" style="text-align:center;">
+<p style="font-size:2.5rem; font-weight:700; margin-bottom:8px;">70+</p>
+<p class="secondary">만든 서비스 수</p>
+<p style="font-size:0.82rem; margin-top:4px;">95% 실패 → 5%가 대박</p>
+</div>
+<div class="card" style="text-align:center;">
+<p style="font-size:2.5rem; font-weight:700; margin-bottom:8px;">30분</p>
+<p class="secondary">서비스 하나 만드는 시간</p>
+<p style="font-size:0.82rem; margin-top:4px;">Antigravity + AI 활용</p>
+</div>
+</div>
+<div class="card mb-16" style="border-left:4px solid #111; padding:20px;">
+<h4 class="mb-8">솔로프리너 공식</h4>
+<div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+<span style="font-size:0.95rem;">월요일: 기획</span>
+<span>→</span>
+<span style="font-size:0.95rem;">수요일: 개발</span>
+<span>→</span>
+<span style="font-size:0.95rem;">금요일: 배포</span>
+<span>→</span>
+<span style="font-size:0.95rem; font-weight:700;">일주일에 1개 서비스</span>
+</div>
+<p class="secondary mt-12">바이브코딩 + AI 도구로 실현 가능한 시대!</p>
+</div>
+<div class="grid-2">
+<div class="card-alt" style="padding:14px;">
+<h4 class="mb-8">필요한 도구</h4>
+<p style="font-size:0.88rem;">Lovable (프로토타입) + Antigravity (커스텀) + Firebase (백엔드) + Vercel (배포) + Stripe/PayPal (결제)</p>
+</div>
+<div class="card-alt" style="padding:14px;">
+<h4 class="mb-8">핵심 마인드셋</h4>
+<p style="font-size:0.88rem;">"완벽하게 만들어서 출시"가 아니라 "빨리 출시하고 반응을 보고 개선"</p>
+</div>
+</div>
+</div>
+</section>
+
+<section class="slide divider" id="s66">
+<div class="inner">
+<p style="color:rgba(255,255,255,0.6); margin-bottom:8px;">STEP 5</p>
+<h1>Firebase Studio &amp; Google Stitch</h1>
+<p>★★★★☆ · 30분 (자율 실습)</p>
+</div>
+</section>
+
+<section class="slide" id="s67">
+  <div class="inner">
+    <div class="pill mb-12">도구 소개</div>
+    <h2>Firebase가 뭔가요?</h2>
+    <p class="subtitle mb-20">구글이 만든 올인원 백엔드 플랫폼</p>
+    <div class="grid-2 mb-16">
+      <div class="card">
+        <div class="step-num">1</div>
+        <h4>Firestore</h4>
+        <p class="secondary">NoSQL 데이터베이스. 문서(document) 안에 데이터를 JSON처럼 저장합니다. 폴더 속 파일 구조로 이해하면 쉽습니다.</p>
+      </div>
+      <div class="card">
+        <div class="step-num">2</div>
+        <h4>Authentication</h4>
+        <p class="secondary">구글 · 이메일 로그인을 한번에 구현합니다. Firebase Console에서 몇 번의 클릭으로 활성화됩니다.</p>
+      </div>
+      <div class="card">
+        <div class="step-num">3</div>
+        <h4>Hosting</h4>
+        <p class="secondary">만든 앱을 인터넷에 공개합니다. 자동으로 URL이 부여되어 누구나 접속할 수 있습니다.</p>
+      </div>
+      <div class="card">
+        <div class="step-num">4</div>
+        <h4>Cloud Functions</h4>
+        <p class="secondary">서버 코드를 클라우드에서 실행합니다. 결제 처리, 이메일 발송 등 고급 기능에 사용합니다.</p>
+      </div>
+    </div>
+    <h3 class="mb-12">Supabase vs Firebase 비교</h3>
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Supabase</th>
+          <th>Firebase</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>DB 타입</td>
+          <td>SQL (테이블)</td>
+          <td>NoSQL (문서)</td>
+        </tr>
+        <tr>
+          <td>비유</td>
+          <td>엑셀 표</td>
+          <td>폴더 속 파일</td>
+        </tr>
+        <tr>
+          <td>사용 도구</td>
+          <td>Lovable</td>
+          <td>Firebase Studio</td>
+        </tr>
+        <tr>
+          <td>가격</td>
+          <td>무료 티어 있음</td>
+          <td>무료 티어 있음</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="slide" id="s68">
+  <div class="inner">
+    <div class="pill mb-12">STEP 5 · 기획 복습</div>
+    <h2>Firebase 실습도 기획부터!</h2>
+    <p class="subtitle mb-20">새로운 도구(Firebase)지만 기획 과정은 동일합니다. IA → UJ → PRD → 프롬프트</p>
+    <div class="grid-2 mb-16">
+      <div class="card">
+        <h4 class="mb-12">📋 투두앱 30초 기획</h4>
+        <div class="code-block" style="font-size:0.82rem;">[IA — 화면 구조]
+1. 메인 리스트 — 할 일 목록
+2. 추가 모달 — 새 할 일 입력
+3. (선택) 설정 — 계정/로그아웃
+
+[UJ — 사용 흐름]
+로그인 → 목록 확인 → 할 일 추가
+→ 완료 체크 → 삭제/수정
+
+[PRD 핵심]
+타겟: 학생/직장인
+기능: CRUD + 우선순위 + 필터
+기술: Next.js + Firebase</div>
+      </div>
+      <div class="card-alt">
+        <h4 class="mb-12">🔄 도구가 달라도 기획은 같다!</h4>
+        <table class="tbl" style="font-size:0.85rem;">
+          <thead><tr><th>기획 단계</th><th>AI Studio</th><th>Lovable</th><th>Firebase</th></tr></thead>
+          <tbody>
+            <tr><td><strong>IA</strong></td><td>Sections</td><td>Pages</td><td>Pages</td></tr>
+            <tr><td><strong>UJ</strong></td><td>기능 나열</td><td>Features</td><td>주요 기능</td></tr>
+            <tr><td><strong>PRD</strong></td><td>Context</td><td>Context+Tech</td><td>Auth+DB</td></tr>
+          </tbody>
+        </table>
+        <div class="highlight-box mt-12" style="font-size:0.85rem;">Firebase만 다른 점: <strong>Google Auth</strong>와 <strong>기술 스택(Next.js + Firebase)</strong>을 반드시 명시!</div>
+      </div>
+    </div>
+    <div class="highlight-box">기획 → 프롬프트 파이프라인은 어떤 도구에서든 동일합니다. 이 습관만 들이면 어떤 AI 도구든 잘 쓸 수 있어요!</div>
+  </div>
+</section>
+
+<section class="slide" id="s69">
+<div class="inner">
+<div class="pill mb-12">실습 · 5분 · Firebase Studio</div>
+<h2>실습: 내 기획서 → Firebase 프롬프트</h2>
+<p class="subtitle">같은 PRD를 Firebase Studio용 프롬프트로 변환합니다. Auth + DB 명시가 핵심!</p>
+<div class="grid-2">
+<div>
+<h4 class="mb-8">변환 규칙</h4>
+<table class="tbl mb-16">
+<thead><tr><th>PRD 항목</th><th>프롬프트 요소</th></tr></thead>
+<tbody>
+<tr><td>서비스명 + 한줄설명</td><td>Task</td></tr>
+<tr><td>핵심 기능 (Journey)</td><td>주요 기능</td></tr>
+<tr><td>기술 스택</td><td><strong>Next.js + Firebase</strong></td></tr>
+<tr><td>(추가) 인증</td><td><strong>Google Auth</strong></td></tr>
+</tbody>
+</table>
+<div class="card-alt" style="padding:14px; font-size:0.88rem;">
+<strong>Firebase 핵심:</strong> Lovable보다 간결해도 됩니다. 대신 <strong>기술 스택(Next.js + Firebase)</strong>과 <strong>인증(Google Auth)</strong>을 반드시 명시하세요.
+</div>
+<div class="card-alt mt-16" style="padding:14px; font-size:0.88rem;">
+<strong>지금 해보세요!</strong> 같은 PRD를 오른쪽 형식으로 변환해서 Firebase Studio에 입력하세요!
+</div>
+</div>
+<div>
+<div class="code-block" style="font-size:0.82rem;">
+<div class="label">예시: 프레시키퍼 → Firebase Studio</div>
+프레시키퍼 - 냉장고 식재료 관리 웹앱을
+만들어줘.
+
+주요 기능:  ← PRD 5번에서 가져옴
+1. 사용자 로그인 (Google Auth)  ← 추가!
+2. 식재료 등록 (이름, 카테고리, 유통기한)
+3. 대시보드에서 D-day 색상 표시
+4. 유통기한 임박 알림
+5. 카테고리별 필터링
+6. 소비완료/폐기 처리
+
+기술 스택: Next.js + Firebase
+(Firestore + Auth)  ← 반드시 명시!
+
+디자인: 깔끔한 카드 UI, 모바일 반응형
+메인 컬러: #10b981
+한국어 UI, 샘플 데이터 포함</div>
+<div class="card mt-16" style="border-color:#111; padding:16px;">
+<h4 class="mb-8">3개 도구 프롬프트 비교 요약</h4>
+<div style="font-size:0.85rem; line-height:1.8;">
+<p><strong>AI Studio:</strong> UI 디자인 + Sections 중심</p>
+<p><strong>Lovable:</strong> CRUD + Pages + Tech 중심</p>
+<p><strong>Firebase:</strong> 기능 + Auth + DB 중심</p>
+<p style="margin-top:8px; font-weight:700;">같은 PRD, 다른 포맷 → 도구에 맞게 변환!</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="slide" id="s70">
+<div class="inner">
+<div class="pill mb-12">실습 · Firebase Studio</div>
+<h2>투두(Todo) 앱 만들기 — 기획부터 프롬프트까지</h2>
+<p class="subtitle mb-20">가장 기본적인 CRUD 앱으로 Firebase Studio에 입문합니다.</p>
+<div class="grid-2">
+<div>
+<div class="code-block" style="font-size:0.82rem;">
+<div class="label">투두앱 간단 PRD</div>
+서비스명: 오늘할일
+한 줄 설명: 심플한 할 일 관리 앱
+타겟: 생산성을 높이고 싶은 학생/직장인
+
+핵심 기능:
+① 할 일 추가 (제목, 마감일, 우선순위)
+② 할 일 목록 조회 (완료/미완료 분리)
+③ 완료 체크 (토글)
+④ 할 일 수정/삭제
+⑤ 우선순위별 정렬 (높음/중간/낮음)
+
+화면: 메인 리스트 + 추가 모달
+디자인: 미니멀 흑백</div>
+</div>
+<div>
+<div class="code-block" style="font-size:0.82rem;">
+<div class="label">Firebase Studio 프롬프트</div>
+'오늘할일' - 할 일 관리 웹앱을 만들어줘.
+
+주요 기능:
+1. 사용자 로그인 (Google Auth)
+2. 할 일 추가 (제목, 마감일, 우선순위: 높음/중간/낮음)
+3. 할 일 목록 (미완료/완료 탭 분리)
+4. 완료 체크 토글 (취소선 애니메이션)
+5. 할 일 수정/삭제
+6. 우선순위별 색상 표시 (높음: 빨강, 중간: 주황, 낮음: 초록)
+7. 오늘 완료한 개수 표시
+
+기술 스택: Next.js + Firebase (Firestore + Auth)
+디자인: 미니멀, 흑백 기반, 깔끔한 체크리스트 UI
+모바일 반응형
+한국어 UI
+샘플 데이터: 할 일 5개 포함 (다양한 우선순위)</div>
+</div>
+</div>
+<div class="highlight-box mt-16">가장 기본적인 CRUD 앱! Firebase Studio 입문에 딱 맞는 실습입니다.</div>
+</div>
+</section>
+
+<section class="slide" id="s71">
+<div class="inner">
+<div class="pill mb-12">가이드 · Firebase Studio</div>
+<h2>Firebase Studio 상세 사용법</h2>
+<p class="subtitle mb-20">처음 접속부터 앱 배포까지 — 스텝 바이 스텝</p>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">1</div>
+<div><strong>firebase.studio 접속</strong><br><span class="secondary">Google 계정으로 로그인합니다</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">2</div>
+<div><strong>"Create an app with AI" 선택</strong><br><span class="secondary">AI 앱 생성 모드로 진입합니다</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">3</div>
+<div><strong>프롬프트 입력</strong><br><span class="secondary">위의 투두앱 프롬프트를 그대로 붙여넣기</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">4</div>
+<div><strong>Blueprint 확인</strong><br><span class="secondary">"Continue to Prototyping" 클릭 — AI가 앱 구조를 미리 보여줍니다</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">5</div>
+<div><strong>Prototyping 단계</strong><br><span class="secondary">실시간 미리보기를 확인하고 채팅으로 수정 요청합니다</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">6</div>
+<div><strong>"Code" 탭으로 전환</strong><br><span class="secondary">만족하면 실제 코드를 확인할 수 있습니다</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">7</div>
+<div><strong>"Preview" 버튼 클릭</strong><br><span class="secondary">실제 앱이 실행됩니다 (localhost 미리보기)</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">8</div>
+<div><strong>배포: App Hosting → "Publish"</strong><br><span class="secondary">공개 URL이 생성되어 누구나 접속 가능!</span></div>
+</div>
+</div>
+<div class="highlight-box mt-16">Blueprint → Prototyping → Code → Preview → Publish 순서를 기억하세요!</div>
+</div>
+</section>
+
+<section class="slide" id="s72">
+<div class="inner">
+<div class="pill mb-12">가이드 · Firebase Console</div>
+<h2>Firebase 콘솔에서 데이터 확인하기</h2>
+<p class="subtitle mb-20">Firebase Studio가 만든 프로젝트의 데이터를 직접 확인하고 관리합니다</p>
+<div class="grid-2 mb-16">
+<div>
+<h4 class="mb-12">Firestore 데이터 확인</h4>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">1</div>
+<div><strong>console.firebase.google.com 접속</strong></div>
+</div>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">2</div>
+<div><strong>프로젝트 선택</strong></div>
+</div>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">3</div>
+<div><strong>좌측 메뉴 → Firestore Database 클릭</strong></div>
+</div>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">4</div>
+<div><strong>컬렉션 목록 확인</strong><br><span class="secondary">todos, users 등 데이터 묶음</span></div>
+</div>
+<div class="card mb-8" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">5</div>
+<div><strong>문서 클릭 → 필드 확인/수정</strong><br><span class="secondary">JSON처럼 키:값 형태</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">6</div>
+<div><strong>"+ Add document" → 수동 데이터 추가</strong></div>
+</div>
+</div>
+<div>
+<h4 class="mb-12">Authentication 확인</h4>
+<div class="card mb-8">
+<h4>인증된 사용자 목록</h4>
+<p class="secondary">Authentication → Users 탭에서 로그인한 사용자 전체를 확인합니다.</p>
+</div>
+<div class="card mb-8">
+<h4>로그인 방법 설정</h4>
+<p class="secondary">Sign-in method → Google 활성화. 이메일/비밀번호, GitHub 등도 추가 가능합니다.</p>
+</div>
+<div class="card mb-8">
+<h4>사용자 관리</h4>
+<p class="secondary">Users 탭에서 사용자 삭제/비활성화가 가능합니다.</p>
+</div>
+<h4 class="mb-8 mt-16">Hosting 확인</h4>
+<div class="card">
+<p class="secondary mb-8"><strong>배포된 앱 URL:</strong> Hosting → 도메인에서 확인</p>
+<p class="secondary"><strong>배포 기록:</strong> Release History에서 이전 버전으로 롤백 가능</p>
+</div>
+</div>
+</div>
+<div class="highlight-box">Firestore는 '폴더(컬렉션) 속 파일(문서)' 구조. 엑셀의 시트→행 구조와 비슷합니다!</div>
+</div>
+</section>
+
+<section class="slide" id="s73">
+<div class="inner">
+<h2>Firebase vs Supabase — 최종 비교</h2>
+<p class="subtitle mb-20">둘 다 써봤으니 이제 차이를 정확히 이해할 수 있습니다</p>
+<table class="tbl mb-20">
+<thead>
+<tr><th>항목</th><th>Supabase</th><th>Firebase</th></tr>
+</thead>
+<tbody>
+<tr><td>DB 타입</td><td>SQL (PostgreSQL)</td><td>NoSQL (Firestore)</td></tr>
+<tr><td>데이터 구조</td><td>테이블 (엑셀 표)</td><td>컬렉션/문서 (폴더/파일)</td></tr>
+<tr><td>쿼리</td><td>SQL로 검색 (익숙함)</td><td>문서 경로로 접근</td></tr>
+<tr><td>인증</td><td>Supabase Auth</td><td>Firebase Auth</td></tr>
+<tr><td>파일 저장</td><td>Supabase Storage</td><td>Cloud Storage</td></tr>
+<tr><td>실시간</td><td>Realtime 구독</td><td>onSnapshot 리스너</td></tr>
+<tr><td>호스팅</td><td>별도 필요</td><td>Firebase Hosting 내장</td></tr>
+<tr><td>연동 도구</td><td>Lovable</td><td>Firebase Studio</td></tr>
+<tr><td>가격</td><td>무료 티어 넉넉</td><td>무료 티어 넉넉</td></tr>
+<tr><td>추천 상황</td><td>정형 데이터, CRUD 앱</td><td>유연한 데이터, 실시간 앱</td></tr>
+</tbody>
+</table>
+<div class="grid-2 mb-16">
+<div class="card">
+<h4 class="mb-8">이런 앱엔 Supabase</h4>
+<p class="secondary">가계부, 식재료 관리, 예약 시스템 등 테이블 구조가 명확한 앱. 데이터가 엑셀처럼 행/열로 정리되는 경우 Supabase가 편합니다.</p>
+</div>
+<div class="card-alt">
+<h4 class="mb-8">이런 앱엔 Firebase</h4>
+<p class="secondary">채팅, 메모, 피드 등 유연한 구조가 필요한 앱. 데이터 형태가 다양하거나 실시간 동기화가 중요한 경우 Firebase가 적합합니다.</p>
+</div>
+</div>
+<div class="highlight-box">정답은 없습니다! 둘 다 무료이니 프로젝트 특성에 맞게 선택하세요.</div>
+</div>
+</section>
+
+<section class="slide" id="s74">
+<div class="inner">
+<h2>Google AI 도구 각각 체험하기</h2>
+<p class="subtitle">세 도구는 각각 독립적으로 사용할 수 있습니다.</p>
+<div class="grid-3 mb-24">
+<div class="card">
+<h3 class="mb-8">Google Stitch</h3>
+<p class="secondary mb-12">UI 디자인 &amp; 프로토타입</p>
+<div class="card-alt" style="padding:12px; font-size:0.88rem;">
+텍스트로 화면 디자인 생성<br>
+Variant로 여러 안 비교<br>
+디자인 감각 없어도 OK
+</div>
+<p class="secondary mt-16" style="font-size:0.8rem;">stitch.withgoogle.com</p>
+</div>
+<div class="card">
+<h3 class="mb-8">Firebase Studio</h3>
+<p class="secondary mb-12">풀스택 앱을 프롬프트로</p>
+<div class="card-alt" style="padding:12px; font-size:0.88rem;">
+프롬프트만으로 웹앱 생성<br>
+Firestore DB + Auth 내장<br>
+실시간 미리보기 &amp; 배포
+</div>
+<p class="secondary mt-16" style="font-size:0.8rem;">firebase.studio</p>
+</div>
+<div class="card">
+<h3 class="mb-8">AI Studio</h3>
+<p class="secondary mb-12">Gemini API 실험실</p>
+<div class="card-alt" style="padding:12px; font-size:0.88rem;">
+Gemini 모델 직접 테스트<br>
+프롬프트 설계 &amp; 튜닝<br>
+API 키 발급 &amp; 코드 생성
+</div>
+<p class="secondary mt-16" style="font-size:0.8rem;">aistudio.google.com</p>
+</div>
+</div>
+<div class="card-alt" style="padding:16px;">
+<h4 class="mb-8">프레시키퍼로 각각 체험해보기</h4>
+<div class="grid-3">
+<div style="font-size:0.85rem;"><strong>Stitch:</strong> "냉장고 식재료 관리 앱의 메인 대시보드를 만들어줘"</div>
+<div style="font-size:0.85rem;"><strong>Firebase:</strong> "식재료 유통기한을 관리하는 웹앱을 만들어줘"</div>
+<div style="font-size:0.85rem;"><strong>AI Studio:</strong> "유통기한 데이터를 주면 레시피를 추천해줘"</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="slide" id="s75">
+<div class="inner">
+<div class="pill mb-12">실습 8 · 자율 · Firebase Studio</div>
+<h2>Firebase Studio 프롬프트</h2>
+<p class="subtitle">Firebase Studio에 아래 프롬프트를 입력하면 풀스택 앱이 생성됩니다.</p>
+<div class="grid-2">
+<div>
+<div class="code-block">
+<div class="label">CASE A: 프레시키퍼</div>
+프레시키퍼 - 냉장고 식재료 관리 웹앱을 만들어줘.
+
+주요 기능:
+1. 식재료 등록 (이름, 카테고리, 유통기한)
+2. 대시보드에서 D-day 색상 표시 (초록/노랑/빨강)
+3. 유통기한 임박 알림
+4. 카테고리별 필터링
+5. 사용자 로그인 (Google Auth)
+
+기술 스택: Next.js + Firebase (Firestore + Auth)
+디자인: 깔끔한 카드 UI, 모바일 반응형
+한국어 UI, 샘플 데이터 포함</div>
+</div>
+<div>
+<div class="code-block">
+<div class="label">CASE B: 하루습관</div>
+하루습관 - 습관 트래커 웹앱을 만들어줘.
+
+주요 기능:
+1. 습관 추가/수정/삭제
+2. 매일 습관 체크 (토글)
+3. 주간 달성률 차트
+4. 연속 달성일(Streak) 표시
+5. 사용자 로그인 (Google Auth)
+
+기술 스택: Next.js + Firebase (Firestore + Auth)
+디자인: 미니멀 카드 UI, 모바일 반응형
+한국어 UI, 샘플 데이터 포함</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="slide" id="s76">
+  <div class="inner">
+    <div class="pill mb-12">🎉 STEP 5 마무리 · 자유실습</div>
+    <h2>내 기획서에 백엔드 붙여보기</h2>
+    <p class="subtitle mb-20">STEP 3에서 만든 기획서를 Firebase Studio 프롬프트로 변환해서 풀스택 앱을 만들어봅니다. (10분)</p>
+    <div class="grid-2 mb-16">
+      <div class="card">
+        <h4 class="mb-8">🔧 내 기획서 → 풀스택 변환</h4>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="card-alt" style="padding:10px 14px;">
+            <p class="secondary"><strong>1.</strong> 내 기획서(PRD)에서 핵심 기능 가져오기</p>
+          </div>
+          <div class="card-alt" style="padding:10px 14px;">
+            <p class="secondary"><strong>2.</strong> "사용자 로그인 (Google Auth)" 추가</p>
+          </div>
+          <div class="card-alt" style="padding:10px 14px;">
+            <p class="secondary"><strong>3.</strong> "기술 스택: Next.js + Firebase" 추가</p>
+          </div>
+          <div class="card-alt" style="padding:10px 14px;">
+            <p class="secondary"><strong>4.</strong> Firebase Studio에 입력 → 풀스택 앱 생성!</p>
+          </div>
+        </div>
+      </div>
+      <div class="card-alt">
+        <h4 class="mb-8">⚡ 프론트 vs 풀스택 차이 체감하기</h4>
+        <table class="tbl" style="font-size:0.85rem;">
+          <thead><tr><th>비교</th><th>STEP 4 (Lovable)</th><th>STEP 5 (Firebase)</th></tr></thead>
+          <tbody>
+            <tr><td>데이터 저장</td><td>Supabase</td><td>Firestore</td></tr>
+            <tr><td>로그인</td><td>선택</td><td>Google Auth</td></tr>
+            <tr><td>배포</td><td>자동 URL</td><td>Firebase Hosting</td></tr>
+            <tr><td>장점</td><td>빠르고 쉬움</td><td>구글 생태계</td></tr>
+          </tbody>
+        </table>
+        <p class="secondary mt-12">같은 기획서로 두 도구 모두 시도해보세요! 어떤 도구가 내 앱에 맞는지 비교할 수 있습니다.</p>
+      </div>
+    </div>
+    <div class="highlight-box">축하합니다! 🎉 기획부터 프론트 프로토타입 → 백엔드 연동까지 전체 과정을 경험했습니다. 다음은 Stitch로 디자인까지!</div>
+  </div>
+</section>
+
+<section class="slide divider" id="s77">
+<div class="inner">
+<p style="color:rgba(255,255,255,0.6); margin-bottom:8px;">STEP 6</p>
+<h1>Stitch 콜라보 워크플로우</h1>
+<p>디자인은 Stitch, 구현은 AI Studio / Lovable / Firebase Studio</p>
+<div class="tools" style="margin-top:24px;">디자인 → 코드 → 배포까지 원스톱</div>
+</div>
+</section>
+
+<section class="slide" id="s78">
+<div class="inner">
+<h2>Stitch 콜라보란?</h2>
+<p class="subtitle mb-20">Stitch는 텍스트 프롬프트로 UI 디자인(HTML/CSS)을 만들어줍니다. 디자인 감각이 없어도 프로 수준의 화면을 뽑을 수 있어요!</p>
+<div class="card-alt mb-24" style="padding:16px; text-align:center;">
+<p style="font-weight:700; font-size:1.05rem; margin-bottom:8px;">핵심 개념: 디자인과 구현을 분리한다</p>
+<p class="secondary">Stitch = 디자인 담당 / AI Studio, Lovable, Firebase Studio = 구현 담당</p>
+</div>
+<div class="grid-3 mb-24">
+<div class="card">
+<h4 class="mb-8">Stitch + AI Studio</h4>
+<p class="secondary mb-8">Export 버튼으로 직접 연동</p>
+<p style="font-size:0.85rem;">디자인 → AI Studio에서 코드 작성 + 배포. 가장 쉽고 빠른 방법!</p>
+<div class="pill mt-16">난이도 ★★☆☆☆</div>
+</div>
+<div class="card" style="border-color:#111;">
+<h4 class="mb-8">Stitch + Lovable</h4>
+<p class="secondary mb-8">스크린샷 + 프롬프트로 전달</p>
+<p style="font-size:0.85rem;">디자인 → Lovable에서 CRUD 앱 구현 + Supabase DB 연동</p>
+<div class="pill pill-black mt-16">난이도 ★★★☆☆</div>
+</div>
+<div class="card">
+<h4 class="mb-8">Stitch + Firebase Studio</h4>
+<p class="secondary mb-8">HTML 코드 복사 후 프롬프트에 포함</p>
+<p style="font-size:0.85rem;">디자인 → Firebase에서 풀스택 앱 (Auth + DB + 배포)</p>
+<div class="pill mt-16">난이도 ★★★★☆</div>
+</div>
+</div>
+<div style="display:flex; align-items:center; justify-content:center; gap:20px; flex-wrap:wrap;">
+<div class="card-alt" style="padding:10px 20px; text-align:center;"><strong>아이디어</strong></div>
+<span style="font-size:1.5rem; color:#999;">→</span>
+<div class="card-alt" style="padding:10px 20px; text-align:center;"><strong>PRD</strong></div>
+<span style="font-size:1.5rem; color:#999;">→</span>
+<div class="card" style="padding:10px 20px; text-align:center; border-color:#111;"><strong>Stitch (디자인)</strong></div>
+<span style="font-size:1.5rem; color:#999;">→</span>
+<div class="card-alt" style="padding:10px 20px; text-align:center;"><strong>구현 도구 (코드)</strong></div>
+<span style="font-size:1.5rem; color:#999;">→</span>
+<div class="card-alt" style="padding:10px 20px; text-align:center;"><strong>배포</strong></div>
+</div>
+</div>
+</section>
+
+<section class="slide" id="s79">
+<div class="inner">
+<div class="pill mb-12">가이드 · Stitch</div>
+<h2>Stitch 사용법 상세 가이드</h2>
+<p class="subtitle mb-20">stitch.withgoogle.com — 텍스트만 입력하면 UI 디자인이 뚝딱!</p>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px;">
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">1</div>
+<div><strong>stitch.withgoogle.com 접속</strong><br><span class="secondary">Google 계정으로 로그인합니다</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">2</div>
+<div><strong>"Design with AI" 클릭</strong><br><span class="secondary">AI 디자인 생성 모드로 진입합니다</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">3</div>
+<div><strong>디바이스 타입 선택</strong><br><span class="secondary">Web / Mobile / Tablet 중 선택</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">4</div>
+<div><strong>모델 선택</strong><br><span class="secondary">Gemini 3 Flash (빠름) / Gemini 3 Pro (정교함)</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">5</div>
+<div><strong>프롬프트 입력 → 생성 대기</strong><br><span class="secondary">영어 프롬프트 권장. 1~2분 소요됩니다</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">6</div>
+<div><strong>디자인 확인 → 수정 요청</strong><br><span class="secondary">채팅으로 추가 수정을 요청할 수 있습니다</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">7</div>
+<div><strong>Variant 생성</strong><br><span class="secondary">여러 디자인안을 비교해서 최적안을 고릅니다</span></div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:flex-start;">
+<div class="step-num" style="flex-shrink:0;">8</div>
+<div><strong>Export</strong><br><span class="secondary">Code 복사 / AI Studio로 보내기 / 스크린샷 저장</span></div>
+</div>
+</div>
+<div class="highlight-box">프롬프트는 영어로 작성하면 결과가 더 좋습니다! 한국어 UI는 프롬프트에 "Korean UI text"라고 명시하세요.</div>
+</div>
+</section>
+
+<section class="slide" id="s80">
+<div class="inner">
+<h2>Stitch + AI Studio 워크플로우</h2>
+<p class="subtitle mb-20">Stitch에서 디자인 → Export → AI Studio에서 코드 작성 → 배포까지 한번에!</p>
+<div style="display:flex; align-items:center; justify-content:center; gap:16px; margin:40px 0; flex-wrap:wrap;">
+<div class="card" style="text-align:center; padding:16px 20px; min-width:140px;">
+<div class="step-num" style="margin:0 auto 8px;">1</div>
+<strong>AI 프로젝트</strong>
+<p class="secondary" style="font-size:0.8rem;">Claude/Gemini에서<br>Stitch 프롬프트 생성</p>
+</div>
+<div style="font-size:1.5rem; color:#999;">→</div>
+<div class="card" style="text-align:center; padding:16px 20px; min-width:140px; border-color:#111;">
+<div class="step-num" style="margin:0 auto 8px;">2</div>
+<strong>Stitch</strong>
+<p class="secondary" style="font-size:0.8rem;">프롬프트 입력<br>→ UI 디자인 생성</p>
+</div>
+<div style="font-size:1.5rem; color:#999;">→</div>
+<div class="card" style="text-align:center; padding:16px 20px; min-width:140px;">
+<div class="step-num" style="margin:0 auto 8px;">3</div>
+<strong>Export</strong>
+<p class="secondary" style="font-size:0.8rem;">"AI Studio" 선택<br>→ Build 클릭</p>
+</div>
+<div style="font-size:1.5rem; color:#999;">→</div>
+<div class="card" style="text-align:center; padding:16px 20px; min-width:140px;">
+<div class="step-num" style="margin:0 auto 8px;">4</div>
+<strong>AI Studio</strong>
+<p class="secondary" style="font-size:0.8rem;">코드 자동 작성<br>+ 프롬프트 추가</p>
+</div>
+<div style="font-size:1.5rem; color:#999;">→</div>
+<div class="card" style="text-align:center; padding:16px 20px; min-width:140px;">
+<div class="step-num" style="margin:0 auto 8px;">5</div>
+<strong>Deploy</strong>
+<p class="secondary" style="font-size:0.8rem;">Deploy App → URL 생성<br>→ 배포 완료!</p>
+</div>
+</div>
+<div class="grid-2">
+<div class="card-alt" style="padding:14px;">
+<h4 class="mb-8">Export 할 때 무엇이 전달되나요?</h4>
+<p style="font-size:0.88rem;">Stitch에서 Export → AI Studio를 선택하면 <strong>디자인 이미지 + HTML 코드</strong>가 함께 AI Studio로 전달됩니다. AI Studio는 이걸 보고 실제 작동하는 앱을 만들어줍니다.</p>
+</div>
+<div class="card-alt" style="padding:14px;">
+<h4 class="mb-8">AI Studio에서 추가 프롬프트 작성</h4>
+<p style="font-size:0.88rem;">Export 후 AI Studio 화면에서 <strong>추가 기능 요청</strong>을 작성합니다. "이 디자인을 기반으로 ~기능을 추가해줘"라고 입력하면 됩니다.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section class="slide" id="s81">
+<div class="inner">
+<div class="pill mb-12">실습 11 · Stitch + AI Studio</div>
+<h2>AI 구독 관리자 만들기</h2>
+<p class="subtitle mb-20">내가 구독 중인 AI 서비스를 정리하고, AI가 추천까지 해주는 대시보드</p>
+<div class="grid-2">
+<div>
+<div class="code-block" style="font-size:0.82rem;">
+<div class="label">STEP 1: Stitch 프롬프트</div>
+Design a web dashboard for 'AI Subscription Manager'.
+
+Layout:
+1. Header with app title and user avatar
+2. Summary cards: total monthly cost,
+   active subscriptions count,
+   next renewal date
+3. Subscription list table: service name,
+   price, billing date, category, status badge
+4. Add subscription form: service name,
+   price (USD), start date, category dropdown
+5. AI Advisor section: API key input,
+   job title input, interests input,
+   "Get Recommendations" button
+
+Style: Clean, modern dashboard.
+White background, dark text.
+Primary color: #3b82f6 (blue).
+Card-based layout with subtle shadows.
+Korean UI text.</div>
+</div>
+<div>
+<div class="code-block" style="font-size:0.82rem;">
+<div class="label">STEP 2: AI Studio 프롬프트 (Export 후)</div>
+이 디자인을 기반으로 AI 구독 관리 웹앱을
+완성해줘.
+
+주요 기능:
+1. 구독 서비스 추가/수정/삭제
+   (이름, 가격, 결제일, 카테고리)
+2. 월별 총 구독 비용 자동 계산
+3. 다음 결제일 알림 표시
+4. AI 어드바이저: Gemini API 키 입력 →
+   내 직업/관심분야 기반 AI 서비스 추천
+5. 데이터는 브라우저 localStorage에 저장
+
+기술: 순수 HTML/CSS/JavaScript (서버 없음)
+한국어 UI
+샘플 데이터: 구독 3개 포함
+(ChatGPT, Gemini, Claude)</div>
+</div>
+</div>
+<div class="highlight-box mt-16">Stitch에서 Export 버튼 → AI Studio 선택 → 위 프롬프트 추가 입력 → Build → Deploy!</div>
+</div>
+</section>
+
+<section class="slide" id="s82">
+<div class="inner">
+<div class="pill mb-12">실습 12 · Stitch + AI Studio</div>
+<h2>포트폴리오 사이트 만들기</h2>
+<p class="subtitle mb-20">취업/이직에 바로 쓸 수 있는 나만의 포트폴리오 웹사이트</p>
+<div class="grid-2">
+<div>
+<div class="code-block" style="font-size:0.82rem;">
+<div class="label">STEP 1: Stitch 프롬프트</div>
+Design a personal portfolio website.
+
+Layout:
+1. Hero section: large name, title,
+   one-line bio, profile photo placeholder
+2. About section: brief introduction paragraph
+3. Skills section: skill tags with
+   proficiency bars
+4. Projects section: 3 project cards with
+   image, title, description, tech tags,
+   link button
+5. Contact section: email, GitHub,
+   LinkedIn icons
+6. Footer with copyright
+
+Style: Minimal, elegant. White bg, dark text.
+Accent: #6366f1 (indigo).
+Clean typography, plenty of whitespace.
+Desktop layout.</div>
+</div>
+<div>
+<div class="code-block" style="font-size:0.82rem;">
+<div class="label">STEP 2: AI Studio 프롬프트 (Export 후)</div>
+이 디자인을 기반으로 개인 포트폴리오
+웹사이트를 완성해줘.
+
+기능:
+1. 반응형 레이아웃
+   (모바일/태블릿/데스크탑)
+2. 스크롤 시 부드러운 애니메이션 효과
+3. 프로젝트 카드 클릭 시 상세 모달
+4. 다크모드 토글 버튼
+5. Contact 폼 (이메일 전송은 없이 UI만)
+
+기술: HTML/CSS/JavaScript
+한국어 UI (이름, 소개 등은 한국어로)
+샘플 데이터: 프로젝트 3개, 스킬 6개 포함</div>
+</div>
+</div>
+<div class="highlight-box mt-16">포트폴리오는 취업/이직에 바로 쓸 수 있는 실전 프로젝트! 내 정보로 바꿔서 바로 활용하세요.</div>
+</div>
+</section>
+
+<section class="slide" id="s83">
+<div class="inner">
+<h2>Stitch + Lovable 워크플로우</h2>
+<p class="subtitle mb-20">Stitch 디자인 → 스크린샷 캡처 → Lovable에 이미지 첨부 + 프롬프트</p>
+<div class="card-alt mb-24" style="padding:14px;">
+<p style="font-size:0.88rem;"><strong>왜 스크린샷?</strong> Lovable은 AI Studio처럼 Export 연동이 없습니다. 대신 이미지를 첨부하면 그 디자인을 참고해서 코드를 작성합니다!</p>
+</div>
+<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:24px;">
+<div class="card" style="display:flex; flex-direction:column; gap:8px; align-items:center; text-align:center; padding:16px;">
+<div class="step-num">1</div>
+<strong>Stitch에서 디자인 생성</strong>
+<p class="secondary" style="font-size:0.82rem;">원하는 UI를 프롬프트로 만듭니다</p>
+</div>
+<div class="card" style="display:flex; flex-direction:column; gap:8px; align-items:center; text-align:center; padding:16px;">
+<div class="step-num">2</div>
+<strong>스크린샷 캡처</strong>
+<p class="secondary" style="font-size:0.82rem;">Mac: Cmd+Shift+4<br>Win: Win+Shift+S</p>
+</div>
+<div class="card" style="display:flex; flex-direction:column; gap:8px; align-items:center; text-align:center; padding:16px;">
+<div class="step-num">3</div>
+<strong>Lovable 새 프로젝트</strong>
+<p class="secondary" style="font-size:0.82rem;">lovable.dev 접속 → 새 프로젝트</p>
+</div>
+<div class="card" style="display:flex; flex-direction:column; gap:8px; align-items:center; text-align:center; padding:16px;">
+<div class="step-num">4</div>
+<strong>이미지 첨부 + 프롬프트</strong>
+<p class="secondary" style="font-size:0.82rem;">스크린샷 업로드 + 기능 설명 작성</p>
+</div>
+<div class="card" style="display:flex; flex-direction:column; gap:8px; align-items:center; text-align:center; padding:16px;">
+<div class="step-num">5</div>
+<strong>"이 디자인 참고" 명시</strong>
+<p class="secondary" style="font-size:0.82rem;">"이 디자인을 참고해서 만들어줘"</p>
+</div>
+<div class="card" style="display:flex; flex-direction:column; gap:8px; align-items:center; text-align:center; padding:16px;">
+<div class="step-num">6</div>
+<strong>Supabase 연동 (선택)</strong>
+<p class="secondary" style="font-size:0.82rem;">DB 저장이 필요하면 Supabase 연동</p>
+</div>
+</div>
+<div class="highlight-box">Lovable은 이미지를 첨부하면 디자인을 참고해서 코드를 작성합니다! "이 디자인을 참고해서 만들어줘"를 꼭 프롬프트에 포함하세요.</div>
+</div>
+</section>
+
+<section class="slide" id="s84">
+<div class="inner">
+<div class="pill mb-12">실습 13 · Stitch + Lovable</div>
+<h2>레시피 공유 앱 만들기 (CookMate)</h2>
+<p class="subtitle mb-20">Stitch로 디자인하고 Lovable + Supabase로 CRUD 앱 완성!</p>
+<div class="grid-2">
+<div>
+<div class="code-block" style="font-size:0.82rem;">
+<div class="label">STEP 1: Stitch 프롬프트</div>
+Design a recipe sharing web app
+called 'CookMate'.
+
+Layout:
+1. Top nav: logo, search bar,
+   "Add Recipe" button, user avatar
+2. Filter bar: category chips
+   (Korean, Japanese, Western,
+    Chinese, Dessert)
+3. Recipe grid: cards with food photo,
+   title, cook time, difficulty stars,
+   author name
+4. Recipe detail view: large photo,
+   ingredients list, step-by-step
+   instructions, comments
+5. Add recipe form: title, photo upload,
+   category, cook time, difficulty,
+   ingredients, steps
+
+Style: Warm, inviting.
+White bg, coral (#f97316) accent.
+Card layout with rounded corners.
+Desktop view.</div>
+</div>
+<div>
+<div class="code-block" style="font-size:0.82rem;">
+<div class="label">STEP 2: Lovable 프롬프트 (+ 스크린샷 첨부)</div>
+이 디자인을 참고해서 'CookMate' 레시피
+공유 웹앱을 만들어줘.
+(Stitch 스크린샷 이미지 첨부)
+
+주요 기능:
+1. 레시피 CRUD (제목, 사진URL, 카테고리,
+   조리시간, 난이도, 재료, 조리순서)
+2. 카테고리 필터
+   (한식/일식/양식/중식/디저트)
+3. 검색 기능 (제목, 재료 검색)
+4. 레시피 상세 보기
+   (재료 목록 + 단계별 조리법)
+5. 좋아요 기능
+
+디자인: Stitch 디자인 참고
+포인트 컬러: 코랄(#f97316)
+Supabase 연동 (recipes 테이블)
+한국어 UI, 반응형
+샘플 데이터: 레시피 5개 포함</div>
+</div>
+</div>
+<div class="highlight-box mt-16">Stitch 스크린샷을 Lovable 프롬프트 입력 시 이미지로 첨부하는 것을 잊지 마세요!</div>
+</div>
+</section>
+
+<section class="slide" id="s85">
+<div class="inner">
+<h2>Stitch + Firebase Studio 워크플로우 (상세)</h2>
+<p class="subtitle mb-20">Stitch HTML 코드를 Firebase Studio에 전달해서 풀스택 앱 완성</p>
+<div style="display:flex; align-items:center; justify-content:center; gap:16px; margin:32px 0; flex-wrap:wrap;">
+<div class="card" style="text-align:center; padding:14px 18px;">
+<div class="step-num" style="margin:0 auto 6px;">1</div>
+<strong>Stitch</strong>
+<p class="secondary" style="font-size:0.8rem;">UI 디자인 생성</p>
+</div>
+<span style="font-size:1.5rem; color:#999;">→</span>
+<div class="card" style="text-align:center; padding:14px 18px;">
+<div class="step-num" style="margin:0 auto 6px;">2</div>
+<strong>Export → Copy Code</strong>
+<p class="secondary" style="font-size:0.8rem;">HTML 코드 클립보드 복사</p>
+</div>
+<span style="font-size:1.5rem; color:#999;">→</span>
+<div class="card" style="text-align:center; padding:14px 18px;">
+<div class="step-num" style="margin:0 auto 6px;">3</div>
+<strong>Firebase Studio</strong>
+<p class="secondary" style="font-size:0.8rem;">프롬프트 + HTML 코드 붙여넣기</p>
+</div>
+<span style="font-size:1.5rem; color:#999;">→</span>
+<div class="card" style="text-align:center; padding:14px 18px;">
+<div class="step-num" style="margin:0 auto 6px;">4</div>
+<strong>Build &amp; Preview</strong>
+<p class="secondary" style="font-size:0.8rem;">Blueprint → Code → Preview</p>
+</div>
+<span style="font-size:1.5rem; color:#999;">→</span>
+<div class="card" style="text-align:center; padding:14px 18px;">
+<div class="step-num" style="margin:0 auto 6px;">5</div>
+<strong>Publish</strong>
+<p class="secondary" style="font-size:0.8rem;">App Hosting → URL 배포</p>
+</div>
+</div>
+<table class="tbl mb-20">
+<thead><tr><th>항목</th><th>Stitch + AI Studio</th><th>Stitch + Firebase Studio</th></tr></thead>
+<tbody>
+<tr><td>연동 방식</td><td>Export 버튼 (직접 연동)</td><td>HTML 코드 복사 → 프롬프트에 포함</td></tr>
+<tr><td>백엔드</td><td>없음 (프론트엔드만)</td><td>Firestore + Auth 포함</td></tr>
+<tr><td>배포</td><td>Deploy App 버튼</td><td>App Hosting → Publish</td></tr>
+<tr><td>난이도</td><td>★★☆☆☆</td><td>★★★★☆</td></tr>
+<tr><td>추천 상황</td><td>간단한 도구/대시보드</td><td>로그인 + DB 필요한 앱</td></tr>
+</tbody>
+</table>
+<div class="highlight-box">Firebase Studio에는 Export 직접 연동이 없습니다. Stitch에서 "Copy Code" → Firebase Studio 프롬프트에 HTML 코드를 붙여넣기하세요!</div>
+</div>
+</section>
+
+<section class="slide" id="s86">
+<div class="inner">
+<div class="pill mb-12">실습 14 · Stitch + Firebase Studio</div>
+<h2>모임 관리 앱 만들기 (MeetUp Planner)</h2>
+<p class="subtitle mb-20">Stitch로 디자인 → Firebase Studio에서 Auth + DB 포함 풀스택 앱 완성!</p>
+<div class="grid-2">
+<div>
+<div class="code-block" style="font-size:0.82rem;">
+<div class="label">STEP 1: Stitch 프롬프트</div>
+Design a group meetup management
+web app called 'MeetUp Planner'.
+
+Layout:
+1. Header: app name, notification bell,
+   user avatar
+2. Dashboard: upcoming meetups cards
+   with date, time, location,
+   attendee avatars
+3. Create meetup form: title, date,
+   time, location, description,
+   max attendees
+4. Meetup detail: info card,
+   attendee list with RSVP status,
+   comments section
+5. My meetups tab: hosting vs
+   attending filter
+
+Style: Clean, professional.
+White bg, teal (#14b8a6) accent.
+Card-based, desktop layout.</div>
+</div>
+<div>
+<div class="code-block" style="font-size:0.82rem;">
+<div class="label">STEP 2: Firebase Studio 프롬프트 (+ HTML 코드)</div>
+'MeetUp Planner' - 모임 관리 웹앱을
+만들어줘.
+
+아래 HTML 디자인을 참고해줘:
+[Stitch에서 복사한 HTML 코드 붙여넣기]
+
+주요 기능:
+1. 사용자 로그인 (Google Auth)
+2. 모임 생성 (제목, 날짜, 시간, 장소,
+   설명, 최대인원)
+3. 모임 목록 조회 (다가오는 순 정렬)
+4. 참석 여부 표시 (참석/불참/미정)
+5. 모임별 댓글 기능
+6. 내 모임 (주최/참석 분리)
+
+기술 스택: Next.js + Firebase
+(Firestore + Auth)
+디자인: Stitch 디자인 참고
+포인트 컬러: 틸(#14b8a6)
+모바일 반응형, 한국어 UI
+샘플 데이터: 모임 3개 + 사용자 5명</div>
+</div>
+</div>
+<div class="highlight-box mt-16">Stitch에서 Copy Code 클릭 → Firebase Studio 프롬프트에 "아래 HTML 디자인을 참고해줘:" 뒤에 붙여넣기!</div>
+</div>
+</section>
+
+<section class="slide" id="s87">
+<div class="inner">
+<h2>Stitch 콜라보 비교 정리</h2>
+<p class="subtitle mb-20">세 가지 콜라보 패턴을 한눈에 비교합니다</p>
+<table class="tbl mb-24">
+<thead>
+<tr><th>항목</th><th>Stitch + AI Studio</th><th>Stitch + Lovable</th><th>Stitch + Firebase Studio</th></tr>
+</thead>
+<tbody>
+<tr><td>연동 방식</td><td>Export 버튼 (직접)</td><td>스크린샷 + 프롬프트</td><td>HTML 코드 복사</td></tr>
+<tr><td>백엔드</td><td>없음 (프론트만)</td><td>Supabase 연동 가능</td><td>Firebase (Auth+DB+배포)</td></tr>
+<tr><td>난이도</td><td>★★☆☆☆</td><td>★★★☆☆</td><td>★★★★☆</td></tr>
+<tr><td>장점</td><td>가장 빠르고 쉬움</td><td>CRUD + DB 연동</td><td>풀스택 + 인증</td></tr>
+<tr><td>추천 상황</td><td>간단한 도구/대시보드</td><td>데이터 저장 필요한 앱</td><td>로그인 + 실시간 앱</td></tr>
+<tr><td>배포</td><td>AI Studio Deploy</td><td>Lovable 자동 배포</td><td>Firebase Hosting</td></tr>
+</tbody>
+</table>
+<div class="grid-3 mb-16">
+<div class="card-alt" style="padding:14px; text-align:center;">
+<h4 class="mb-8">쉬운 것부터</h4>
+<p style="font-size:0.88rem;">AI Studio로 시작</p>
+<p class="secondary" style="font-size:0.82rem;">구독관리자, 포트폴리오</p>
+</div>
+<div class="card-alt" style="padding:14px; text-align:center;">
+<h4 class="mb-8">DB가 필요하면</h4>
+<p style="font-size:0.88rem;">Lovable + Supabase</p>
+<p class="secondary" style="font-size:0.82rem;">레시피앱, 가계부</p>
+</div>
+<div class="card-alt" style="padding:14px; text-align:center;">
+<h4 class="mb-8">로그인이 필요하면</h4>
+<p style="font-size:0.88rem;">Firebase Studio</p>
+<p class="secondary" style="font-size:0.82rem;">모임앱, SNS</p>
+</div>
+</div>
+<div class="highlight-box">디자인은 Stitch에서, 구현은 프로젝트 특성에 맞는 도구로! 디자인 감각 없어도 프로 수준 UI를 만들 수 있습니다.</div>
+</div>
+</section>
+
+<section class="slide" id="s88">
+<div class="inner">
+<div class="pill mb-12">실습 10 · 자율 · Firebase Studio</div>
+<h2>독서 기록 앱 만들기 (Firebase)</h2>
+<p class="subtitle">Firebase의 인증 + DB를 활용하는 풀스택 앱 실습입니다.</p>
+<div class="code-block mb-24">독서 기록 관리 웹앱 '북로그'를 만들어줘.
+
+주요 기능:
+1. 사용자 로그인 (Google Auth)
+2. 책 등록 (제목, 저자, 표지 이미지 URL, 시작일)
+3. 독서 진행률 기록 (현재 페이지 / 전체 페이지)
+4. 독서 메모 추가 (인상 깊은 구절, 내 생각)
+5. 완독 시 별점 (1~5) + 한줄평
+6. 읽고 있는 책 / 완독한 책 탭 분리
+7. 올해 독서 통계 (완독 수, 총 페이지 수)
+
+디자인:
+- 스타일: 따뜻하고 차분한 느낌, 카드 UI
+- 메인 컬러: #92400e (갈색), 배경: #fefce8 (밝은 노란색)
+- 책 표지가 눈에 띄게 큰 카드
+- 진행률을 프로그레스 바로 표시
+- 모바일 반응형
+
+기술 스택: Next.js + Firebase (Firestore + Auth)
+한국어 UI
+샘플 데이터: 읽고 있는 책 2권 + 완독한 책 3권 포함</div>
+<div class="highlight-box">Auth + Firestore + 실시간 데이터 — Firebase 풀스택의 모든 것을 경험!</div>
+</div>
+</section>
+
+<section class="slide divider" id="s89">
+<div class="inner">
+<h1>궁극의 프롬프트 작성법</h1>
+<p>기획서를 프롬프트로 변환하는 마스터 템플릿</p>
+</div>
+</section>
+
+<section class="slide" id="s90">
+<div class="inner">
+<h2>프롬프트 구조 마스터 템플릿</h2>
+<p class="subtitle">이 템플릿의 [ ] 안을 자신의 서비스에 맞게 채우면 됩니다.</p>
+<div class="code-block"># Role
+너는 [역할]이야. [경력/전문성] 수준으로 작업해줘.
+
+# Context
+- 서비스명: [서비스명]
+- 서비스 설명: [한 줄 설명]
+- 타겟 유저: [페르소나 요약]  ← PRD의 타겟 사용자
+- 핵심 가치: [사용자에게 주는 가치]
+
+# Task
+[구체적으로 만들어야 할 것]
+
+# Features  ← User Journey에서 추출
+1. [기능 1] — [상세 설명]
+2. [기능 2] — [상세 설명]
+3. [기능 3] — [상세 설명]
+
+# Design System  ← 와이어프레임/디자인 가이드에서 추출
+- 스타일 참고: [레퍼런스 사이트/앱]
+- 메인 컬러: [HEX]
+- 서브 컬러: [HEX]
+- 폰트: [폰트명]
+- 레이아웃: [카드/리스트/그리드]
+- 반응형: [모바일 우선/데스크톱 우선]
+
+# Pages &amp; Sections  ← IA(정보구조)에서 추출
+1. [페이지 1]: [포함 요소]
+2. [페이지 2]: [포함 요소]
+
+# Constraints  ← PRD의 비기능 요구사항
+- [금지사항 1]
+- [필수사항 1]
+
+# Tech Stack
+[프레임워크, 라이브러리, DB]
+
+# Language
+한국어 UI, 모든 텍스트 한국어로</div>
+</div>
+</section>
+
+<section class="slide" id="s91">
+<div class="inner">
+<h2>나쁜 프롬프트 vs 좋은 프롬프트</h2>
+<p class="subtitle">프롬프트 자가 체크리스트</p>
+<div class="grid-2 mb-24">
+<div class="card">
+<h4 class="mb-12">나쁜 프롬프트</h4>
+<div class="code-block">"여행 앱 만들어줘. 예쁘게."</div>
+<p class="secondary mt-16">→ 정보 부족, AI가 추측해서 만듦</p>
+</div>
+<div class="card" style="border-color:#111;">
+<h4 class="mb-12">좋은 프롬프트</h4>
+<div class="code-block">Role: 시니어 풀스택 개발자
+Task: 20대 배낭여행객을 위한 여행 일정 관리 앱
+Context: 타겟은 예산에 민감한 대학생
+Features: 일정 추가, 지도 표시, 예산 계산
+Design: 미니멀, #3b82f6, 모바일 우선
+Tech: React + Supabase
+Language: 한국어 UI</div>
+<p class="secondary mt-16">→ 구조화된 정보로 정확한 결과</p>
+</div>
+</div>
+<h4 class="mb-12">자가 체크리스트</h4>
+<div class="grid-2">
+<div style="display:flex; flex-direction:column; gap:8px;">
+<div class="card-alt" style="padding:10px 16px; font-size:0.9rem;">☐ 역할(Role)을 지정했는가?</div>
+<div class="card-alt" style="padding:10px 16px; font-size:0.9rem;">☐ 타겟 유저를 명시했는가?</div>
+<div class="card-alt" style="padding:10px 16px; font-size:0.9rem;">☐ 기능을 구체적으로 나열했는가?</div>
+</div>
+<div style="display:flex; flex-direction:column; gap:8px;">
+<div class="card-alt" style="padding:10px 16px; font-size:0.9rem;">☐ 디자인 시스템(컬러, 폰트)을 지정했는가?</div>
+<div class="card-alt" style="padding:10px 16px; font-size:0.9rem;">☐ 기술 스택을 명시했는가?</div>
+<div class="card-alt" style="padding:10px 16px; font-size:0.9rem;">☐ 한국어 UI를 요청했는가?</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="slide" id="s92">
+<div class="inner">
+<h2>사용성 테스트 (Usability Test)</h2>
+<p class="subtitle">내 의도대로 사용자가 움직이는지 확인하는 최종 관문</p>
+<div class="grid-2 mb-24">
+<div class="card">
+<h3 class="mb-12">Think Aloud (소리내어 생각하기)</h3>
+<p>사용자에게 "사용하면서 드는 생각을 계속 입밖으로 말해주세요"라고 요청하세요.</p>
+<div class="card-alt mt-16" style="padding:12px; font-size:0.9rem; font-style:italic;">
+"어? 버튼이 왜 여기 있지?"<br>
+"이건 뭐지? 아 식재료 추가인가..."
+</div>
+</div>
+<div class="card">
+<h3 class="mb-12">테스트 시나리오 작성법</h3>
+<p>답을 알려주지 말고 목표만 주세요.</p>
+<div class="mt-16">
+<p class="mb-8"><strong>나쁜 예:</strong> "우측 상단 메뉴를 눌러서 검색하세요"</p>
+<p><strong>좋은 예:</strong> "원하는 식재료를 추가해보세요"</p>
+</div>
+</div>
+</div>
+<div class="highlight-box">Nielsen의 법칙: 5명만 테스트하면 문제의 85%를 발견할 수 있습니다</div>
+</div>
+</section>
+
+<section class="slide" id="s93">
+<div class="inner">
+<div class="pill mb-12">실습 · 5분</div>
+<h2>짝꿍 실습: 사용성 테스트</h2>
+<p class="subtitle">서로의 앱을 교환해서 실제 테스트를 진행합니다.</p>
+<div class="grid-2 mb-24">
+<div>
+<h4 class="mb-12">실습 순서</h4>
+<div style="display:flex; flex-direction:column; gap:10px;">
+<div class="card" style="display:flex; gap:12px; align-items:center; padding:14px;">
+<div class="step-num" style="width:28px; height:28px; font-size:0.8rem;">1</div>
+<div>짝꿍과 앱 교환</div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:center; padding:14px;">
+<div class="step-num" style="width:28px; height:28px; font-size:0.8rem;">2</div>
+<div>3분간 사용 (Think Aloud)</div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:center; padding:14px;">
+<div class="step-num" style="width:28px; height:28px; font-size:0.8rem;">3</div>
+<div>관찰만, 절대 개입하지 않기</div>
+</div>
+<div class="card" style="display:flex; gap:12px; align-items:center; padding:14px;">
+<div class="step-num" style="width:28px; height:28px; font-size:0.8rem;">4</div>
+<div>발견한 문제 3가지 적기</div>
+</div>
+</div>
+</div>
+<div>
+<h4 class="mb-12">문제 심각도 분류</h4>
+<div style="display:flex; flex-direction:column; gap:10px;">
+<div class="card-alt" style="padding:12px 16px;"><strong>Critical:</strong> 과업을 완수하지 못함 (버그, 길 막힘)</div>
+<div class="card-alt" style="padding:12px 16px;"><strong>Major:</strong> 헤매다가 겨우 성공함</div>
+<div class="card-alt" style="padding:12px 16px;"><strong>Minor:</strong> 불편하지만 쓸만함</div>
+<div class="card-alt" style="padding:12px 16px;"><strong>Cosmetic:</strong> 디자인/텍스트 문제</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="slide divider" id="s94">
+<div class="inner">
+<h1>과제</h1>
+<p>나만의 앱 완성하기</p>
+</div>
+</section>
+
+<section class="slide" id="s95">
+<div class="inner">
+<h2>3단계 과제 — AI Studio</h2>
+<p class="subtitle">모든 단계에 기획(IA → UJ → PRD) → 프롬프트 과정이 포함됩니다. 블로그에 기록하여 제출!</p>
+<div class="grid-3">
+<div class="card">
+<div class="pill mb-12">🌱 새싹반 · 필수</div>
+<h3 class="mb-12">게임 2개 만들기</h3>
+<div style="display:flex; flex-direction:column; gap:6px; font-size:0.88rem;">
+<p style="font-weight:700;">① 기획서 작성</p>
+<p class="secondary">IA(화면 구조) + User Journey(3단계)</p>
+<p style="font-weight:700; margin-top:8px;">② AI Studio 게임 2개</p>
+<p class="secondary">주사위 / 운세 / 스톱워치 / 팁계산기 등</p>
+<p style="font-weight:600; margin-top:10px; border-top:1px solid #e5e5e5; padding-top:10px;">제출물:</p>
+<p class="secondary">기획서(IA+UJ) + 프롬프트 + 스크린샷 3장+</p>
+</div>
+</div>
+<div class="card" style="border-color:#111;">
+<div class="pill pill-black mb-12">🔥 열정반 · 도전</div>
+<h3 class="mb-12">새싹 + PRD + 수정</h3>
+<div style="display:flex; flex-direction:column; gap:6px; font-size:0.88rem;">
+<p style="font-weight:700;">① 기획서 (PRD 포함)</p>
+<p class="secondary">IA → UJ → 간단 PRD (서비스명, 타겟, 핵심기능 3개)</p>
+<p style="font-weight:700; margin-top:8px;">② AI Studio 게임 2개</p>
+<p class="secondary">카드짝맞추기 / 스네이크 / 슬롯머신 / 그림판 등</p>
+<p style="font-weight:700; margin-top:8px;">③ 수정 요청 2회</p>
+<p class="secondary">디자인/기능 수정 → 전/후 비교 기록</p>
+<p style="font-weight:600; margin-top:10px; border-top:1px solid #e5e5e5; padding-top:10px;">제출물:</p>
+<p class="secondary">기획서(IA+UJ+PRD) + 프롬프트 + 수정 비교 + 스크린샷</p>
+</div>
+</div>
+<div class="card">
+<div class="pill mb-12">🚀 심화반 · 고수</div>
+<h3 class="mb-12">열정 + 고도화 V1→V3</h3>
+<div style="display:flex; flex-direction:column; gap:6px; font-size:0.88rem;">
+<p style="font-weight:700;">① 기획서 (PRD 제대로)</p>
+<p class="secondary">IA → UJ → PRD (페르소나, 핵심기능 5개+, 디자인 방향)</p>
+<p style="font-weight:700; margin-top:8px;">② 게임/앱 2개</p>
+<p class="secondary">두뇌트레이닝 / RPG / 피아노 / 나라퀴즈 등</p>
+<p class="secondary">System Instructions 활용</p>
+<p style="font-weight:700; margin-top:8px;">③ V1 → V2 → V3 고도화</p>
+<p class="secondary">같은 앱 3번 반복 개선 + 과정 기록</p>
+<p style="font-weight:600; margin-top:10px; border-top:1px solid #e5e5e5; padding-top:10px;">제출물:</p>
+<p class="secondary">기획서 + 프롬프트 + V1~V3 비교 + 스크린샷</p>
+</div>
+</div>
+</div>
+<div class="highlight-box mt-16">자세한 과제 가이드 + 기획서·프롬프트 예시 → <strong>homework.md</strong> 참고</div>
+</div>
+</section>
+
+<section class="slide" id="s96">
+<div class="inner">
+<h2>제출 가이드</h2>
+<p class="subtitle">과제 제출 항목과 평가 기준을 확인하세요.</p>
+<div class="grid-2 mb-24">
+<div class="card">
+<h3 class="mb-12">제출 항목</h3>
+<div style="display:flex; flex-direction:column; gap:10px;">
+<div class="card-alt" style="padding:10px 16px;"><strong>1. 기획서</strong> (IA + User Journey + PRD)</div>
+<div class="card-alt" style="padding:10px 16px;"><strong>2. 프롬프트</strong> 전문 (텍스트 파일)</div>
+<div class="card-alt" style="padding:10px 16px;"><strong>3. 앱 스크린샷</strong> (최소 3장)</div>
+<div class="card-alt" style="padding:10px 16px;"><strong>4. 앱 URL</strong> (Lovable/Firebase의 경우)</div>
+<div class="card-alt" style="padding:10px 16px;"><strong>5. (심화반)</strong> 사용성 테스트 결과 + 개선 전/후</div>
+</div>
+<div class="card">
+<h3 class="mb-12">평가 기준</h3>
+<div style="display:flex; flex-direction:column; gap:14px;">
+<div>
+<div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+<span style="font-weight:600;">기획서 + 프롬프트 구조화</span><span style="font-weight:700;">40%</span>
+</div>
+<div style="background:#E5E5E5; height:6px; border-radius:3px;"><div style="background:#111; height:6px; border-radius:3px; width:40%;"></div></div>
+</div>
+<div>
+<div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+<span style="font-weight:600;">앱의 완성도</span><span style="font-weight:700;">30%</span>
+</div>
+<div style="background:#E5E5E5; height:6px; border-radius:3px;"><div style="background:#111; height:6px; border-radius:3px; width:30%;"></div></div>
+</div>
+<div>
+<div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+<span style="font-weight:600;">창의성 &amp; 사용자 경험</span><span style="font-weight:700;">30%</span>
+</div>
+<div style="background:#E5E5E5; height:6px; border-radius:3px;"><div style="background:#111; height:6px; border-radius:3px; width:30%;"></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="slide" id="s97">
+<div class="inner">
+<h2>오늘의 실습 치트시트</h2>
+<p class="subtitle">오늘 한 모든 실습을 한눈에 정리합니다.</p>
+<table class="tbl" style="font-size:0.85rem;">
+<thead><tr><th>#</th><th>실습</th><th>도구</th><th>난이도</th><th>핵심 학습</th></tr></thead>
+<tbody>
+<tr style="background:#f5f5f5;"><td>0</td><td>웹 기초 (FE/BE/DB)</td><td>이론</td><td>☆☆☆☆☆</td><td>기초 개념 이해</td></tr>
+<tr><td>1</td><td>가위바위보 게임</td><td>AI Studio</td><td>★☆☆☆☆</td><td>첫 앱 만들기</td></tr>
+<tr><td>2</td><td>숫자 맞추기 + 수정</td><td>AI Studio</td><td>★☆☆☆☆</td><td>수정 요청 연습</td></tr>
+<tr><td>3</td><td>자기소개 / 서비스 UI</td><td>AI Studio</td><td>★★☆☆☆</td><td>5원칙 적용</td></tr>
+<tr><td>4</td><td>뽀모도로 타이머</td><td>AI Studio</td><td>★★☆☆☆</td><td>구조화 프롬프트</td></tr>
+<tr style="background:#f5f5f5;"><td>5-11</td><td>체스/심리테스트/점심추천/타로/팔레트/D-Day/밸런스</td><td>AI Studio</td><td>★★☆☆☆</td><td>다양한 실습</td></tr>
+<tr style="background:#f5f5f5;"><td>12</td><td>IA → UJ → PRD</td><td>기획</td><td>★★★☆☆</td><td>기획서 직접 작성</td></tr>
+<tr style="background:#f5f5f5;"><td>13</td><td>PRD → 도구별 프롬프트</td><td>AI Studio/Lovable/Firebase</td><td>★★★☆☆</td><td>기획→프롬프트 변환</td></tr>
+<tr><td>14</td><td>나만의 링크 모음</td><td>Lovable</td><td>★☆☆☆☆</td><td>Lovable 입문 (DB 없음)</td></tr>
+<tr><td>15</td><td>오늘의 기분 일기</td><td>Lovable</td><td>★★☆☆☆</td><td>간단 CRUD 체험</td></tr>
+<tr style="background:#f5f5f5;"><td>16</td><td>OX 퀴즈 앱</td><td>Lovable</td><td>★★★☆☆</td><td>Lovable + CRUD</td></tr>
+<tr style="background:#f5f5f5;"><td>17</td><td>프레시키퍼 / 하루습관</td><td>Lovable</td><td>★★★☆☆</td><td>본격 CRUD 앱</td></tr>
+<tr><td>18</td><td>미니 가계부</td><td>Lovable</td><td>★★★☆☆</td><td>실용 앱 제작</td></tr>
+<tr><td>19</td><td>에어비앤비 클론코딩</td><td>Lovable + Supabase</td><td>★★★★☆</td><td>클론코딩 + DB 연동</td></tr>
+<tr style="background:#f5f5f5;"><td>20</td><td>Lovable → Antigravity 수정</td><td>Antigravity</td><td>★★★☆☆</td><td>GitHub 연동 + 코드 수정</td></tr>
+<tr style="background:#f5f5f5;"><td>21</td><td>ZenPop 게임</td><td>Antigravity</td><td>★★★★☆</td><td>게임 개발 + 수익화</td></tr>
+<tr><td>22</td><td>투두앱</td><td>Firebase Studio</td><td>★★★★☆</td><td>Firebase 입문</td></tr>
+<tr><td>23</td><td>독서 기록 앱</td><td>Firebase</td><td>★★★★☆</td><td>Auth + DB 연동</td></tr>
+<tr style="background:#f5f5f5;"><td>24</td><td>AI 구독 관리자</td><td>Stitch + AI Studio</td><td>★★★☆☆</td><td>Stitch Export 연동</td></tr>
+<tr style="background:#f5f5f5;"><td>25</td><td>포트폴리오 사이트</td><td>Stitch + AI Studio</td><td>★★★☆☆</td><td>디자인 → 배포</td></tr>
+<tr><td>26</td><td>레시피 공유 앱</td><td>Stitch + Lovable</td><td>★★★★☆</td><td>스크린샷 + CRUD</td></tr>
+<tr><td>27</td><td>모임 관리 앱</td><td>Stitch + Firebase</td><td>★★★★☆</td><td>HTML 코드 + 풀스택</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="slide" id="s98">
+<div class="inner" style="text-align:center;">
+<h2 class="mb-24">핵심 메시지</h2>
+<div style="display:flex; flex-direction:column; gap:24px; margin-bottom:40px;">
+<p style="font-size:1.6rem; font-weight:700; color:#111;">"기획 없는 바이브코딩 = 예쁜 쓰레기"</p>
+<p style="font-size:1.6rem; font-weight:700; color:#111;">"프롬프트 품질 = 결과물 품질"</p>
+<p style="font-size:1.6rem; font-weight:700; color:#111;">"5명의 테스트 &gt; 500명의 추측"</p>
+</div>
+<div class="highlight-box" style="font-size:1.05rem;">
+IA → User Journey → PRD → 프롬프트 → 바이브코딩 → 사용성 테스트
+</div>
+</div>
+</section>
+
+<section class="slide divider" id="s99">
+<div class="inner">
+<h1 style="font-size:3.5rem;">감사합니다</h1>
+<p style="font-size:1.2rem; color:rgba(255,255,255,0.7); margin-bottom:32px;">질문이 있으시면 언제든 물어보세요</p>
+<div style="display:flex; flex-direction:column; gap:8px; align-items:center; font-size:0.95rem; color:rgba(255,255,255,0.5);">
+<span>AI Studio — aistudio.google.com</span>
+<span>Lovable — lovable.dev</span>
+<span>Antigravity — antigravity.google</span>
+<span>Firebase Studio — firebase.studio</span>
+<span>Google Stitch — stitch.withgoogle.com</span>
+</div>
+</div>
+</section>
+
+<script>
+(function() {
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  const progress = document.getElementById('progress');
+  const counter = document.getElementById('counter');
+
+  function update() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progress.style.width = pct + '%';
+
+    let current = 1;
+    for (let i = 0; i < slides.length; i++) {
+      const rect = slides[i].getBoundingClientRect();
+      if (rect.top <= window.innerHeight / 2) current = i + 1;
+    }
+    counter.textContent = current + ' / ' + total;
+  }
+
+  window.addEventListener('scroll', update);
+  window.addEventListener('resize', update);
+  update();
+
+  document.addEventListener('keydown', function(e) {
+    const currentScroll = window.scrollY;
+    let currentIdx = 0;
+    for (let i = 0; i < slides.length; i++) {
+      if (slides[i].offsetTop <= currentScroll + 10) currentIdx = i;
+    }
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      if (currentIdx < slides.length - 1) slides[currentIdx + 1].scrollIntoView({ behavior: 'smooth' });
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      if (currentIdx > 0) slides[currentIdx - 1].scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+})();
+</script>
+</body>
+</html>

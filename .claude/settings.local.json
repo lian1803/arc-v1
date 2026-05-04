@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(echo \"exit=$?\")",
+      "Bash(date +%s%N)",
+      "Bash(python -c \"import json; json.load\\(open\\('.claude/settings.json', encoding='utf-8'\\)\\); print\\('valid'\\)\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(cat)",
+      "Bash(mkdir -p /c/Users/lian1/Documents/Work/ARC/.claude/hooks)",
+      "Read(//c/Users/lian1/Documents/Work/ARC/.claude//**)"
+    ]
+  }
+}

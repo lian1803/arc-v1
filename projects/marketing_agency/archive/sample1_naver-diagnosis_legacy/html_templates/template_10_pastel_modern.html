@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>네이버 플레이스 진단 — {{업체명}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #fce4ec;
+    color: #2a0a1a;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 14mm;
+    background: #fff9fc;
+    position: relative;
+    overflow: hidden;
+  }
+  .page + .page { page-break-before: always; }
+
+  .deco-top-right {
+    position: absolute;
+    top: -20mm; right: -15mm;
+    width: 55mm; height: 55mm;
+    border-radius: 50%;
+    background: rgba(255,182,193,0.2);
+  }
+  .deco-bottom-left {
+    position: absolute;
+    bottom: -10mm; left: -10mm;
+    width: 40mm; height: 40mm;
+    border-radius: 50%;
+    background: rgba(178,235,242,0.2);
+  }
+
+  .grade-badge {
+    padding: 3mm 6mm;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    display: inline-block;
+  }
+  .grade-badge.a { background: #c8e6c9; color: #2e7d32; }
+  .grade-badge.b { background: #fff9c4; color: #f57f17; }
+  .grade-badge.c { background: #ffe0b2; color: #e65100; }
+  .grade-badge.d { background: #ffcdd2; color: #c62828; }
+
+  .bar-comparison {
+    display: flex;
+    gap: 2mm;
+    align-items: center;
+    margin-bottom: 3mm;
+  }
+  .bar-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .bar-label {
+    font-size: 10px;
+    color: #7a3050;
+    margin-bottom: 1mm;
+  }
+  .bar-container {
+    width: 100%;
+    height: 12px;
+    background: #f0f0f0;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 2mm;
+    font-size: 8px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .bar-fill.ours { background: #ccc; }
+  .bar-fill.competitor { background: #e91e63; }
+
+  .loss-amount {
+    font-size: 32px;
+    font-weight: 900;
+    color: #e91e63;
+    letter-spacing: -1px;
+  }
+
+  .checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 3mm;
+    padding: 3mm 4mm;
+    border-radius: 8px;
+    margin-bottom: 2mm;
+    font-size: 11px;
+  }
+  .checklist-item.has {
+    background: #e8f5e9;
+    border-left: 3px solid #4caf50;
+  }
+  .checklist-item.missing {
+    background: #ffebee;
+    border-left: 3px solid #f44336;
+  }
+  .checklist-icon {
+    font-size: 14px;
+    font-weight: 700;
+    min-width: 16px;
+  }
+  .checklist-name {
+    flex: 1;
+    color: #2a0a1a;
+    font-weight: 600;
+  }
+
+  .cover-wrap { display: flex; flex-direction: column; min-height: 269mm; position: relative; z-index: 1; }
+
+  .cover-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8mm;
+    padding-bottom: 3mm;
+    border-bottom: 2px solid rgba(255,182,193,0.5);
+  }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 2mm;
+  }
+  .nav-dot { width: 10px; height: 10px; border-radius: 50%; background: #ff80ab; }
+  .nav-name { font-size: 12px; font-weight: 700; color: #c2185b; }
+  .nav-badge { background: #fce4ec; border: 1.5px solid #f48fb1; color: #c2185b; font-size: 9px; font-weight: 600; padding: 2px 7px; border-radius: 20px; }
+
+  .cover-eyebrow { font-size: 10px; font-weight: 600; color: #f48fb1; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 3mm; }
+  .cover-h1 {
+    font-size: 34px;
+    font-weight: 900;
+    color: #2a0a1a;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    margin-bottom: 3mm;
+  }
+  .cover-h1 em { color: #e91e63; font-style: normal; }
+  .cover-accent { width: 40px; height: 4px; background: linear-gradient(90deg, #f48fb1, #80deea); border-radius: 2px; margin-bottom: 5mm; }
+  .cover-lead { font-size: 13px; color: #7a3050; line-height: 1.7; margin-bottom: 8mm; }
+
+  .biz-card {
+    background: linear-gradient(135deg, #fce4ec, #e0f7fa);
+    border-radius: 16px;
+    padding: 5mm 6mm;
+    margin-bottom: 6mm;
+    display: flex;
+    align-items: center;
+    gap: 4mm;
+    border: 1.5px solid rgba(244,143,177,0.4);
+  }
+  .biz-avatar {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, #f48fb1, #80deea);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    color: #fff;
+  }
+  .biz-name { font-size: 20px; font-weight: 800; color: #2a0a1a; letter-spacing: -0.5px; }
+  .biz-meta { font-size: 11px; color: #9a5070; margin-top: 1px; }
+
+  .kpi-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3mm; margin-bottom: 5mm; }
+  .kc {
+    border-radius: 14px;
+    padding: 4mm;
+    text-align: center;
+  }
+  .kc.pink { background: #fce4ec; border: 1.5px solid #f48fb1; }
+  .kc.mint { background: #e0f7fa; border: 1.5px solid #80deea; }
+  .kc.peach { background: #fff3e0; border: 1.5px solid #ffcc80; }
+  .kc-l { font-size: 9px; font-weight: 600; letter-spacing: 1px; color: #b07090; text-transform: uppercase; margin-bottom: 2mm; }
+  .kc.mint .kc-l { color: #00838f; }
+  .kc.peach .kc-l { color: #e65100; }
+  .kc-v { font-size: 26px; font-weight: 900; letter-spacing: -1.5px; line-height: 1; }
+  .kv-pink { color: #e91e63; }
+  .kv-teal { color: #00838f; }
+  .kv-dark { color: #2a0a1a; }
+  .kc-n { font-size: 9px; color: #c0a0b0; margin-top: 1mm; }
+
+  .rec-bar { background: linear-gradient(135deg, #fce4ec, #e0f7fa); border-radius: 10px; padding: 3mm 5mm; margin-bottom: 5mm; font-size: 12px; color: #7a3050; }
+  .rec-bar strong { color: #e91e63; }
+
+  .cover-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-top: 4mm;
+    border-top: 1px dashed rgba(244,143,177,0.4);
+    margin-top: auto;
+  }
+  .cf-d { font-size: 10px; color: #c0a0b0; }
+  .cf-a { text-align: right; font-size: 11px; color: #9a5070; line-height: 1.7; }
+  .cf-a strong { color: #e91e63; font-size: 12px; }
+
+  .page-tag {
+    display: flex;
+    align-items: center;
+    gap: 3mm;
+    margin-bottom: 6mm;
+    padding-bottom: 3mm;
+    border-bottom: 2px dashed rgba(244,143,177,0.4);
+    position: relative;
+    z-index: 1;
+  }
+  .pt-dot { width: 8px; height: 8px; border-radius: 50%; background: #f48fb1; flex-shrink: 0; }
+  .pt-l { font-size: 11px; font-weight: 700; color: #e91e63; }
+  .pt-sub { font-size: 10px; color: #c0a0b0; margin-left: auto; }
+
+  .sh { margin-bottom: 5mm; }
+  .sh-t { font-size: 16px; font-weight: 700; color: #2a0a1a; letter-spacing: -0.3px; padding-left: 3mm; border-left: 3px solid #f48fb1; }
+
+  .sr { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3mm; margin-bottom: 5mm; }
+  .sc { border-radius: 12px; padding: 5mm; text-align: center; }
+  .sc.danger { background: #fce4ec; border: 1.5px solid #f48fb1; }
+  .sc.info { background: #e0f7fa; border: 1.5px solid #80deea; }
+  .sc-l { font-size: 9px; font-weight: 600; color: #b07090; margin-bottom: 1.5mm; }
+  .sc.info .sc-l { color: #00838f; }
+  .sc-v { font-size: 28px; font-weight: 900; letter-spacing: -1.5px; }
+  .sv-pink { color: #e91e63; }
+  .sv-teal { color: #00838f; }
+  .sv-dark { color: #2a0a1a; }
+  .sc-n { font-size: 9px; color: #c0a0b0; margin-top: 1mm; }
+
+  .prob { background: #fff3cd; border-radius: 10px; padding: 4mm 5mm; margin-bottom: 5mm; font-size: 12px; color: #7a5200; line-height: 1.6; border: 1.5px solid #ffcc02; }
+  .prob strong { color: #e67e00; }
+
+  .dg { display: grid; grid-template-columns: 1fr 1fr; gap: 2mm; position: relative; z-index: 1; }
+  .di {
+    background: #fff;
+    border-radius: 10px;
+    padding: 3mm 4mm;
+    display: flex;
+    align-items: center;
+    gap: 2.5mm;
+    border: 1.5px solid #f8e1ea;
+  }
+  .di.bad { border-color: #f48fb1; background: #fdf4f8; }
+  .di.ok { border-color: #80deea; background: #f0fafe; }
+  .di-s {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .ds-bad { background: #f48fb1; color: #fff; }
+  .ds-ok { background: #80deea; color: #fff; }
+  .di-name { flex: 1; font-size: 11px; color: #5a2040; }
+  .di-tag { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 20px; }
+  .dt-bad { background: #fce4ec; color: #c2185b; }
+  .dt-ok { background: #e0f7fa; color: #00838f; }
+
+  .kwt { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .kwt th { background: linear-gradient(90deg, #f48fb1, #80deea); color: #fff; padding: 3mm; font-size: 10px; font-weight: 600; text-align: left; }
+  .kwt td { padding: 3mm; border-bottom: 1px solid #fce4f0; background: #fff; }
+  .kwt tr:nth-child(even) td { background: #fdf4f8; }
+  .kwt .num { text-align: right; font-weight: 700; color: #e91e63; }
+  .vb { background: #f8d0e0; height: 6px; border-radius: 3px; width: 70px; }
+  .vf { height: 100%; background: linear-gradient(90deg, #f48fb1, #80deea); border-radius: 3px; }
+
+  .pkg-g { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3mm; margin-bottom: 5mm; }
+  .pc { background: #fff; border-radius: 14px; overflow: hidden; border: 1.5px solid #f8d0e0; }
+  .pc.rec { border-color: #f48fb1; box-shadow: 0 4px 16px rgba(244,143,177,0.25); }
+  .ph { padding: 4mm; text-align: center; background: #fdf4f8; }
+  .ph.rh { background: linear-gradient(135deg, #e91e63, #f48fb1); }
+  .pn { font-size: 17px; font-weight: 800; color: #2a0a1a; }
+  .ph.rh .pn { color: #fff; }
+  .rtag { display: inline-block; background: rgba(255,255,255,0.3); color: #fff; font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 20px; margin-top: 1mm; border: 1px solid rgba(255,255,255,0.4); }
+  .pb { padding: 4mm; }
+  .ppl { font-size: 9px; color: #c0a0b0; }
+  .pp { font-size: 20px; font-weight: 900; color: #e91e63; letter-spacing: -1px; }
+  .ppu { font-size: 11px; font-weight: 400; color: #c0a0b0; }
+  .ps { height: 1px; background: #f8e0ec; margin: 3mm 0; }
+  .pi { font-size: 10px; color: #7a3050; padding: 1.5mm 0; display: flex; gap: 2mm; }
+  .pi::before { content: '♡'; color: #f48fb1; font-size: 11px; flex-shrink: 0; }
+
+  .prop { background: linear-gradient(135deg, #fce4ec, #e0f7fa); border-radius: 14px; padding: 6mm; margin-bottom: 5mm; border: 1.5px solid rgba(244,143,177,0.3); }
+  .prop-h { font-size: 13px; font-weight: 700; color: #e91e63; margin-bottom: 4mm; }
+  .pr { display: flex; justify-content: space-between; padding: 2.5mm 0; border-bottom: 1px dashed rgba(244,143,177,0.3); font-size: 12px; }
+  .pr:last-child { border: none; }
+  .pk { color: #b07090; }
+  .pv { font-weight: 600; color: #2a0a1a; }
+  .ptot { display: flex; justify-content: space-between; align-items: center; padding: 3mm 0; border-top: 2px solid rgba(233,30,99,0.3); margin-top: 1mm; }
+  .ptk { font-size: 13px; font-weight: 700; color: #e91e63; }
+  .ptv { font-size: 24px; font-weight: 900; color: #e91e63; letter-spacing: -1px; }
+  .sig { text-align: right; font-size: 11px; color: #c0a0b0; line-height: 1.8; }
+  .sig strong { color: #e91e63; }
+
+  .comparison-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4mm;
+    margin-bottom: 5mm;
+  }
+  .comp-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 5mm;
+    border: 2px solid #f8e1ea;
+    text-align: center;
+  }
+  .comp-card.winner {
+    border-color: #f48fb1;
+    box-shadow: 0 4px 12px rgba(244,143,177,0.2);
+  }
+  .comp-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #c2185b;
+    margin-bottom: 3mm;
+  }
+  .comp-rank { font-size: 14px; font-weight: 600; color: #2a0a1a; margin-bottom: 1.5mm; }
+  .comp-metric {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2.5mm 0;
+    border-bottom: 1px solid #f8e1ea;
+    font-size: 11px;
+  }
+  .comp-metric:last-child { border: none; }
+  .comp-label { color: #9a5070; }
+  .comp-value { font-weight: 700; color: #2a0a1a; }
+  .comp-value.bad { color: #e91e63; }
+  .comp-value.good { color: #00838f; }
+
+  .loss-card {
+    background: linear-gradient(135deg, #fce4ec, #ffe0f0);
+    border-radius: 14px;
+    padding: 6mm;
+    margin-bottom: 5mm;
+    border: 2px solid #f48fb1;
+    text-align: center;
+  }
+  .loss-title { font-size: 12px; font-weight: 700; color: #c2185b; letter-spacing: 1px; margin-bottom: 3mm; }
+  .loss-equation {
+    font-size: 13px;
+    color: #2a0a1a;
+    line-height: 1.8;
+    margin-bottom: 3mm;
+  }
+  .loss-equation strong { color: #e91e63; font-weight: 900; font-size: 15px; }
+  .loss-highlight {
+    background: #fff;
+    border-radius: 10px;
+    padding: 3mm 4mm;
+    margin-top: 3mm;
+    font-size: 11px;
+    color: #7a3050;
+    border: 1.5px solid #f48fb1;
+  }
+  .loss-highlight strong { color: #e91e63; font-weight: 700; }
+
+  .cta-box {
+    background: linear-gradient(135deg, #e91e63, #f48fb1);
+    border-radius: 12px;
+    padding: 5mm 6mm;
+    text-align: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    margin-top: 4mm;
+    cursor: pointer;
+  }
+
+  @media print {
+    body { background: #fff9fc; }
+    .page { margin: 0; }
+    .page + .page { page-break-before: always; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: 표지 — 임팩트 강화 -->
+<div class="page">
+  <div class="deco-top-right"></div>
+  <div class="deco-bottom-left"></div>
+  <div class="cover-wrap">
+    <div class="cover-nav">
+      <div class="nav-brand">
+        <div class="nav-dot"></div>
+        <div class="nav-name">솔직한 마케팅</div>
+      </div>
+      <div class="nav-badge">진단 리포트 2025</div>
+    </div>
+
+    <!-- 좌측 메인 카피 / 우측 등급 박스 -->
+    <div style="display:grid; grid-template-columns:7fr 3fr; gap:6mm; align-items:flex-start; margin:8mm 0;">
+      <div>
+        <div class="cover-eyebrow">{{사장님이름}}님을 위한</div>
+        <div class="cover-h1">{{충격카피}}</div>
+        <div class="cover-accent"></div>
+        <div class="cover-lead">네이버 플레이스 무료 진단 결과</div>
+
+        <div class="biz-card">
+          <div class="biz-avatar">✂</div>
+          <div>
+            <div class="biz-name">{{업체명}}</div>
+            <div class="biz-meta">{{업종}} · {{주소}}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 우측: 등급 + 점수 -->
+      <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3mm; padding:6mm; background:linear-gradient(135deg,#fce4ec,#ffe0f0); border-radius:16px; border:2px solid #f48fb1; text-align:center;">
+        <div style="font-size:10px; font-weight:700; color:#c2185b; letter-spacing:1px;">종합 평가</div>
+        <div class="grade-badge {{등급_클래스}}">{{등급}}</div>
+        <div style="font-size:32px; font-weight:900; color:#e91e63; letter-spacing:-1px;">{{종합점수}}</div>
+        <div style="font-size:9px; color:#7a3050; line-height:1.3;">
+          지역 경쟁사 기준<br>하위 {{백분위}}%
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI 3열 -->
+    <div class="kpi-row">
+      <div class="kc pink">
+        <div class="kc-l">검색 순위</div>
+        <div class="kc-v kv-pink">{{순위}}</div>
+        <div class="kc-n">지역 내</div>
+      </div>
+      <div class="kc pink">
+        <div class="kc-l">월 손실 고객</div>
+        <div class="kc-v kv-pink">{{추정손실고객수}}</div>
+        <div class="kc-n">명</div>
+      </div>
+      <div class="kc mint">
+        <div class="kc-l">월 검색량</div>
+        <div class="kc-v kv-dark">{{전체검색량}}</div>
+        <div class="kc-n">건</div>
+      </div>
+    </div>
+
+    <!-- 충격 메시지 -->
+    <div style="background:#ffebee; border:2px solid #f44336; border-radius:12px; padding:5mm 6mm; margin-bottom:4mm; text-align:center;">
+      <div style="font-size:10px; color:#7a3050; margin-bottom:1mm;">이 상태가 계속되면</div>
+      <div style="font-size:18px; font-weight:900; color:#c62828; letter-spacing:-0.5px;">
+        연간 {{연간손실고객}}명 손실
+      </div>
+      <div style="font-size:10px; color:#7a3050; margin-top:1mm;">
+        = <strong style="color:#e91e63;">{{연간손실금}}원</strong> 기회비용
+      </div>
+    </div>
+
+    <div class="rec-bar">
+      💡 <strong>{{추천패키지}}</strong> 패키지 추천 — 이 결과를 바꿀 수 있습니다.
+    </div>
+
+    <div class="cover-foot" style="margin-top:auto;">
+      <div class="cf-d">진단일: {{진단날짜}}</div>
+      <div class="cf-a"><strong>솔직한 마케팅</strong><br>김리안 지점장 · 010-5641-1803</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 2: 현황 분석 -->
+<div class="page">
+  <div class="deco-top-right"></div>
+  <div class="page-tag">
+    <div class="pt-dot"></div>
+    <div class="pt-l">업체 현황 요약</div>
+    <div class="pt-sub">{{업체명}}</div>
+  </div>
+
+  <div class="sr">
+    <div class="sc danger"><div class="sc-l">검색 순위</div><div class="sc-v sv-pink">{{순위}}</div><div class="sc-n">{{순위설명}}</div></div>
+    <div class="sc danger"><div class="sc-l">월 손실 고객</div><div class="sc-v sv-pink">{{추정손실고객수}}</div><div class="sc-n">경쟁사 이탈/월</div></div>
+    <div class="sc info"><div class="sc-l">월 검색량</div><div class="sc-v sv-dark">{{전체검색량}}</div><div class="sc-n">PC {{PC검색량}} + 모바일 {{모바일검색량}}</div></div>
+  </div>
+
+  <div class="prob"><strong>핵심 문제:</strong> {{주요문제}}</div>
+
+  <div class="sh" style="margin-bottom:4mm;"><div class="sh-t">10개 항목 진단 결과</div></div>
+  <div class="dg">{{진단그리드}}</div>
+</div>
+
+<!-- PAGE 3: 경쟁사 비교 + 손실 계산 -->
+<div class="page">
+  <div class="deco-bottom-left"></div>
+  <div class="page-tag">
+    <div class="pt-dot"></div>
+    <div class="pt-l">경쟁사 비교 분석</div>
+    <div class="pt-sub">{{업체명}}</div>
+  </div>
+
+  <!-- 리뷰 비교 바 차트 -->
+  <div style="margin-bottom:6mm;">
+    <div style="font-size:11px; font-weight:700; color:#2a0a1a; margin-bottom:3mm;">📊 리뷰 격차</div>
+    <div class="bar-comparison">
+      <div style="width:30%; text-align:right; padding-right:2mm;">
+        <div style="font-size:11px; font-weight:700; color:#2a0a1a;">{{우리리뷰}}</div>
+      </div>
+      <div class="bar-wrapper">
+        <div class="bar-label">{{업체명}}</div>
+        <div class="bar-container"><div class="bar-fill ours" style="width:30%;"></div></div>
+      </div>
+    </div>
+    <div class="bar-comparison">
+      <div style="width:30%; text-align:right; padding-right:2mm;">
+        <div style="font-size:11px; font-weight:700; color:#e91e63;">{{경쟁사리뷰}}</div>
+      </div>
+      <div class="bar-wrapper">
+        <div class="bar-label">이 지역 1위</div>
+        <div class="bar-container"><div class="bar-fill competitor" style="width:100%;"></div></div>
+      </div>
+    </div>
+    <div style="background:#fff3cd; border-radius:8px; padding:3mm 4mm; text-align:center; margin-top:3mm; font-size:11px; color:#7a5200; font-weight:600;">
+      격차: <strong style="color:#e91e63;">{{리뷰격차}}</strong>개 ← 이것이 매달 손실 고객을 만듭니다
+    </div>
+  </div>
+
+  <!-- 사진 비교 바 차트 -->
+  <div style="margin-bottom:6mm;">
+    <div style="font-size:11px; font-weight:700; color:#2a0a1a; margin-bottom:3mm;">📸 사진 격차</div>
+    <div class="bar-comparison">
+      <div style="width:30%; text-align:right; padding-right:2mm;">
+        <div style="font-size:11px; font-weight:700; color:#2a0a1a;">{{우리사진}}</div>
+      </div>
+      <div class="bar-wrapper">
+        <div class="bar-label">{{업체명}}</div>
+        <div class="bar-container"><div class="bar-fill ours" style="width:25%;"></div></div>
+      </div>
+    </div>
+    <div class="bar-comparison">
+      <div style="width:30%; text-align:right; padding-right:2mm;">
+        <div style="font-size:11px; font-weight:700; color:#e91e63;">{{경쟁사사진}}</div>
+      </div>
+      <div class="bar-wrapper">
+        <div class="bar-label">이 지역 1위</div>
+        <div class="bar-container"><div class="bar-fill competitor" style="width:100%;"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 손실 계산 -->
+  <div class="loss-card">
+    <div class="loss-title">매달 기회비용 계산</div>
+    <div class="loss-equation">
+      유출 고객 <strong>{{추정손실고객수}}</strong>명<br>
+      × 평균 객단가 <strong>{{객단가}}원</strong><br>
+      = 월 <strong class="loss-amount">{{월손실금}}원</strong> 손실
+    </div>
+    <div class="loss-highlight">
+      이 중 단 <strong>{{목표명수}}</strong>명만 더 와도<br>
+      우리 서비스가 본전입니다.
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 4: 체크리스트 -->
+<div class="page">
+  <div class="deco-top-right"></div>
+  <div class="page-tag">
+    <div class="pt-dot"></div>
+    <div class="pt-l">개선 항목 체크리스트</div>
+    <div class="pt-sub">{{업체명}}</div>
+  </div>
+
+  <div style="background:#fff3cd; border-radius:10px; padding:4mm 5mm; margin-bottom:5mm; font-size:11px; color:#7a5200; line-height:1.6;">
+    <strong style="color:#e67e00;">⚠️ 아래 항목들이 비어있습니다.</strong> 이것이 검색 순위 저하의 주요 원인입니다.
+  </div>
+
+  {{체크리스트}}
+
+  <div style="background:#f0f0f0; border-radius:10px; padding:4mm 5mm; margin-top:6mm; font-size:11px; color:#555; line-height:1.6;">
+    <strong style="color:#2a0a1a;">💡 어떻게 채울까요?</strong><br>
+    이 항목들을 완벽히 채우면 순위가 오릅니다. 저희가 해드릴 수 있어요.
+  </div>
+</div>
+
+<!-- PAGE 5: 키워드 분석 -->
+<div class="page">
+  <div class="deco-bottom-left"></div>
+  <div class="page-tag">
+    <div class="pt-dot"></div>
+    <div class="pt-l">검색 키워드 분석</div>
+    <div class="pt-sub">{{업체명}}</div>
+  </div>
+  <table class="kwt">
+    <thead><tr><th>#</th><th>키워드</th><th style="text-align:right;">PC</th><th style="text-align:right;">모바일</th><th style="text-align:right;">합계</th><th>볼륨</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>{{키워드1}}</td><td class="num">-</td><td class="num">-</td><td class="num">{{검색량1}}</td><td><div class="vb"><div class="vf" style="width:90%"></div></div></td></tr>
+      <tr><td>2</td><td>{{키워드2}}</td><td class="num">-</td><td class="num">-</td><td class="num">{{검색량2}}</td><td><div class="vb"><div class="vf" style="width:73%"></div></div></td></tr>
+      <tr><td>3</td><td>{{키워드3}}</td><td class="num">-</td><td class="num">-</td><td class="num">{{검색량3}}</td><td><div class="vb"><div class="vf" style="width:58%"></div></div></td></tr>
+      <tr><td>4</td><td>{{키워드4}}</td><td class="num">-</td><td class="num">-</td><td class="num">{{검색량4}}</td><td><div class="vb"><div class="vf" style="width:44%"></div></div></td></tr>
+      <tr><td>5</td><td>{{키워드5}}</td><td class="num">-</td><td class="num">-</td><td class="num">{{검색량5}}</td><td><div class="vb"><div class="vf" style="width:33%"></div></div></td></tr>
+      <tr><td>6</td><td>{{키워드6}}</td><td class="num">-</td><td class="num">-</td><td class="num">{{검색량6}}</td><td><div class="vb"><div class="vf" style="width:22%"></div></div></td></tr>
+      <tr><td>7</td><td>{{키워드7}}</td><td class="num">-</td><td class="num">-</td><td class="num">{{검색량7}}</td><td><div class="vb"><div class="vf" style="width:13%"></div></div></td></tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:5mm; display:grid; grid-template-columns:1fr 1fr; gap:3mm;">
+    <div style="background:#fce4ec; border:2px solid #f48fb1; border-radius:12px; padding:4mm; text-align:center;">
+      <div style="font-size:9px; font-weight:700; color:#b07090; letter-spacing:1px; margin-bottom:2mm;">이 키워드 월 검색횟수</div>
+      <div style="font-size:28px; font-weight:900; color:#e91e63; letter-spacing:-1.5px;">{{전체검색량}}</div>
+      <div style="font-size:9px; color:#c0a0b0; margin-top:1mm;">{{검색량설명}}</div>
+    </div>
+    <div style="background:#fff3cd; border:2px solid #ffcc02; border-radius:12px; padding:4mm; text-align:center;">
+      <div style="font-size:9px; font-weight:700; color:#7a5200; letter-spacing:1px; margin-bottom:2mm;">{{업체명}} 검색 유입</div>
+      <div style="font-size:28px; font-weight:900; color:#e67e00; letter-spacing:-1.5px;">{{순위}}위</div>
+      <div style="font-size:9px; color:#7a5200; margin-top:1mm;">대부분을 경쟁사가 흡수</div>
+    </div>
+  </div>
+  <div style="margin-top:3mm; background:#2a0a1a; border-radius:10px; padding:4mm 5mm; text-align:center;">
+    <div style="font-size:12px; color:#fff; font-weight:600; line-height:1.7;">
+      위 검색량의 상위 3개 업체 점유율 <strong style="color:#f48fb1;">약 73%</strong><br>
+      <strong style="color:#ffcc02;">{{업체명}}이 받는 비율: 사실상 0%</strong>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 6: 패키지 + 견적 -->
+<div class="page">
+  <div class="deco-top-right"></div>
+  <div class="page-tag">
+    <div class="pt-dot"></div>
+    <div class="pt-l">패키지 안내 · 견적서</div>
+    <div class="pt-sub">{{업체명}}</div>
+  </div>
+
+  <div class="sh" style="margin-bottom:4mm;"><div class="sh-t">기회손실 vs 투자 비교</div></div>
+
+  <div style="background:#fce4ec; border:2px solid #f48fb1; border-radius:14px; padding:6mm; margin-bottom:5mm;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:4mm; margin-bottom:4mm;">
+      <div style="text-align:center; padding:3mm;">
+        <div style="font-size:10px; font-weight:700; color:#c2185b; letter-spacing:1px; margin-bottom:2mm;">월 기회손실</div>
+        <div style="font-size:32px; font-weight:900; color:#e91e63; letter-spacing:-1.5px;">{{월손실금}}</div>
+        <div style="font-size:9px; color:#c0a0b0; margin-top:1mm;">원/월</div>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:center;">
+        <div style="font-size:24px; font-weight:700; color:#f48fb1;">VS</div>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:4mm;">
+      <div style="text-align:center; padding:3mm; background:#fff; border-radius:10px; border:1.5px solid #f48fb1;">
+        <div style="font-size:10px; font-weight:700; color:#c2185b; letter-spacing:1px; margin-bottom:2mm;">월 투자비용</div>
+        <div style="font-size:28px; font-weight:900; color:#2a0a1a; letter-spacing:-1.5px;">{{월비용}}</div>
+        <div style="font-size:9px; color:#c0a0b0; margin-top:1mm;">원/월</div>
+      </div>
+      <div style="text-align:center; padding:3mm; background:#fff; border-radius:10px; border:1.5px solid #80deea;">
+        <div style="font-size:10px; font-weight:700; color:#00838f; letter-spacing:1px; margin-bottom:2mm;">수익률</div>
+        <div style="font-size:28px; font-weight:900; color:#00838f; letter-spacing:-1.5px;">{{roi배수}}</div>
+        <div style="font-size:9px; color:#00838f; margin-top:1mm;">배 차이</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#fff3e0; border:2px solid #ffcc80; border-radius:14px; padding:5mm 6mm; margin-bottom:5mm; text-align:center;">
+    <div style="font-size:11px; color:#7a5200; margin-bottom:3mm;">
+      <strong>하루 {{하루비용}}원 투자로</strong>
+    </div>
+    <div style="font-size:18px; font-weight:900; color:#e67e00; letter-spacing:-0.5px; margin-bottom:3mm;">
+      {{본전명수}}명만 더 오면 됩니다
+    </div>
+    <div style="font-size:10px; color:#7a5200; font-weight:600;">
+      (패키지 투자비를 회수하는 최소 고객 수)
+    </div>
+  </div>
+
+  <div style="background:#fff9fc; border:1.5px solid #f8e1ea; border-radius:12px; padding:4mm 5mm; margin-bottom:4mm; font-size:11px; color:#7a3050; line-height:1.8;">
+    <strong style="color:#e91e63;">{{추천패키지}} 패키지 포함:</strong><br>
+    ✓ 기본정보 완벽 최적화<br>
+    ✓ 전문 촬영 (최소 20장)<br>
+    ✓ 블로그 리뷰 월 4회<br>
+    ✓ 고객 답글 대행<br>
+    ✓ 월간 성과 보고서
+  </div>
+
+  <div class="cta-box">
+    🚀 시작하기 → 카카오톡 {{카톡번호}}로 연락주세요
+  </div>
+
+  <div class="sig" style="margin-top:5mm;">
+    <strong>솔직한 마케팅</strong><br>
+    김리안 지점장 · 010-5641-1803<br>
+    <span style="font-size:10px;">사장님의 성공을 위해 정성껏 분석했습니다.</span>
+  </div>
+</div>
+
+</body>
+</html>

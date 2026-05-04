@@ -1,0 +1,452 @@
+[
+  {
+    "name": "뉴쎈학원",
+    "industry": "학원",
+    "status": "success",
+    "elapsed_s": 42,
+    "total_score": 40.4,
+    "grade": "C",
+    "category": "교육,학문>학원 등 교습시설",
+    "address": "경기도 동두천시 지행동 721-3 8층 802호",
+    "review_count": 1,
+    "photo_count": 0,
+    "blog_review_count": 0,
+    "naver_place_rank": 0,
+    "has_owner_reply": false,
+    "owner_reply_rate": 0,
+    "competitor_name": "열린학원 영어수학국어과학사회학원",
+    "competitor_avg_review": 600,
+    "competitor_avg_photo": 500,
+    "own_brand_search_volume": 10,
+    "competitor_brand_search_volume": 0,
+    "estimated_lost_customers": 130,
+    "photo_quality_score": 0,
+    "review_last_30d_count": 0,
+    "keywords": [
+      {
+        "keyword": "동두천수학학원",
+        "search_volume": 90
+      },
+      {
+        "keyword": "지역인재의대준비반",
+        "search_volume": 0
+      },
+      {
+        "keyword": "수리논술",
+        "search_volume": 3010
+      }
+    ],
+    "has_keywords": true,
+    "related_keywords": false,
+    "photo_urls_count": 15,
+    "place_id": "1964497148"
+  },
+  {
+    "name": "여배우살롱",
+    "industry": "피부관리",
+    "status": "success",
+    "elapsed_s": 34,
+    "total_score": 75.0,
+    "grade": "B",
+    "category": "미용>미용실",
+    "address": "주소 정보 미수집",
+    "review_count": 429,
+    "photo_count": 1739,
+    "blog_review_count": 202,
+    "naver_place_rank": 0,
+    "has_owner_reply": false,
+    "owner_reply_rate": 0,
+    "competitor_name": "래쉬허",
+    "competitor_avg_review": 1451,
+    "competitor_avg_photo": 770,
+    "own_brand_search_volume": 440,
+    "competitor_brand_search_volume": 120,
+    "estimated_lost_customers": 266,
+    "photo_quality_score": 0,
+    "review_last_30d_count": 0,
+    "keywords": [
+      {
+        "keyword": "산본속눈썹연장",
+        "search_volume": 270
+      },
+      {
+        "keyword": "산본속눈썹펌",
+        "search_volume": 1210
+      },
+      {
+        "keyword": "산본역속눈썹",
+        "search_volume": 120
+      },
+      {
+        "keyword": "led속눈썹연장",
+        "search_volume": 2960
+      },
+      {
+        "keyword": "산본피부관리",
+        "search_volume": 1790
+      }
+    ],
+    "has_keywords": true,
+    "related_keywords": false,
+    "photo_urls_count": 15,
+    "place_id": "1229678676"
+  },
+  {
+    "name": "음식점",
+    "industry": "음식점",
+    "status": "success",
+    "elapsed_s": 31,
+    "total_score": 64.0,
+    "grade": "B",
+    "category": "기타,소상공인",
+    "address": "주소 정보 미수집",
+    "review_count": 2241,
+    "photo_count": 6484,
+    "blog_review_count": 0,
+    "naver_place_rank": 1,
+    "has_owner_reply": true,
+    "owner_reply_rate": 0.3,
+    "competitor_name": "지역 상위 경쟁사",
+    "competitor_avg_review": 600,
+    "competitor_avg_photo": 500,
+    "own_brand_search_volume": 108600,
+    "competitor_brand_search_volume": 0,
+    "estimated_lost_customers": 10,
+    "photo_quality_score": 0,
+    "review_last_30d_count": 0,
+    "keywords": [
+      {
+        "keyword": "광화문인도커리",
+        "search_volume": 130
+      },
+      {
+        "keyword": "광화문탄두리치킨",
+        "search_volume": 0
+      },
+      {
+        "keyword": "광화문탄두리",
+        "search_volume": 0
+      },
+      {
+        "keyword": "인도카레",
+        "search_volume": 2580
+      },
+      {
+        "keyword": "탄두리치킨",
+        "search_volume": 3570
+      }
+    ],
+    "has_keywords": true,
+    "related_keywords": false,
+    "photo_urls_count": 35,
+    "place_id": "11873695"
+  },
+  {
+    "name": "시매쓰 의정부송산센터",
+    "industry": "수학학원",
+    "status": "success",
+    "elapsed_s": 34,
+    "total_score": 60.6,
+    "grade": "B",
+    "category": "교습학원,교습소>수학교육",
+    "address": "경기도 의정부시 민락동 804-5 802호",
+    "review_count": 3,
+    "photo_count": 37,
+    "blog_review_count": 10,
+    "naver_place_rank": 0,
+    "has_owner_reply": false,
+    "owner_reply_rate": 0,
+    "competitor_name": "미래엔수학 의정부양주지사",
+    "competitor_avg_review": 600,
+    "competitor_avg_photo": 500,
+    "own_brand_search_volume": 0,
+    "competitor_brand_search_volume": 0,
+    "estimated_lost_customers": 36,
+    "photo_quality_score": 0,
+    "review_last_30d_count": 0,
+    "keywords": [
+      {
+        "keyword": "의정부수학학원",
+        "search_volume": 320
+      },
+      {
+        "keyword": "민락동수학학원",
+        "search_volume": 230
+      },
+      {
+        "keyword": "의정부학원",
+        "search_volume": 220
+      },
+      {
+        "keyword": "의정부수학",
+        "search_volume": 40
+      },
+      {
+        "keyword": "민락동학원",
+        "search_volume": 50
+      }
+    ],
+    "has_keywords": true,
+    "related_keywords": false,
+    "photo_urls_count": 15,
+    "place_id": "1623521918"
+  },
+  {
+    "name": "모먼트 태권도장",
+    "industry": "태권도",
+    "status": "success",
+    "elapsed_s": 33,
+    "total_score": 67.5,
+    "grade": "B",
+    "category": "기타,소상공인",
+    "address": "주소 정보 미수집",
+    "review_count": 3,
+    "photo_count": 172,
+    "blog_review_count": 30,
+    "naver_place_rank": 0,
+    "has_owner_reply": false,
+    "owner_reply_rate": 0,
+    "competitor_name": "K타이거즈 탑클래스영어태권도장",
+    "competitor_avg_review": 600,
+    "competitor_avg_photo": 500,
+    "own_brand_search_volume": 0,
+    "competitor_brand_search_volume": 0,
+    "estimated_lost_customers": 12,
+    "photo_quality_score": 0,
+    "review_last_30d_count": 0,
+    "keywords": [
+      {
+        "keyword": "신곡동태권도",
+        "search_volume": 220
+      },
+      {
+        "keyword": "새말초태권도",
+        "search_volume": 0
+      },
+      {
+        "keyword": "신곡동유치부태권도",
+        "search_volume": 0
+      },
+      {
+        "keyword": "의정부성인태권도",
+        "search_volume": 40
+      },
+      {
+        "keyword": "신곡2동태권도",
+        "search_volume": 30
+      }
+    ],
+    "has_keywords": true,
+    "related_keywords": false,
+    "photo_urls_count": 15,
+    "place_id": "1063092042"
+  },
+  {
+    "name": "아이스크림홈런 도봉한신공부방",
+    "industry": "공부방",
+    "status": "success",
+    "elapsed_s": 8,
+    "total_score": 6.2,
+    "grade": "D",
+    "category": "교육,학문>학원",
+    "address": "주소 정보 미수집",
+    "review_count": 0,
+    "photo_count": 0,
+    "blog_review_count": 0,
+    "naver_place_rank": 0,
+    "has_owner_reply": false,
+    "owner_reply_rate": 0,
+    "competitor_name": "지역 상위 경쟁사",
+    "competitor_avg_review": 600,
+    "competitor_avg_photo": 500,
+    "own_brand_search_volume": 0,
+    "competitor_brand_search_volume": 0,
+    "estimated_lost_customers": 84,
+    "photo_quality_score": 0,
+    "review_last_30d_count": 0,
+    "keywords": [],
+    "has_keywords": false,
+    "related_keywords": false,
+    "photo_urls_count": 0,
+    "place_id": null
+  },
+  {
+    "name": "왁싱앤유 노원점",
+    "industry": "왁싱",
+    "status": "success",
+    "elapsed_s": 32,
+    "total_score": 77.0,
+    "grade": "B",
+    "category": "미용>뷰티샵",
+    "address": "주소 정보 미수집",
+    "review_count": 2225,
+    "photo_count": 3619,
+    "blog_review_count": 654,
+    "naver_place_rank": 5,
+    "has_owner_reply": false,
+    "owner_reply_rate": 0,
+    "competitor_name": "올댓뷰티아카데미학원 노원점",
+    "competitor_avg_review": 1451,
+    "competitor_avg_photo": 770,
+    "own_brand_search_volume": 0,
+    "competitor_brand_search_volume": 0,
+    "estimated_lost_customers": 52,
+    "photo_quality_score": 0,
+    "review_last_30d_count": 0,
+    "keywords": [
+      {
+        "keyword": "노원왁싱",
+        "search_volume": 1540
+      },
+      {
+        "keyword": "노원역왁싱",
+        "search_volume": 320
+      },
+      {
+        "keyword": "노원브라질리언",
+        "search_volume": 80
+      },
+      {
+        "keyword": "노원속눈썹펌",
+        "search_volume": 1210
+      },
+      {
+        "keyword": "노원임산부왁싱",
+        "search_volume": 110
+      }
+    ],
+    "has_keywords": true,
+    "related_keywords": false,
+    "photo_urls_count": 15,
+    "place_id": "1020061442"
+  },
+  {
+    "name": "바른숨 필라테스",
+    "industry": "필라테스",
+    "status": "success",
+    "elapsed_s": 27,
+    "total_score": 76.9,
+    "grade": "B",
+    "category": "스포츠시설>필라테스",
+    "address": "인천광역시 서구 가정로 451 벨라미 루원 센텀시티 13층 (1305-1310)",
+    "review_count": 136,
+    "photo_count": 1730,
+    "blog_review_count": 134,
+    "naver_place_rank": 5,
+    "has_owner_reply": false,
+    "owner_reply_rate": 0.3,
+    "competitor_name": "루시필라테스 가정 2호점",
+    "competitor_avg_review": 600,
+    "competitor_avg_photo": 500,
+    "own_brand_search_volume": 260,
+    "competitor_brand_search_volume": 0,
+    "estimated_lost_customers": 1499,
+    "photo_quality_score": 0,
+    "review_last_30d_count": 0,
+    "keywords": [
+      {
+        "keyword": "가정동필라테스",
+        "search_volume": 260
+      },
+      {
+        "keyword": "필라테스",
+        "search_volume": 142800
+      },
+      {
+        "keyword": "루원시티필라테스",
+        "search_volume": 390
+      },
+      {
+        "keyword": "가정역필라테스",
+        "search_volume": 80
+      },
+      {
+        "keyword": "청라필라테스",
+        "search_volume": 1590
+      }
+    ],
+    "has_keywords": true,
+    "related_keywords": false,
+    "photo_urls_count": 15,
+    "place_id": "1741840497"
+  },
+  {
+    "name": "나미스뷰티",
+    "industry": "피부관리",
+    "status": "success",
+    "elapsed_s": 30,
+    "total_score": 75.2,
+    "grade": "B",
+    "category": "미용>왁싱,제모",
+    "address": "경기도 고양시 덕양구 지축동 1005-5 6층 612호",
+    "review_count": 132,
+    "photo_count": 354,
+    "blog_review_count": 21,
+    "naver_place_rank": 1,
+    "has_owner_reply": false,
+    "owner_reply_rate": 0,
+    "competitor_name": "혜결왁싱",
+    "competitor_avg_review": 1451,
+    "competitor_avg_photo": 770,
+    "own_brand_search_volume": 70,
+    "competitor_brand_search_volume": 280,
+    "estimated_lost_customers": 0,
+    "photo_quality_score": 0,
+    "review_last_30d_count": 0,
+    "keywords": [
+      {
+        "keyword": "지축왁싱",
+        "search_volume": 240
+      },
+      {
+        "keyword": "지축콜드플라즈마",
+        "search_volume": 0
+      },
+      {
+        "keyword": "지축피부샵",
+        "search_volume": 0
+      },
+      {
+        "keyword": "지축동왁싱",
+        "search_volume": 0
+      },
+      {
+        "keyword": "지축동피부샵",
+        "search_volume": 0
+      }
+    ],
+    "has_keywords": true,
+    "related_keywords": false,
+    "photo_urls_count": 15,
+    "place_id": "1415462451"
+  },
+  {
+    "name": "더예쁜필라테스",
+    "industry": "필라테스",
+    "status": "success",
+    "elapsed_s": 8,
+    "total_score": 21.8,
+    "grade": "D",
+    "category": "스포츠시설>운동시설",
+    "address": "주소 정보 미수집",
+    "review_count": 0,
+    "photo_count": 0,
+    "blog_review_count": 0,
+    "naver_place_rank": 0,
+    "has_owner_reply": true,
+    "owner_reply_rate": 0,
+    "competitor_name": "지역 상위 경쟁사",
+    "competitor_avg_review": 600,
+    "competitor_avg_photo": 800,
+    "own_brand_search_volume": 10,
+    "competitor_brand_search_volume": 0,
+    "estimated_lost_customers": 84,
+    "photo_quality_score": 0,
+    "review_last_30d_count": 0,
+    "keywords": [],
+    "has_keywords": false,
+    "related_keywords": false,
+    "photo_urls_count": 3,
+    "place_id": null
+  }
+]

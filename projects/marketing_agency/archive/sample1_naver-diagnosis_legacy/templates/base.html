@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}네이버 플레이스 진단 리포트{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            corePlugins: {
+                preflight: false,  // 기존 style.css 충돌 방지
+            },
+            theme: {
+                extend: {
+                    colors: {
+                        'naver-green': '#03C75A',
+                        'kakao-yellow': '#FEE500',
+                        'priority-red': '#FF4757',
+                        'priority-orange': '#FFA502',
+                        'priority-gray': '#A4A4A4',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="text-xl font-bold text-blue-600">네이버 플레이스 진단</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">홈</a>
+                    <a href="/history" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">이력</a>
+                    <a href="/batch" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition">배치 진단</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-white border-t mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-gray-500 text-sm">
+            <p>네이버 플레이스 자동 진단 툴 &copy; 2026</p>
+        </div>
+    </footer>
+</body>
+</html>

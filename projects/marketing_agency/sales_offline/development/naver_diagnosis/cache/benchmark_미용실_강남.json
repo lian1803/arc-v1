@@ -1,0 +1,16 @@
+{
+  "cached_at": "2026-04-17T06:21:13.325808",
+  "result": {
+    "region": "강남",
+    "category": "미용실",
+    "sample_size": 9,
+    "avg_review": 1711,
+    "avg_photo": 4095,
+    "avg_blog": 401,
+    "top3_avg_review": 5133,
+    "top3_avg_photo": 12286,
+    "top10pct_review": 7054,
+    "has_news_ratio": 0.22,
+    "has_booking_ratio": 0.33
+  }
+}

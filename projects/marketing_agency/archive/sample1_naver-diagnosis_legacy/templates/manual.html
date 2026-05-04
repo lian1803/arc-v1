@@ -1,0 +1,392 @@
+{% extends "base.html" %}
+
+{% block title %}수동 입력 - 네이버 플레이스 진단{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">수동 입력</h1>
+        <p class="text-gray-600">
+            검색이 안 되는 업체는 직접 정보를 입력하여 진단할 수 있습니다
+        </p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-lg p-8">
+        <form id="manualForm" method="POST" action="/manual" class="space-y-6">
+            <!-- Business Name -->
+            <div>
+                <label for="business_name" class="block text-sm font-medium text-gray-700 mb-2">
+                    업체명 <span class="text-red-500">*</span>
+                </label>
+                <input
+                    type="text"
+                    id="business_name"
+                    name="business_name"
+                    required
+                    placeholder="예: 강남역 맛집"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                >
+            </div>
+
+            <!-- Place ID -->
+            <div>
+                <label for="place_id" class="block text-sm font-medium text-gray-700 mb-2">
+                    플레이스 ID
+                    <span class="text-gray-500 text-xs">(선택)</span>
+                </label>
+                <input
+                    type="text"
+                    id="place_id"
+                    name="place_id"
+                    placeholder="예: 1234567890"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                >
+                <p class="text-xs text-gray-500 mt-1">네이버 플레이스 URL의 숫자 부분</p>
+            </div>
+
+            <hr class="border-gray-200">
+
+            <!-- Photo Count -->
+            <div>
+                <label for="photo_count" class="block text-sm font-medium text-gray-700 mb-2">
+                    사진 개수
+                </label>
+                <input
+                    type="number"
+                    id="photo_count"
+                    name="photo_count"
+                    min="0"
+                    value="0"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                >
+            </div>
+
+            <!-- Review Count -->
+            <div>
+                <label for="review_count" class="block text-sm font-medium text-gray-700 mb-2">
+                    방문자 리뷰 개수
+                </label>
+                <input
+                    type="number"
+                    id="review_count"
+                    name="review_count"
+                    min="0"
+                    value="0"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                >
+            </div>
+
+            <!-- Blog Review Count -->
+            <div>
+                <label for="blog_review_count" class="block text-sm font-medium text-gray-700 mb-2">
+                    블로그 리뷰 개수
+                </label>
+                <input
+                    type="number"
+                    id="blog_review_count"
+                    name="blog_review_count"
+                    min="0"
+                    value="0"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                >
+            </div>
+
+            <hr class="border-gray-200">
+
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">기본 정보</h3>
+
+            <!-- Has Hours -->
+            <div class="flex items-start mb-3">
+                <div class="flex items-center h-5">
+                    <input
+                        type="checkbox"
+                        id="has_hours"
+                        name="has_hours"
+                        value="true"
+                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    >
+                </div>
+                <div class="ml-3">
+                    <label for="has_hours" class="font-medium text-gray-700">영업시간 등록됨</label>
+                    <p class="text-sm text-gray-500">네이버 플레이스에 영업시간이 등록되어 있습니까?</p>
+                </div>
+            </div>
+
+            <!-- Has Menu -->
+            <div class="flex items-start mb-3">
+                <div class="flex items-center h-5">
+                    <input
+                        type="checkbox"
+                        id="has_menu"
+                        name="has_menu"
+                        value="true"
+                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    >
+                </div>
+                <div class="ml-3">
+                    <label for="has_menu" class="font-medium text-gray-700">메뉴 등록됨</label>
+                    <p class="text-sm text-gray-500">네이버 플레이스에 메뉴가 등록되어 있습니까?</p>
+                </div>
+            </div>
+
+            <!-- Has Price -->
+            <div class="flex items-start mb-3">
+                <div class="flex items-center h-5">
+                    <input
+                        type="checkbox"
+                        id="has_price"
+                        name="has_price"
+                        value="true"
+                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    >
+                </div>
+                <div class="ml-3">
+                    <label for="has_price" class="font-medium text-gray-700">가격 정보 등록됨</label>
+                    <p class="text-sm text-gray-500">메뉴별 가격 정보가 등록되어 있습니까?</p>
+                </div>
+            </div>
+
+            <hr class="border-gray-200">
+
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">편의 기능</h3>
+
+            <!-- Has Booking -->
+            <div class="flex items-start mb-3">
+                <div class="flex items-center h-5">
+                    <input
+                        type="checkbox"
+                        id="has_booking"
+                        name="has_booking"
+                        value="true"
+                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    >
+                </div>
+                <div class="ml-3">
+                    <label for="has_booking" class="font-medium text-gray-700">네이버 예약</label>
+                    <p class="text-sm text-gray-500">네이버 예약 서비스가 활성화되어 있습니까?</p>
+                </div>
+            </div>
+
+            <!-- Has TalkTalk -->
+            <div class="flex items-start mb-3">
+                <div class="flex items-center h-5">
+                    <input
+                        type="checkbox"
+                        id="has_talktalk"
+                        name="has_talktalk"
+                        value="true"
+                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    >
+                </div>
+                <div class="ml-3">
+                    <label for="has_talktalk" class="font-medium text-gray-700">톡톡 상담</label>
+                    <p class="text-sm text-gray-500">톡톡 상담 기능이 활성화되어 있습니까?</p>
+                </div>
+            </div>
+
+            <!-- Has SmartCall -->
+            <div class="flex items-start mb-3">
+                <div class="flex items-center h-5">
+                    <input
+                        type="checkbox"
+                        id="has_smartcall"
+                        name="has_smartcall"
+                        value="true"
+                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    >
+                </div>
+                <div class="ml-3">
+                    <label for="has_smartcall" class="font-medium text-gray-700">스마트콜</label>
+                    <p class="text-sm text-gray-500">스마트콜 기능이 활성화되어 있습니까?</p>
+                </div>
+            </div>
+
+            <!-- Has Coupon -->
+            <div class="flex items-start mb-3">
+                <div class="flex items-center h-5">
+                    <input
+                        type="checkbox"
+                        id="has_coupon"
+                        name="has_coupon"
+                        value="true"
+                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    >
+                </div>
+                <div class="ml-3">
+                    <label for="has_coupon" class="font-medium text-gray-700">쿠폰</label>
+                    <p class="text-sm text-gray-500">쿠폰 발행 기능을 사용하고 있습니까?</p>
+                </div>
+            </div>
+
+            <!-- Has News -->
+            <div class="flex items-start mb-3">
+                <div class="flex items-center h-5">
+                    <input
+                        type="checkbox"
+                        id="has_news"
+                        name="has_news"
+                        value="true"
+                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    >
+                </div>
+                <div class="ml-3">
+                    <label for="has_news" class="font-medium text-gray-700">새소식</label>
+                    <p class="text-sm text-gray-500">새소식을 정기적으로 등록하고 있습니까?</p>
+                </div>
+            </div>
+
+            <hr class="border-gray-200">
+
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">콘텐츠 & 채널</h3>
+
+            <!-- Has Intro -->
+            <div class="flex items-start mb-3">
+                <div class="flex items-center h-5">
+                    <input
+                        type="checkbox"
+                        id="has_intro"
+                        name="has_intro"
+                        value="true"
+                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    >
+                </div>
+                <div class="ml-3">
+                    <label for="has_intro" class="font-medium text-gray-700">소개글</label>
+                    <p class="text-sm text-gray-500">소개글이 등록되어 있습니까?</p>
+                </div>
+            </div>
+
+            <!-- Has Directions -->
+            <div class="flex items-start mb-3">
+                <div class="flex items-center h-5">
+                    <input
+                        type="checkbox"
+                        id="has_directions"
+                        name="has_directions"
+                        value="true"
+                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    >
+                </div>
+                <div class="ml-3">
+                    <label for="has_directions" class="font-medium text-gray-700">오시는 길</label>
+                    <p class="text-sm text-gray-500">오시는 길 안내가 등록되어 있습니까?</p>
+                </div>
+            </div>
+
+            <!-- Has Menu Description -->
+            <div class="flex items-start mb-3">
+                <div class="flex items-center h-5">
+                    <input
+                        type="checkbox"
+                        id="has_menu_description"
+                        name="has_menu_description"
+                        value="true"
+                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    >
+                </div>
+                <div class="ml-3">
+                    <label for="has_menu_description" class="font-medium text-gray-700">메뉴 설명</label>
+                    <p class="text-sm text-gray-500">메뉴별 상세 설명이 작성되어 있습니까?</p>
+                </div>
+            </div>
+
+            <!-- Has Owner Reply -->
+            <div class="flex items-start mb-3">
+                <div class="flex items-center h-5">
+                    <input
+                        type="checkbox"
+                        id="has_owner_reply"
+                        name="has_owner_reply"
+                        value="true"
+                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    >
+                </div>
+                <div class="ml-3">
+                    <label for="has_owner_reply" class="font-medium text-gray-700">사장님 댓글</label>
+                    <p class="text-sm text-gray-500">리뷰에 사장님 댓글을 남기고 있습니까?</p>
+                </div>
+            </div>
+
+            <!-- Has Instagram -->
+            <div class="flex items-start mb-3">
+                <div class="flex items-center h-5">
+                    <input
+                        type="checkbox"
+                        id="has_instagram"
+                        name="has_instagram"
+                        value="true"
+                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    >
+                </div>
+                <div class="ml-3">
+                    <label for="has_instagram" class="font-medium text-gray-700">인스타그램</label>
+                    <p class="text-sm text-gray-500">인스타그램 계정이 연결되어 있습니까?</p>
+                </div>
+            </div>
+
+            <!-- Has Kakao -->
+            <div class="flex items-start mb-3">
+                <div class="flex items-center h-5">
+                    <input
+                        type="checkbox"
+                        id="has_kakao"
+                        name="has_kakao"
+                        value="true"
+                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    >
+                </div>
+                <div class="ml-3">
+                    <label for="has_kakao" class="font-medium text-gray-700">카카오톡 채널</label>
+                    <p class="text-sm text-gray-500">카카오톡 채널이 연결되어 있습니까?</p>
+                </div>
+            </div>
+
+            <hr class="border-gray-200">
+
+            <!-- Submit Button -->
+            <div class="flex gap-4">
+                <button
+                    type="submit"
+                    id="submitBtn"
+                    class="flex-1 bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center justify-center"
+                >
+                    <span id="btnText">진단 시작하기</span>
+                    <svg id="btnSpinner" class="hidden animate-spin ml-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+
+                <a
+                    href="/"
+                    class="flex-1 bg-gray-200 text-gray-700 py-4 rounded-lg font-semibold hover:bg-gray-300 transition text-center"
+                >
+                    취소
+                </a>
+            </div>
+        </form>
+
+        <!-- Info Box -->
+        <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <p class="text-sm text-blue-800">
+                <svg class="inline w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                업체명만 필수 항목입니다. 나머지는 선택 사항이며, 입력하지 않으면 0점으로 계산됩니다.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('manualForm').addEventListener('submit', function(e) {
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const btnSpinner = document.getElementById('btnSpinner');
+
+    submitBtn.disabled = true;
+    btnText.textContent = '진단 시작 중...';
+    btnSpinner.classList.remove('hidden');
+});
+</script>
+{% endblock %}

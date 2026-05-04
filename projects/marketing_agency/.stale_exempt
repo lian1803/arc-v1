@@ -1,0 +1,5 @@
+# Stale-alert exemption marker
+# Lian sign 2026-04-29 session 33 — "프로젝트들 테스트된거는 걍 필요없어"
+# Effect: phase4_monitor.py 가 본 프로젝트의 ≥2일 stale alert 메시지 skip.
+#         REVIEW/KEEP/KILL 분류 자체는 그대로 산출 (정보는 surface).
+# Remove: 상품화 / live traffic 시작 시 이 파일 삭제 → alert 재활성화.

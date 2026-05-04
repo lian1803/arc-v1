@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>영업 플레이북 — 네이버 플레이스 대행 서비스</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif;
+    background: #f4f6f9;
+    color: #1a202c;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  /* ── 레이아웃 ── */
+  .page-wrapper { max-width: 860px; margin: 0 auto; padding: 24px 16px 80px; }
+  /* ── 헤더 ── */
+  .pb-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    border-radius: 16px;
+    padding: 32px 36px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .pb-header::after {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 160px; height: 160px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .pb-header h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .pb-header p { font-size: 13px; color: #a0aec0; }
+  .pb-meta { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+  .pb-meta-tag {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #e2e8f0;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  /* ── 탭 ── */
+  .tab-nav {
+    display: flex;
+    gap: 4px;
+    background: white;
+    border-radius: 12px;
+    padding: 6px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    flex: 1;
+    min-width: 100px;
+    padding: 10px 8px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    background: transparent;
+    color: #64748b;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .tab-btn.active {
+    background: #2563eb;
+    color: white;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+  }
+  .tab-btn .tab-emoji { display: block; font-size: 18px; margin-bottom: 2px; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  /* ── 카드 ── */
+  .card {
+    background: white;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .step-num {
+    background: #2563eb;
+    color: white;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  /* ── 스크립트 박스 ── */
+  .script-box {
+    background: #f8faff;
+    border: 1px solid #dbeafe;
+    border-left: 4px solid #3b82f6;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 14px;
+    line-height: 1.8;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .script-box .script-label {
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    background: #3b82f6;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    letter-spacing: 0.5px;
+  }
+  .script-box.warning {
+    background: #fff8f0;
+    border-left-color: #f97316;
+  }
+  .script-box.warning .script-label { background: #f97316; }
+  .script-box.success {
+    background: #f0fdf4;
+    border-left-color: #22c55e;
+  }
+  .script-box.success .script-label { background: #22c55e; }
+  .script-box.danger {
+    background: #fff5f5;
+    border-left-color: #ef4444;
+  }
+  .script-box.danger .script-label { background: #ef4444; }
+  /* ── 타임라인 ── */
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 11px; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #3b82f6, #e5e7eb);
+  }
+  .tl-item {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .tl-dot {
+    position: absolute;
+    left: -32px;
+    top: 4px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: #2563eb;
+    border: 3px solid white;
+    box-shadow: 0 0 0 2px #3b82f6;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px;
+    color: white;
+    font-weight: 700;
+  }
+  .tl-dot.gray { background: #94a3b8; box-shadow: 0 0 0 2px #94a3b8; }
+  .tl-dot.orange { background: #f97316; box-shadow: 0 0 0 2px #f97316; }
+  .tl-dot.green { background: #22c55e; box-shadow: 0 0 0 2px #22c55e; }
+  .tl-dot.red { background: #ef4444; box-shadow: 0 0 0 2px #ef4444; }
+  .tl-title { font-weight: 700; font-size: 14px; color: #1e293b; margin-bottom: 4px; }
+  .tl-desc { font-size: 13px; color: #475569; }
+  /* ── 배지 ── */
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .badge-blue { background: #dbeafe; color: #1d4ed8; }
+  .badge-red { background: #fee2e2; color: #b91c1c; }
+  .badge-green { background: #dcfce7; color: #15803d; }
+  .badge-orange { background: #ffedd5; color: #c2410c; }
+  .badge-gray { background: #f1f5f9; color: #475569; }
+  /* ── 패키지 테이블 ── */
+  .pkg-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .pkg-card {
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .pkg-card.highlight { border-color: #2563eb; background: #eff6ff; }
+  .pkg-name { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+  .pkg-price { font-size: 22px; font-weight: 700; color: #2563eb; margin-bottom: 8px; }
+  .pkg-price span { font-size: 12px; color: #64748b; font-weight: 400; }
+  .pkg-items { font-size: 12px; color: #475569; text-align: left; line-height: 1.9; }
+  /* ── 반론 카드 ── */
+  .objection-card {
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .obj-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: #f8fafc;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .obj-trigger:hover { background: #f1f5f9; }
+  .obj-trigger .obj-quote { color: #ef4444; font-style: italic; }
+  .obj-body {
+    display: none;
+    padding: 16px;
+    background: white;
+    border-top: 1px solid #e2e8f0;
+  }
+  .objection-card.open .obj-body { display: block; }
+  .objection-card.open .obj-arrow { transform: rotate(180deg); }
+  .obj-arrow { transition: transform 0.2s; }
+  /* ── 체크리스트 ── */
+  .checklist { list-style: none; }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 13px;
+    color: #374151;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist .check-icon { color: #22c55e; font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .checklist .warn-icon { color: #f59e0b; font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .checklist .x-icon { color: #ef4444; font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  /* ── 경고 배너 ── */
+  .alert-box {
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .alert-box.danger { background: #fff1f2; border: 1px solid #fecdd3; color: #be123c; }
+  .alert-box.info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; }
+  .alert-box.success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+  .alert-box strong { display: block; margin-bottom: 4px; }
+  /* ── 복사 버튼 ── */
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fef3c7;
+    border: 1px solid #fbbf24;
+    color: #92400e;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.15s;
+  }
+  .copy-btn:hover { background: #fde68a; }
+  .copy-btn.copied { background: #d1fae5; border-color: #34d399; color: #065f46; }
+  /* ── 방문 시나리오 ── */
+  .visit-step {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  .visit-num {
+    width: 36px; height: 36px;
+    background: #1e293b;
+    color: white;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .visit-body { flex: 1; }
+  .visit-title { font-weight: 700; font-size: 14px; color: #1e293b; margin-bottom: 6px; }
+  .visit-sub { font-size: 13px; color: #475569; }
+  /* ── 모바일 ── */
+  @media (max-width: 640px) {
+    .pkg-grid { grid-template-columns: 1fr; }
+    .pb-header { padding: 24px 20px; }
+    .card { padding: 18px; }
+  }
+  /* ── 인쇄 ── */
+  @media print {
+    body { background: white; }
+    .page-wrapper { max-width: 100%; padding: 12px; }
+    .tab-nav { display: none; }
+    .tab-content { display: block !important; }
+    .card { box-shadow: none; border: 1px solid #e2e8f0; }
+    .obj-body { display: block !important; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <!-- ── 헤더 ── -->
+  <div class="pb-header">
+    <h1>네이버 플레이스 대행 서비스 — 영업 플레이북</h1>
+    <p>리안 · 혜경 전용 내부 문서 / 업체에 공유 금지</p>
+    <div class="pb-meta">
+      <span class="pb-meta-tag">주목 38만원/월</span>
+      <span class="pb-meta-tag">집중 56만원/월</span>
+      <span class="pb-meta-tag">시선 95만원/월</span>
+      <span class="pb-meta-tag">경기 북부 지역 기준</span>
+    </div>
+  </div>
+
+  <!-- ── 탭 네비 ── -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('dm')">
+      <span class="tab-emoji">💬</span>DM 비대면
+    </button>
+    <button class="tab-btn" onclick="switchTab('visit')">
+      <span class="tab-emoji">🤝</span>방문 대면
+    </button>
+    <button class="tab-btn" onclick="switchTab('objection')">
+      <span class="tab-emoji">🛡️</span>반론 대응
+    </button>
+    <button class="tab-btn" onclick="switchTab('followup')">
+      <span class="tab-emoji">📅</span>팔로업
+    </button>
+    <button class="tab-btn" onclick="switchTab('packages')">
+      <span class="tab-emoji">📦</span>패키지
+    </button>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- TAB 1: DM 비대면 영업 -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="tab-dm" class="tab-content active">
+
+    <div class="alert-box danger">
+      <strong>핵심 원칙 — 절대 잊지 마</strong>
+      문제는 확실히 보여주되, 해결법은 절대 안 알려준다. 너무 많이 알려주면 "혼자 해볼게요"로 끝난다.
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="step-num">1</span>1차 콜드DM — 충격 숫자 1개</div>
+      <p style="font-size:13px;color:#475569;margin-bottom:12px;">
+        진단 결과 화면에서 업체에 맞는 1차 메시지를 복사해서 카톡/문자로 발송.
+        <br>아래는 3가지 버전 중 자동 선택 기준.
+      </p>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot">A</div>
+          <div class="tl-title">리뷰 격차형 <span class="badge badge-red">경쟁사 리뷰 ≥ 내 리뷰 × 5</span></div>
+          <div class="tl-desc">리뷰 차이가 클 때. "경쟁사 리뷰 2,600개 vs 사장님 116개"</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">B</div>
+          <div class="tl-title">손실 고객형 <span class="badge badge-orange">순위 &gt;10 AND 월검색 ≥ 500</span></div>
+          <div class="tl-desc">순위가 밀려 있을 때. "매달 약 N명이 경쟁사로"</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">C</div>
+          <div class="tl-title">방치형 <span class="badge badge-gray">새소식 90일+ 또는 저장수=0</span></div>
+          <div class="tl-desc">관리가 전혀 안 되어 있을 때. 방치 상태 강조</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="step-num">2</span>2차 — 회신 오면 PDF 전송 + 진단 결과 공유</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot green">→</div>
+          <div class="tl-title">PDF 제안서 다운로드 후 카톡으로 전송</div>
+          <div class="tl-desc">진단 결과 페이지에서 PDF 다운로드 버튼 클릭 → 파일 카톡 전송</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot green">→</div>
+          <div class="tl-title">2차 메시지 복사해서 함께 발송</div>
+          <div class="tl-desc">진단 결과 전체를 카드 형식으로 요약한 텍스트. 툴에서 자동 생성됨.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="step-num">3</span>3차 — 패키지 제안 + 손익분기 계산</div>
+      <div class="script-box">
+        <span class="script-label">핵심 멘트</span>
+        저희가 딱 한 가지만 말씀드릴게요. 사장님이 지금 이 상태로 한 달만 더 가면,
+        경쟁사와의 격차가 더 벌어집니다. 저희 [집중 플랜 56만원]으로 시작하면,
+        고객 <strong>[X]명만 더 오면</strong> 그달 비용이 회수돼요.
+      </div>
+      <p style="font-size:12px;color:#94a3b8;margin-top:8px;">※ [X] = 패키지 금액 ÷ 업종 평균 객단가. 툴에서 자동 계산됨.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="step-num">4</span>4차 — 보류/무응답 대응</div>
+      <p style="font-size:13px;color:#475569;margin-bottom:12px;">
+        아래 "팔로업" 탭 또는 툴의 "대화 관리" 섹션에서 D+3/D+7/D+14 메시지를 생성하세요.
+      </p>
+      <div class="alert-box info">
+        무응답이라도 D+14까지는 포기하지 말 것. 3번 팔로업 후에도 반응 없으면 6개월 후 재접촉.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="step-num">5</span>계약 의향 확인 후 — 결제/계약</div>
+      <div class="script-box success">
+        <span class="script-label">클로징 멘트</span>
+        감사합니다 사장님! 그럼 계약서 먼저 카톡으로 보내드릴게요.
+        서명하시면 바로 이번 달부터 시작합니다. 결제는 [링크] 로 진행해주시면 돼요.
+        첫 달 리포트는 30일 후에 카톡으로 드릴게요.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- TAB 2: 방문 대면 영업 -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="tab-visit" class="tab-content">
+
+    <div class="alert-box info">
+      <strong>방문 전 준비물 체크</strong>
+      ① 해당 업체 PDF 제안서 출력 또는 태블릿/노트북 준비<br>
+      ② 업체 등급/점수/손실 고객 수 머릿속에 외워두기<br>
+      ③ 경쟁사 1위 업체명과 리뷰 수 파악해두기
+    </div>
+
+    <div class="visit-step">
+      <div class="visit-num">1</div>
+      <div class="visit-body">
+        <div class="visit-title">오프닝 — 30초 훅</div>
+        <div class="script-box">
+          <span class="script-label">스크립트</span>
+          안녕하세요, 저 네이버 플레이스 마케팅 관련해서 잠깐 말씀 드리려고 왔어요.
+          혹시 지금 네이버에 [업체명] 검색하면 몇 위에 나오는지 알고 계세요?
+        </div>
+        <div class="visit-sub" style="margin-top:8px;">
+          → 모른다고 하면 바로 핸드폰 꺼내서 검색해서 보여줌.<br>
+          → 순위가 낮으면 "11위면 사실상 안 보이는 거예요" 바로 연결.
+        </div>
+      </div>
+    </div>
+
+    <div class="visit-step">
+      <div class="visit-num">2</div>
+      <div class="visit-body">
+        <div class="visit-title">충격 포인트 — 숫자 1개로 집중</div>
+        <div class="script-box warning">
+          <span class="script-label">핵심</span>
+          (PDF 표지 또는 핸드폰 화면 보여주면서)<br><br>
+          <strong>보이세요? 지금 경쟁사는 리뷰 [N]개인데, 사장님은 [M]개예요.</strong><br>
+          이 차이만큼 매달 고객이 저쪽으로 가고 있어요.<br>
+          저희 계산으로는 <strong>매달 약 [X]명이 검색하다가 경쟁사로 가고 있어요.</strong>
+        </div>
+        <div class="visit-sub">⚠️ 해결법은 아직 말하지 말 것. 문제만 보여주기.</div>
+      </div>
+    </div>
+
+    <div class="visit-step">
+      <div class="visit-num">3</div>
+      <div class="visit-body">
+        <div class="visit-title">PDF 설명 — 최대 3분</div>
+        <div class="visit-sub">
+          PDF 넘기면서 아래 순서로만 설명. 빨리 넘길수록 좋음.
+        </div>
+        <ul class="checklist" style="margin-top:10px;">
+          <li><span class="check-icon">▶</span>표지: 등급 + 점수 → "D등급이에요" (짧게)</li>
+          <li><span class="check-icon">▶</span>경쟁사 비교 슬라이드: 격차 숫자만 짚어주기</li>
+          <li><span class="check-icon">▶</span>체크리스트 슬라이드: X 표시된 항목들 "이게 다 비어있어요"</li>
+          <li><span class="warn-icon">⚠</span>패키지 슬라이드: 아직 펼치지 말 것 — 반응 먼저 보기</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="visit-step">
+      <div class="visit-num">4</div>
+      <div class="visit-body">
+        <div class="visit-title">반응 읽기 — 침묵이 답</div>
+        <div class="script-box">
+          <span class="script-label">스크립트</span>
+          사장님, 솔직히 어떻게 생각하세요?<br>
+          (침묵 유지 → 먼저 말하면 지는 거)
+        </div>
+        <div class="visit-sub">→ "어떻게 해야 하나요?" 물어보면 → 5단계로</div>
+        <div class="visit-sub">→ "바빠요/비싸요/생각해볼게요" → 반론 대응 탭 참고</div>
+      </div>
+    </div>
+
+    <div class="visit-step">
+      <div class="visit-num">5</div>
+      <div class="visit-body">
+        <div class="visit-title">패키지 제안 — 손익분기로 닫기</div>
+        <div class="script-box success">
+          <span class="script-label">클로징</span>
+          저희가 딱 두 가지만 해도 돼요. 사진이랑 리뷰만 잡아도 3개월 안에 순위가 바뀌어요.
+          근데 그걸 혼자 하시면 시간이 엄청 걸리고, 어떻게 해야 할지도 모르시잖아요.<br><br>
+          <strong>[집중 플랜 56만원]</strong>으로 시작하시면, 사장님 업종 특성상
+          고객 <strong>[X]명만 더 오면</strong> 그달 비용이 회수돼요.
+          한 달에 [X]명 더 오는 게 어려운 일이에요? (웃음)
+        </div>
+      </div>
+    </div>
+
+    <div class="visit-step">
+      <div class="visit-num" style="background:#22c55e;">✓</div>
+      <div class="visit-body">
+        <div class="visit-title">계약 완료</div>
+        <div class="script-box success">
+          <span class="script-label">완료</span>
+          감사합니다! 계약서 지금 바로 보내드릴게요. 카톡 주소 알려주시면 서명 후
+          저희 팀에서 이번 주 안에 작업 시작해드릴게요.
+          30일 뒤에 어떻게 바뀌었는지 리포트 드릴게요.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- TAB 3: 반론 대응 -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="tab-objection" class="tab-content">
+
+    <div class="alert-box info">
+      반론은 거절이 아닙니다. 관심이 있다는 신호입니다. 공감 먼저 → 숫자로 재반격.
+    </div>
+
+    <div class="objection-card" id="obj1">
+      <div class="obj-trigger" onclick="toggleObj('obj1')">
+        <span>"바빠요 / 지금 시간이 없어요"</span>
+        <span class="obj-arrow">▼</span>
+      </div>
+      <div class="obj-body">
+        <div class="script-box">
+          <span class="script-label">대응</span>
+          맞아요, 그래서 제가 찾아온 거예요. (웃음)<br>
+          바쁘실 때 일수록 저희 같은 데가 필요한 거잖아요.<br>
+          사장님이 하실 건 아무것도 없어요. 저희가 다 해드려요.<br><br>
+          딱 10분만 더 주시면 가장 중요한 부분만 보여드릴게요.
+        </div>
+      </div>
+    </div>
+
+    <div class="objection-card" id="obj2">
+      <div class="obj-trigger" onclick="toggleObj('obj2')">
+        <span>"혼자 해볼게요"</span>
+        <span class="obj-arrow">▼</span>
+      </div>
+      <div class="obj-body">
+        <div class="script-box warning">
+          <span class="script-label">대응</span>
+          네, 해보실 수는 있어요. 근데 솔직히 말씀드리면,<br>
+          대부분의 사장님들이 "해봐야지" 하시고 3개월 지나도 그대로예요.<br>
+          이 경쟁사 분들도 처음엔 다 직접 하셨어요.<br><br>
+          그 사이에 경쟁사 리뷰는 계속 쌓이고 있고요.<br>
+          (PDF 격차 슬라이드 다시 보여주기)
+        </div>
+      </div>
+    </div>
+
+    <div class="objection-card" id="obj3">
+      <div class="obj-trigger" onclick="toggleObj('obj3')">
+        <span>"비싸요"</span>
+        <span class="obj-arrow">▼</span>
+      </div>
+      <div class="obj-body">
+        <div class="script-box">
+          <span class="script-label">대응 — 손익분기 카드</span>
+          이해해요. 56만원이 부담되실 수 있죠.<br>
+          근데 사장님 업종으로 계산하면, 고객 <strong>[X]명만 더 오면</strong> 그달 비용이 회수돼요.<br><br>
+          한 달에 [X]명… 지금도 매달 [X]명 넘게 오시잖아요.<br>
+          그럼 투자가 되는 거지, 비용이 되는 게 아니에요.<br><br>
+          만약 부담되시면 <strong>주목 플랜(38만원)</strong>으로 시작하실 수도 있어요.
+          성과 보고 올리시면 되니까요.
+        </div>
+      </div>
+    </div>
+
+    <div class="objection-card" id="obj4">
+      <div class="obj-trigger" onclick="toggleObj('obj4')">
+        <span>"생각해볼게요 / 나중에 연락할게요"</span>
+        <span class="obj-arrow">▼</span>
+      </div>
+      <div class="obj-body">
+        <div class="script-box warning">
+          <span class="script-label">대응 — 마감 압박</span>
+          네, 물론이죠. 근데 솔직히 한 가지만 여쭤봐도 될까요?<br>
+          (잠시 멈춤)<br><br>
+          <strong>생각하시는 동안에도 경쟁사 리뷰는 계속 쌓여요.</strong><br>
+          저희가 지금 이 지역에서 몇 개 업체만 받고 있어서,<br>
+          같은 업종은 1업체만 받아요. 지금 이 지역 [업종]은 아직 없어서 괜찮은데,<br>
+          언제 다른 분이 문의하실지 모르거든요.<br><br>
+          이번 달 안에 결정하시면 첫 달 리포트를 2주 만에 드릴게요.
+        </div>
+      </div>
+    </div>
+
+    <div class="objection-card" id="obj5">
+      <div class="obj-trigger" onclick="toggleObj('obj5')">
+        <span>"효과가 있는지 모르겠어요"</span>
+        <span class="obj-arrow">▼</span>
+      </div>
+      <div class="obj-body">
+        <div class="script-box success">
+          <span class="script-label">대응 — 사례 카드</span>
+          맞아요, 처음엔 다들 그러세요.<br>
+          저희가 비슷한 [업종] 업체에서 시작했을 때, 3개월 만에<br>
+          리뷰 [N]개 → [M]개, 순위 [X]위 → [Y]위로 올라갔어요.<br><br>
+          그리고 저희가 성과 없으면 바로 해지하실 수 있어요.<br>
+          3개월만 해보시고 판단하셔도 늦지 않아요.
+        </div>
+      </div>
+    </div>
+
+    <div class="objection-card" id="obj6">
+      <div class="obj-trigger" onclick="toggleObj('obj6')">
+        <span>"(카톡에서) 관심 없어요 / 괜찮아요"</span>
+        <span class="obj-arrow">▼</span>
+      </div>
+      <div class="obj-body">
+        <div class="script-box">
+          <span class="script-label">DM 대응</span>
+          아, 네 알겠습니다 😊<br>
+          혹시 나중에라도 필요하시면 연락 주세요.<br>
+          참고로 지금 [경쟁사명] 이 지역 1위로 리뷰 [N]개 갖고 있더라고요.<br>
+          격차가 더 벌어지기 전에 시작하시는 게 훨씬 유리해서 말씀드렸어요.<br>
+          또 연락드릴게요!
+        </div>
+        <div style="font-size:12px;color:#94a3b8;margin-top:6px;">→ 3개월 후 재접촉 리스트에 추가</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- TAB 4: 팔로업 일정 -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="tab-followup" class="tab-content">
+
+    <div class="alert-box info">
+      <strong>팔로업 원칙</strong>
+      툴의 "대화 관리" 섹션에서 D+3/D+7/D+14 버튼을 눌러 메시지를 자동 생성하세요.
+    </div>
+
+    <div class="card">
+      <div class="card-title">무응답 팔로업 스케줄</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot">D1</div>
+          <div class="tl-title">발송 당일 — 1차 콜드DM <span class="badge badge-blue">툴에서 복사</span></div>
+          <div class="tl-desc">충격 숫자 1개. "보내드려도 될까요?"로 끝내기.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot orange">D3</div>
+          <div class="tl-title">D+3 — 부드러운 재연락 <span class="badge badge-orange">툴 자동 생성</span></div>
+          <div class="tl-desc">압박 없음. "바쁘셨죠?" 톤. 안부 + PDF 링크 재전송.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot red">D7</div>
+          <div class="tl-title">D+7 — 손실 수치 재강조 <span class="badge badge-red">툴 자동 생성</span></div>
+          <div class="tl-desc">이 7일 사이 얼마나 더 벌어졌는지 수치로 보여주기. 긴박감 UP.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot gray">D14</div>
+          <div class="tl-title">D+14 — 마지막 기회 압박 <span class="badge badge-gray">툴 자동 생성</span></div>
+          <div class="tl-desc">마감 압박 + "이 지역 [업종] 한 자리 남아있어요" 소셜 프루프.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot gray">D90</div>
+          <div class="tl-title">D+90 — 재접촉</div>
+          <div class="tl-desc">3개월 후 다시 진단. "그 사이 경쟁사 리뷰가 [N]개 더 늘었어요."</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">회신 대응 흐름</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot green">✓</div>
+          <div class="tl-title">회신이 옴 → 툴 "대화 관리" 섹션 사용</div>
+          <div class="tl-desc">회신 내용 붙여넣기 → Gemini가 다음 맞춤 메시지 생성.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot orange">?</div>
+          <div class="tl-title">"관심 있음" 신호 감지</div>
+          <div class="tl-desc">질문, "얼마예요?", "어떻게 해요?" → 즉시 3차 메시지 + 방문 제안.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot red">✗</div>
+          <div class="tl-title">거절 회신 → 부드럽게 마무리 + 재접촉 리스트</div>
+          <div class="tl-desc">"알겠습니다. 나중에 필요하시면…" 톤. 3개월 후 재접촉 메모.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- TAB 5: 패키지 -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="tab-packages" class="tab-content">
+
+    <div class="pkg-grid">
+      <div class="pkg-card">
+        <div class="pkg-name">🔹 주목</div>
+        <div class="pkg-price">38만원 <span>/월</span></div>
+        <div class="pkg-items">
+          ✅ 기본정보 최적화<br>
+          ✅ 키워드 등록<br>
+          ✅ 월 리포트<br>
+          <br>
+          <span style="color:#94a3b8;">사진/블로그 미포함</span>
+        </div>
+      </div>
+      <div class="pkg-card highlight">
+        <div style="font-size:10px;background:#2563eb;color:white;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:6px;font-weight:700;">추천</div>
+        <div class="pkg-name">🔸 집중</div>
+        <div class="pkg-price">56만원 <span>/월</span></div>
+        <div class="pkg-items">
+          ✅ 주목 전체 포함<br>
+          ✅ 사진 촬영<br>
+          ✅ 블로그 리뷰 관리<br>
+          ✅ 사장님 답글 대행
+        </div>
+      </div>
+      <div class="pkg-card">
+        <div class="pkg-name">⭐ 시선</div>
+        <div class="pkg-price">95만원 <span>/월</span></div>
+        <div class="pkg-items">
+          ✅ 집중 전체 포함<br>
+          ✅ 인스타 관리<br>
+          ✅ 새소식 2회/월<br>
+          ✅ 전담 매니저
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">업종별 손익분기 계산</div>
+      <p style="font-size:13px;color:#475569;margin-bottom:16px;">
+        "집중 플랜(56만원) 기준, 몇 명만 더 오면 본전인가?"
+      </p>
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead>
+          <tr style="background:#f8fafc;">
+            <th style="padding:8px 12px;text-align:left;border-bottom:2px solid #e2e8f0;color:#374151;">업종</th>
+            <th style="padding:8px 12px;text-align:center;border-bottom:2px solid #e2e8f0;color:#374151;">평균 객단가</th>
+            <th style="padding:8px 12px;text-align:center;border-bottom:2px solid #e2e8f0;color:#2563eb;font-weight:700;">집중(56만) 본전</th>
+            <th style="padding:8px 12px;text-align:center;border-bottom:2px solid #e2e8f0;color:#475569;">주목(38만) 본전</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid #f1f5f9;">
+            <td style="padding:10px 12px;font-weight:600;">미용실</td>
+            <td style="padding:10px 12px;text-align:center;">65,000원</td>
+            <td style="padding:10px 12px;text-align:center;color:#2563eb;font-weight:700;">9명</td>
+            <td style="padding:10px 12px;text-align:center;color:#64748b;">6명</td>
+          </tr>
+          <tr style="border-bottom:1px solid #f1f5f9;background:#fafafa;">
+            <td style="padding:10px 12px;font-weight:600;">네일</td>
+            <td style="padding:10px 12px;text-align:center;">60,000원</td>
+            <td style="padding:10px 12px;text-align:center;color:#2563eb;font-weight:700;">10명</td>
+            <td style="padding:10px 12px;text-align:center;color:#64748b;">7명</td>
+          </tr>
+          <tr style="border-bottom:1px solid #f1f5f9;">
+            <td style="padding:10px 12px;font-weight:600;">피부관리</td>
+            <td style="padding:10px 12px;text-align:center;">115,000원</td>
+            <td style="padding:10px 12px;text-align:center;color:#2563eb;font-weight:700;">5명</td>
+            <td style="padding:10px 12px;text-align:center;color:#64748b;">4명</td>
+          </tr>
+          <tr style="border-bottom:1px solid #f1f5f9;background:#fafafa;">
+            <td style="padding:10px 12px;font-weight:600;">식당</td>
+            <td style="padding:10px 12px;text-align:center;">20,000원</td>
+            <td style="padding:10px 12px;text-align:center;color:#2563eb;font-weight:700;">28명</td>
+            <td style="padding:10px 12px;text-align:center;color:#64748b;">19명</td>
+          </tr>
+          <tr style="border-bottom:1px solid #f1f5f9;">
+            <td style="padding:10px 12px;font-weight:600;">카페</td>
+            <td style="padding:10px 12px;text-align:center;">8,000원</td>
+            <td style="padding:10px 12px;text-align:center;color:#2563eb;font-weight:700;">70명</td>
+            <td style="padding:10px 12px;text-align:center;color:#64748b;">48명</td>
+          </tr>
+          <tr style="border-bottom:1px solid #f1f5f9;background:#fafafa;">
+            <td style="padding:10px 12px;font-weight:600;">병원</td>
+            <td style="padding:10px 12px;text-align:center;">150,000원</td>
+            <td style="padding:10px 12px;text-align:center;color:#2563eb;font-weight:700;">4명</td>
+            <td style="padding:10px 12px;text-align:center;color:#64748b;">3명</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">추천 멘트 — 업셀 전략</div>
+      <div class="script-box">
+        <span class="script-label">D등급 → 주목으로 시작</span>
+        지금 상태에서 당장 큰 투자보다, 기초부터 잡는 게 맞아요.
+        주목 플랜으로 3개월 기초 잡고, 결과 보면서 올리시면 돼요.
+      </div>
+      <div class="script-box" style="margin-top:10px;">
+        <span class="script-label">C등급 → 집중 추천</span>
+        어느 정도 기반은 있으세요. 사진이랑 블로그만 잡으면 B등급은 바로 가요.
+        집중 플랜이 딱 맞아요.
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function switchTab(id) {
+  document.querySelectorAll('.tab-content').forEach(function(el) {
+    el.classList.remove('active');
+  });
+  document.querySelectorAll('.tab-btn').forEach(function(el) {
+    el.classList.remove('active');
+  });
+  document.getElementById('tab-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function toggleObj(id) {
+  var card = document.getElementById(id);
+  card.classList.toggle('open');
+}
+
+// 복사 버튼
+document.querySelectorAll('.copy-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var target = document.getElementById(btn.dataset.target);
+    if (target) {
+      navigator.clipboard.writeText(target.innerText).then(function() {
+        btn.textContent = '✓ 복사됨';
+        btn.classList.add('copied');
+        setTimeout(function() {
+          btn.textContent = '📋 복사';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+  });
+});
+</script>
+</body>
+</html>

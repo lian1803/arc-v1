@@ -1,0 +1,520 @@
+[
+  {
+    "phone": "011-000-0000",
+    "name": "",
+    "region": "남양주",
+    "keyword": "미용실",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-3330-3938",
+    "name": "중고커피머신",
+    "region": "남양주",
+    "keyword": "카페",
+    "via": "naver_local"
+  },
+  {
+    "phone": "017-986-8187",
+    "name": "옵션",
+    "region": "남양주",
+    "keyword": "음식점",
+    "via": "naver_local"
+  },
+  {
+    "phone": "018-249-9325",
+    "name": "디벨롭짐",
+    "region": "남양주",
+    "keyword": "헬스장",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-9465-5760",
+    "name": "",
+    "region": "남양주",
+    "keyword": "헬스장",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-5124-0949",
+    "name": "휠체어",
+    "region": "남양주",
+    "keyword": "네일",
+    "via": "naver_local"
+  },
+  {
+    "phone": "018-557-4190",
+    "name": "",
+    "region": "남양주",
+    "keyword": "고깃집",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-4746-1425",
+    "name": "햇살부동산",
+    "region": "남양주",
+    "keyword": "부동산",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-8673-5098",
+    "name": "디알",
+    "region": "남양주",
+    "keyword": "부동산",
+    "via": "naver_local"
+  },
+  {
+    "phone": "018-1004-0921",
+    "name": "",
+    "region": "남양주",
+    "keyword": "노래방",
+    "via": "naver_local"
+  },
+  {
+    "phone": "016-0002-6065",
+    "name": "위키트리",
+    "region": "남양주",
+    "keyword": "노래방",
+    "via": "naver_local"
+  },
+  {
+    "phone": "017-0000-0000",
+    "name": "",
+    "region": "양주",
+    "keyword": "미용실",
+    "via": "naver_local"
+  },
+  {
+    "phone": "017-531-0250",
+    "name": "",
+    "region": "양주",
+    "keyword": "카페",
+    "via": "naver_local"
+  },
+  {
+    "phone": "018-6969-5000",
+    "name": "",
+    "region": "양주",
+    "keyword": "음식점",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-4470-4090",
+    "name": "하나중장비학원",
+    "region": "양주",
+    "keyword": "학원",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-7392-9227",
+    "name": "눈높이러닝센터",
+    "region": "양주",
+    "keyword": "학원",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-604-7908",
+    "name": "애드짐",
+    "region": "양주",
+    "keyword": "헬스장",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-5909-9679",
+    "name": "추가",
+    "region": "양주",
+    "keyword": "헬스장",
+    "via": "naver_local"
+  },
+  {
+    "phone": "011-5015-0000",
+    "name": "",
+    "region": "양주",
+    "keyword": "네일",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-3255-3919",
+    "name": "함께",
+    "region": "양주",
+    "keyword": "네일",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-120-2409",
+    "name": "",
+    "region": "양주",
+    "keyword": "노래방",
+    "via": "naver_local"
+  },
+  {
+    "phone": "011-565-8596",
+    "name": "화요일",
+    "region": "포천",
+    "keyword": "미용실",
+    "via": "naver_local"
+  },
+  {
+    "phone": "017-5227-8001",
+    "name": "",
+    "region": "포천",
+    "keyword": "카페",
+    "via": "naver_local"
+  },
+  {
+    "phone": "016-0001-8899",
+    "name": "",
+    "region": "포천",
+    "keyword": "카페",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-1199-5186",
+    "name": "태연반점",
+    "region": "포천",
+    "keyword": "음식점",
+    "via": "naver_local"
+  },
+  {
+    "phone": "011-570-1231",
+    "name": "이미지수",
+    "region": "포천",
+    "keyword": "학원",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-8807-1691",
+    "name": "함께",
+    "region": "포천",
+    "keyword": "네일",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-779-0175",
+    "name": "",
+    "region": "포천",
+    "keyword": "고깃집",
+    "via": "naver_local"
+  },
+  {
+    "phone": "019-0002-2009",
+    "name": "",
+    "region": "포천",
+    "keyword": "치킨",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-578-7923",
+    "name": "치킨",
+    "region": "포천",
+    "keyword": "치킨",
+    "via": "naver_local"
+  },
+  {
+    "phone": "018-5395-3000",
+    "name": "",
+    "region": "포천",
+    "keyword": "세탁소",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-3306-9549",
+    "name": "경기도",
+    "region": "포천",
+    "keyword": "약국",
+    "via": "naver_local"
+  },
+  {
+    "phone": "017-089-1711",
+    "name": "링크이미지",
+    "region": "포천",
+    "keyword": "부동산",
+    "via": "naver_local"
+  },
+  {
+    "phone": "019-0000-4380",
+    "name": "몰라요",
+    "region": "포천",
+    "keyword": "부동산",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-1202-2081",
+    "name": "",
+    "region": "포천",
+    "keyword": "노래방",
+    "via": "naver_local"
+  },
+  {
+    "phone": "019-042-5986",
+    "name": "의정부역",
+    "region": "의정부",
+    "keyword": "카페",
+    "via": "naver_local"
+  },
+  {
+    "phone": "016-2034-5952",
+    "name": "",
+    "region": "의정부",
+    "keyword": "음식점",
+    "via": "naver_local"
+  },
+  {
+    "phone": "011-9946-3690",
+    "name": "",
+    "region": "의정부",
+    "keyword": "음식점",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-000-0000",
+    "name": "",
+    "region": "의정부",
+    "keyword": "음식점",
+    "via": "naver_local"
+  },
+  {
+    "phone": "018-3948-2439",
+    "name": "뷔에르뷰티",
+    "region": "의정부",
+    "keyword": "피부관리",
+    "via": "naver_local"
+  },
+  {
+    "phone": "018-1031-1941",
+    "name": "",
+    "region": "의정부",
+    "keyword": "피부관리",
+    "via": "naver_local"
+  },
+  {
+    "phone": "011-0928-2021",
+    "name": "",
+    "region": "의정부",
+    "keyword": "피부관리",
+    "via": "naver_local"
+  },
+  {
+    "phone": "018-1209-1000",
+    "name": "",
+    "region": "의정부",
+    "keyword": "피부관리",
+    "via": "naver_local"
+  },
+  {
+    "phone": "019-0607-1334",
+    "name": "의정부시",
+    "region": "의정부",
+    "keyword": "고깃집",
+    "via": "naver_local"
+  },
+  {
+    "phone": "018-013-4905",
+    "name": "옵션",
+    "region": "의정부",
+    "keyword": "세탁소",
+    "via": "naver_local"
+  },
+  {
+    "phone": "011-1816-0652",
+    "name": "의정부",
+    "region": "의정부",
+    "keyword": "약국",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-123-0911",
+    "name": "의정부",
+    "region": "의정부",
+    "keyword": "약국",
+    "via": "naver_local"
+  },
+  {
+    "phone": "011-2018-0004",
+    "name": "한줄홍보",
+    "region": "의정부",
+    "keyword": "약국",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-4266-9643",
+    "name": "의정부",
+    "region": "의정부",
+    "keyword": "부동산",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-3320-5180",
+    "name": "의정부",
+    "region": "의정부",
+    "keyword": "노래방",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-5817-8717",
+    "name": "의정부노래방",
+    "region": "의정부",
+    "keyword": "노래방",
+    "via": "naver_local"
+  },
+  {
+    "phone": "018-852-6972",
+    "name": "옵션",
+    "region": "동두천",
+    "keyword": "미용실",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-6021-4521",
+    "name": "옵션",
+    "region": "동두천",
+    "keyword": "카페",
+    "via": "naver_local"
+  },
+  {
+    "phone": "016-7172-4297",
+    "name": "",
+    "region": "동두천",
+    "keyword": "헬스장",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-2629-5569",
+    "name": "매장명",
+    "region": "동두천",
+    "keyword": "네일",
+    "via": "naver_local"
+  },
+  {
+    "phone": "019-5843-0255",
+    "name": "휠체어",
+    "region": "동두천",
+    "keyword": "고깃집",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-122-1001",
+    "name": "",
+    "region": "동두천",
+    "keyword": "고깃집",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-2446-3528",
+    "name": "모임",
+    "region": "동두천",
+    "keyword": "고깃집",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-867-2463",
+    "name": "동두천",
+    "region": "동두천",
+    "keyword": "치킨",
+    "via": "naver_local"
+  },
+  {
+    "phone": "018-0403-1348",
+    "name": "",
+    "region": "동두천",
+    "keyword": "세탁소",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-914-5910",
+    "name": "",
+    "region": "동두천",
+    "keyword": "세탁소",
+    "via": "naver_local"
+  },
+  {
+    "phone": "011-7687-6573",
+    "name": "",
+    "region": "동두천",
+    "keyword": "부동산",
+    "via": "naver_local"
+  },
+  {
+    "phone": "019-0327-1740",
+    "name": "",
+    "region": "동두천",
+    "keyword": "부동산",
+    "via": "naver_local"
+  },
+  {
+    "phone": "019-0409-1707",
+    "name": "",
+    "region": "동두천",
+    "keyword": "부동산",
+    "via": "naver_local"
+  },
+  {
+    "phone": "016-1630-1477",
+    "name": "동두천",
+    "region": "동두천",
+    "keyword": "노래방",
+    "via": "naver_local"
+  },
+  {
+    "phone": "011-9008-0000",
+    "name": "",
+    "region": "가평",
+    "keyword": "미용실",
+    "via": "naver_local"
+  },
+  {
+    "phone": "011-009-1732",
+    "name": "",
+    "region": "가평",
+    "keyword": "미용실",
+    "via": "naver_local"
+  },
+  {
+    "phone": "019-1320-8000",
+    "name": "",
+    "region": "가평",
+    "keyword": "네일",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-8908-8703",
+    "name": "",
+    "region": "가평",
+    "keyword": "고깃집",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-6899-1601",
+    "name": "경매입찰",
+    "region": "가평",
+    "keyword": "부동산",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-811-5222",
+    "name": "",
+    "region": "가평",
+    "keyword": "부동산",
+    "via": "naver_local"
+  },
+  {
+    "phone": "018-1120-0742",
+    "name": "",
+    "region": "가평",
+    "keyword": "노래방",
+    "via": "naver_local"
+  },
+  {
+    "phone": "018-1120-1503",
+    "name": "네이버뉴스",
+    "region": "가평",
+    "keyword": "노래방",
+    "via": "naver_local"
+  },
+  {
+    "phone": "010-9652-2722",
+    "name": "노래방기기",
+    "region": "가평",
+    "keyword": "노래방",
+    "via": "naver_local"
+  }
+]

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>수민헤어 — 단골카드</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { font-family: -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; font-size: 17px; color: #191919; background: #F2F2F2; }
+  body { max-width: 420px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; position: relative; padding-bottom: 72px; }
+
+  /* Header */
+  .header { background: #FEE500; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
+  .header h1 { font-size: 22px; font-weight: 800; }
+  .header .add-btn { background: #191919; color: #FEE500; border: none; width: 48px; height: 48px; border-radius: 24px; font-size: 26px; font-weight: 700; cursor: pointer; line-height: 1; }
+
+  /* Tabs */
+  .nav-tabs { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 420px; background: #fff; display: flex; border-top: 1px solid #E0E0E0; z-index: 10; }
+  .nav-tab { flex: 1; padding: 14px 0; background: none; border: none; font-size: 16px; color: #767676; cursor: pointer; min-height: 56px; font-weight: 500; }
+  .nav-tab.active { color: #191919; font-weight: 700; border-top: 3px solid #FEE500; }
+
+  /* Pages */
+  .page { display: none; padding: 20px; }
+  .page.active { display: block; }
+  .page h2 { font-size: 18px; font-weight: 700; margin-bottom: 16px; color: #767676; }
+
+  /* 예약 카드 */
+  .booking-card { background: #fff; border-radius: 14px; padding: 18px; margin-bottom: 12px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.06); min-height: 88px; }
+  .booking-time { font-size: 22px; font-weight: 800; color: #191919; }
+  .booking-name { font-size: 18px; font-weight: 600; margin-top: 4px; }
+  .booking-last { font-size: 15px; color: #767676; margin-top: 6px; }
+  .booking-tag { display: inline-block; background: #FEE500; color: #191919; padding: 3px 10px; border-radius: 10px; font-size: 13px; font-weight: 600; margin-top: 8px; }
+
+  /* 손님 리스트 */
+  .customer-card { background: #fff; border-radius: 14px; padding: 18px; margin-bottom: 10px; cursor: pointer; min-height: 72px; }
+  .customer-name { font-size: 18px; font-weight: 600; }
+  .customer-meta { font-size: 14px; color: #767676; margin-top: 6px; }
+
+  /* 알림톡 미리보기 */
+  .alim-card { background: #fff; border-radius: 14px; padding: 16px; margin-bottom: 12px; border-left: 4px solid #FEE500; }
+  .alim-status { font-size: 13px; color: #767676; margin-bottom: 6px; }
+  .alim-msg { background: #FEE500; padding: 12px 14px; border-radius: 12px; font-size: 15px; line-height: 1.5; margin-top: 8px; }
+  .alim-when { font-size: 13px; color: #767676; margin-top: 8px; }
+
+  /* Modal */
+  .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: flex-end; justify-content: center; }
+  .modal-bg.active { display: flex; }
+  .modal { background: #fff; width: 100%; max-width: 420px; border-radius: 20px 20px 0 0; padding: 24px 20px; max-height: 88vh; overflow-y: auto; }
+  .modal h3 { font-size: 20px; font-weight: 700; margin-bottom: 18px; }
+
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #191919; }
+  .form-group select, .form-group input, .form-group textarea {
+    width: 100%; padding: 14px; border: 1px solid #E0E0E0; border-radius: 10px;
+    font-size: 17px; font-family: inherit; min-height: 48px; background: #FAFAFA;
+  }
+  .form-group textarea { min-height: 88px; resize: none; }
+
+  .btn-row { display: flex; gap: 10px; margin-top: 20px; }
+  .btn { flex: 1; padding: 16px; border: none; border-radius: 12px; font-size: 17px; font-weight: 700; cursor: pointer; min-height: 52px; font-family: inherit; }
+  .btn-primary { background: #FEE500; color: #191919; }
+  .btn-secondary { background: #F0F0F0; color: #191919; }
+
+  /* 손님 카드 상세 */
+  .history-item { background: #FAFAFA; padding: 12px 14px; border-radius: 10px; margin-bottom: 8px; font-size: 15px; }
+  .history-date { color: #767676; font-size: 13px; margin-bottom: 4px; }
+
+  /* 토스트 */
+  .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: #191919; color: #fff; padding: 12px 22px; border-radius: 22px; font-size: 15px; font-weight: 600; opacity: 0; transition: opacity 0.25s; z-index: 200; pointer-events: none; }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <h1>수민헤어</h1>
+  <button class="add-btn" onclick="openModal('addBooking')" aria-label="예약 추가">＋</button>
+</header>
+
+<!-- 오늘 -->
+<section class="page active" id="page-today">
+  <h2>오늘 · 4월 29일 화요일</h2>
+  <div class="booking-card" onclick="openCustomer('김민지')">
+    <div class="booking-time">10:30</div>
+    <div class="booking-name">김민지</div>
+    <div class="booking-last">지난번: 매직 + 회색 톤다운</div>
+    <div class="booking-last">마지막 방문 28일 전</div>
+  </div>
+  <div class="booking-card" onclick="openCustomer('박서연')">
+    <div class="booking-time">13:00</div>
+    <div class="booking-name">박서연</div>
+    <div class="booking-last">지난번: 컷 + 펌</div>
+    <div class="booking-last">마지막 방문 42일 전</div>
+    <span class="booking-tag">단골</span>
+  </div>
+  <div class="booking-card" onclick="openCustomer('이수진')">
+    <div class="booking-time">15:30</div>
+    <div class="booking-name">이수진</div>
+    <div class="booking-last">지난번: 뿌리 염색 (어두운 갈색)</div>
+    <div class="booking-last">마지막 방문 35일 전</div>
+  </div>
+  <div class="booking-card" onclick="openCustomer('정혜원')">
+    <div class="booking-time">18:00</div>
+    <div class="booking-name">정혜원</div>
+    <div class="booking-last">처음 오시는 손님</div>
+    <span class="booking-tag" style="background:#191919;color:#FEE500">신규</span>
+  </div>
+</section>
+
+<!-- 손님 -->
+<section class="page" id="page-customer">
+  <h2>단골 손님</h2>
+  <div class="customer-card" onclick="openCustomer('김민지')">
+    <div class="customer-name">김민지</div>
+    <div class="customer-meta">총 8회 방문 · 마지막 28일 전</div>
+  </div>
+  <div class="customer-card" onclick="openCustomer('박서연')">
+    <div class="customer-name">박서연</div>
+    <div class="customer-meta">총 12회 방문 · 마지막 42일 전</div>
+  </div>
+  <div class="customer-card" onclick="openCustomer('이수진')">
+    <div class="customer-name">이수진</div>
+    <div class="customer-meta">총 5회 방문 · 마지막 35일 전</div>
+  </div>
+  <div class="customer-card" onclick="openCustomer('최유나')">
+    <div class="customer-name">최유나</div>
+    <div class="customer-meta">총 15회 방문 · 마지막 14일 전</div>
+  </div>
+</section>
+
+<!-- 알림 -->
+<section class="page" id="page-alim">
+  <h2>자동 발송 알림톡</h2>
+  <div class="alim-card">
+    <div class="alim-status">📨 내일 보낼 예정 (예약 알림)</div>
+    <div class="alim-msg">박서연 님, 내일 13:00 수민헤어 예약 잊지 않으셨죠? :)</div>
+    <div class="alim-when">발송: 4월 30일 13:00 (예약 24시간 전)</div>
+  </div>
+  <div class="alim-card">
+    <div class="alim-status">📨 다음주 보낼 예정 (재방문 알림)</div>
+    <div class="alim-msg">김민지 님, 수민헤어입니다. 컷 시기네요~ 편하실 때 카톡 주세요 :)</div>
+    <div class="alim-when">발송: 5월 7일 (시술 4주차)</div>
+  </div>
+  <div class="alim-card" style="border-left-color:#767676;opacity:0.7">
+    <div class="alim-status">✅ 어제 발송 완료</div>
+    <div class="alim-msg">이수진 님, 오늘 15:30 수민헤어 예약 잊지 않으셨죠? :)</div>
+    <div class="alim-when">발송: 4월 28일 15:30</div>
+  </div>
+</section>
+
+<!-- 손님 카드 모달 -->
+<div class="modal-bg" id="modalCustomer" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h3 id="customerTitle">손님 카드</h3>
+    <div class="form-group">
+      <label>지난 시술 이력</label>
+      <div class="history-item">
+        <div class="history-date">4월 1일</div>
+        매직 + 회색 톤다운 / 4주 후 컷 예정
+      </div>
+      <div class="history-item">
+        <div class="history-date">2월 28일</div>
+        컷 + 클리닉
+      </div>
+    </div>
+    <div class="form-group">
+      <label>오늘 시술 메모</label>
+      <textarea id="memoInput" placeholder="예: 매직 + 회색 톤다운, 다음 4주 후 컷"></textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="closeModal()">닫기</button>
+      <button class="btn btn-primary" onclick="saveMemo()">메모 저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- 예약 추가 모달 -->
+<div class="modal-bg" id="modalBooking" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h3>예약 추가</h3>
+    <div class="form-group">
+      <label>손님 이름</label>
+      <select id="bookCustomer">
+        <option>김민지</option>
+        <option>박서연</option>
+        <option>이수진</option>
+        <option>최유나</option>
+        <option>+ 새 손님 추가</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>날짜</label>
+      <input type="date" id="bookDate" value="2026-04-30">
+    </div>
+    <div class="form-group">
+      <label>시간</label>
+      <select id="bookTime">
+        <option>10:00</option><option>10:30</option><option>11:00</option>
+        <option>11:30</option><option>13:00</option><option>13:30</option>
+        <option>14:00</option><option>14:30</option><option>15:00</option>
+        <option>15:30</option><option>16:00</option><option>17:00</option>
+        <option>18:00</option><option>19:00</option><option>20:00</option>
+      </select>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="closeModal()">취소</button>
+      <button class="btn btn-primary" onclick="saveBooking()">저장</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- 하단 탭 -->
+<nav class="nav-tabs">
+  <button class="nav-tab active" data-page="today" onclick="switchTab('today')">오늘</button>
+  <button class="nav-tab" data-page="customer" onclick="switchTab('customer')">손님</button>
+  <button class="nav-tab" data-page="alim" onclick="switchTab('alim')">알림</button>
+</nav>
+
+<script>
+  function switchTab(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.toggle('active', t.dataset.page === name));
+  }
+  function openCustomer(name) {
+    document.getElementById('customerTitle').textContent = name + ' 카드';
+    document.getElementById('memoInput').value = '';
+    document.getElementById('modalCustomer').classList.add('active');
+  }
+  function openModal(type) {
+    if (type === 'addBooking') document.getElementById('modalBooking').classList.add('active');
+  }
+  function closeModal() {
+    document.querySelectorAll('.modal-bg').forEach(m => m.classList.remove('active'));
+  }
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 1800);
+  }
+  function saveMemo() {
+    closeModal();
+    showToast('✓ 메모 저장됨');
+  }
+  function saveBooking() {
+    const name = document.getElementById('bookCustomer').value;
+    const time = document.getElementById('bookTime').value;
+    closeModal();
+    showToast('✓ ' + name + ' ' + time + ' 예약 추가됨');
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>네이버 플레이스 진단 — 헤어림</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #e8ecf1;
+    color: #1a2332;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 14mm;
+    background: #ffffff;
+    position: relative;
+    overflow: hidden;
+  }
+  .page + .page { page-break-before: always; }
+
+  /* 상단 사이드 액센트 바 */
+  .page::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 6px;
+    height: 100%;
+    background: linear-gradient(180deg, #1a4875, #2d7dd2);
+  }
+
+  /* ── 표지 ── */
+  .cover-wrap {
+    display: flex;
+    flex-direction: column;
+    min-height: 269mm;
+    position: relative;
+    z-index: 1;
+    padding-left: 8mm;
+  }
+
+  .cover-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12mm;
+    padding-bottom: 4mm;
+    border-bottom: 1px solid #e0e8f0;
+  }
+  .nav-brand { display: flex; align-items: center; gap: 3mm; }
+  .nav-logo {
+    width: 28px; height: 28px;
+    background: #1a4875;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: #fff; font-weight: 900;
+  }
+  .nav-name { font-size: 13px; font-weight: 700; color: #1a4875; letter-spacing: -0.3px; }
+  .nav-tagline { font-size: 9px; color: #6b7a8d; margin-top: 1px; }
+  .nav-badge {
+    background: #1a4875;
+    color: #ffffff;
+    font-size: 9px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  /* 표지 헤드라인 */
+  .cover-eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    color: #2d7dd2;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 4mm;
+  }
+  .cover-h1 {
+    font-size: 28px;
+    font-weight: 900;
+    color: #1a2332;
+    line-height: 1.25;
+    letter-spacing: -1px;
+    margin-bottom: 4mm;
+  }
+  .cover-h1 em { color: #d63031; font-style: normal; }
+  .cover-accent {
+    width: 48px; height: 4px;
+    background: linear-gradient(90deg, #1a4875, #2d7dd2);
+    border-radius: 2px;
+    margin-bottom: 6mm;
+  }
+
+  /* 업체 카드 */
+  .biz-card {
+    background: #f4f8ff;
+    border-radius: 12px;
+    padding: 5mm 6mm;
+    margin-bottom: 6mm;
+    display: flex;
+    align-items: center;
+    gap: 4mm;
+    border: 1px solid #d0e4f8;
+  }
+  .biz-avatar {
+    width: 44px; height: 44px;
+    background: #1a4875;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    color: #fff;
+  }
+  .biz-name { font-size: 19px; font-weight: 800; color: #1a2332; letter-spacing: -0.5px; }
+  .biz-meta { font-size: 10px; color: #6b7a8d; margin-top: 2px; }
+
+  /* KPI 카드 */
+  .kpi-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3mm; margin-bottom: 5mm; }
+  .kc {
+    border-radius: 10px;
+    padding: 4mm;
+    text-align: center;
+  }
+  .kc.danger { background: #fff5f5; border: 1.5px solid #fab8b8; }
+  .kc.info   { background: #f0f7ff; border: 1.5px solid #a8ccf0; }
+  .kc.neutral{ background: #f8f9fa; border: 1.5px solid #dee2e6; }
+  .kc-l { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: #6b7a8d; text-transform: uppercase; margin-bottom: 2mm; }
+  .kc.danger .kc-l { color: #c0392b; }
+  .kc.info .kc-l { color: #1a4875; }
+  .kc-v { font-size: 26px; font-weight: 900; letter-spacing: -1.5px; line-height: 1; }
+  .kv-danger { color: #d63031; }
+  .kv-info   { color: #1a4875; }
+  .kv-dark   { color: #1a2332; }
+  .kc-n { font-size: 9px; color: #9aabb8; margin-top: 1mm; }
+
+  .rec-bar {
+    background: #f0f7ff;
+    border-left: 4px solid #2d7dd2;
+    border-radius: 0 8px 8px 0;
+    padding: 3mm 5mm;
+    margin-bottom: 6mm;
+    font-size: 12px;
+    color: #1a4875;
+    font-weight: 600;
+  }
+
+  .cover-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-top: 4mm;
+    border-top: 1px solid #e0e8f0;
+    margin-top: auto;
+  }
+  .cf-d { font-size: 9px; color: #9aabb8; }
+  .cf-a { text-align: right; font-size: 10px; color: #6b7a8d; line-height: 1.8; }
+  .cf-a strong { color: #1a4875; font-size: 11px; }
+  .disclaimer {
+    padding-top: 3mm;
+    margin-top: 3mm;
+    border-top: 1px dashed #e0e8f0;
+    font-size: 8px;
+    color: #b0bec5;
+    line-height: 1.5;
+    text-align: center;
+    padding-left: 8mm;
+  }
+
+  /* ── 내부 페이지 공통 ── */
+  .page-tag {
+    display: flex;
+    align-items: center;
+    gap: 3mm;
+    margin-bottom: 6mm;
+    padding-bottom: 3mm;
+    border-bottom: 1.5px solid #e0e8f0;
+    position: relative;
+    z-index: 1;
+    padding-left: 8mm;
+  }
+  .pt-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #1a4875;
+    flex-shrink: 0;
+  }
+  .pt-l { font-size: 12px; font-weight: 700; color: #1a4875; letter-spacing: -0.3px; }
+  .pt-sub { font-size: 10px; color: #9aabb8; margin-left: auto; }
+  .inner-wrap { padding-left: 8mm; position: relative; z-index: 1; }
+
+  /* 섹션 헤더 */
+  .sh { margin-bottom: 4mm; }
+  .sh-t {
+    font-size: 14px; font-weight: 700; color: #1a2332;
+    padding-left: 3mm;
+    border-left: 3px solid #1a4875;
+    letter-spacing: -0.3px;
+  }
+
+  /* 스탯 카드 (2페이지) */
+  .sr { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3mm; margin-bottom: 5mm; }
+  .sc { border-radius: 10px; padding: 5mm; text-align: center; }
+  .sc.danger { background: #fff5f5; border: 1.5px solid #fab8b8; }
+  .sc.info   { background: #f0f7ff; border: 1.5px solid #a8ccf0; }
+  .sc-l { font-size: 9px; font-weight: 700; color: #6b7a8d; margin-bottom: 2mm; letter-spacing: 0.5px; }
+  .sc.danger .sc-l { color: #c0392b; }
+  .sc.info .sc-l { color: #1a4875; }
+  .sc-v { font-size: 26px; font-weight: 900; letter-spacing: -1.5px; }
+  .sv-danger { color: #d63031; }
+  .sv-info   { color: #1a4875; }
+  .sv-dark   { color: #1a2332; }
+  .sc-n { font-size: 9px; color: #9aabb8; margin-top: 1mm; }
+
+  /* 경고 박스 */
+  .prob {
+    background: #fff9e6;
+    border-radius: 8px;
+    padding: 4mm 5mm;
+    margin-bottom: 5mm;
+    font-size: 12px;
+    color: #7a5200;
+    line-height: 1.6;
+    border-left: 4px solid #f0b429;
+  }
+  .prob strong { color: #c87f00; }
+
+  /* 진단 그리드 */
+  .dg { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5mm; position: relative; z-index: 1; }
+  .di {
+    background: #fff;
+    border-radius: 8px;
+    padding: 3mm 4mm;
+    display: flex;
+    align-items: center;
+    gap: 2.5mm;
+    border: 1px solid #e8f0f8;
+  }
+  .di.bad { border-color: #fab8b8; background: #fff8f8; }
+  .di.ok  { border-color: #a8d8b8; background: #f4faf6; }
+  .di-s {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .ds-bad { background: #e74c3c; color: #fff; }
+  .ds-ok  { background: #27ae60; color: #fff; }
+  .di-name { flex: 1; font-size: 10.5px; color: #2a3a4a; }
+  .di-tag { font-size: 9px; font-weight: 700; padding: 1px 7px; border-radius: 20px; }
+  .dt-bad { background: #fde8e8; color: #c0392b; }
+  .dt-ok  { background: #e6f5ec; color: #1e8449; }
+
+  /* 경쟁사 비교 */
+  .comparison-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4mm;
+    margin-bottom: 5mm;
+  }
+  .comp-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 5mm;
+    border: 1.5px solid #e0e8f0;
+    text-align: center;
+  }
+  .comp-card.winner {
+    border-color: #2d7dd2;
+    box-shadow: 0 3px 12px rgba(45,125,210,0.12);
+  }
+  .comp-title { font-size: 11px; font-weight: 700; color: #6b7a8d; margin-bottom: 2mm; letter-spacing: 0.5px; }
+  .comp-card.winner .comp-title { color: #1a4875; }
+  .comp-rank { font-size: 28px; font-weight: 900; color: #1a2332; margin-bottom: 3mm; letter-spacing: -1px; }
+  .comp-rank-label { font-size: 10px; font-weight: 600; color: #6b7a8d; }
+  .comp-metric {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2.5mm 0;
+    border-bottom: 1px solid #f0f4f8;
+    font-size: 11px;
+  }
+  .comp-metric:last-child { border: none; }
+  .comp-label { color: #6b7a8d; }
+  .comp-value { font-weight: 700; color: #1a2332; }
+  .comp-value.bad  { color: #d63031; }
+  .comp-value.good { color: #27ae60; }
+
+  /* 손실 계산 카드 */
+  .loss-card {
+    background: #fff5f5;
+    border-radius: 12px;
+    padding: 6mm;
+    margin-bottom: 5mm;
+    border: 2px solid #fab8b8;
+    text-align: center;
+  }
+  .loss-title { font-size: 11px; font-weight: 700; color: #c0392b; letter-spacing: 1px; margin-bottom: 3mm; }
+  .loss-equation { font-size: 13px; color: #1a2332; line-height: 2; margin-bottom: 3mm; }
+  .loss-equation strong { color: #d63031; font-weight: 900; font-size: 16px; }
+  .loss-highlight {
+    background: #fff;
+    border-radius: 8px;
+    padding: 3mm 4mm;
+    margin-top: 3mm;
+    font-size: 11px;
+    color: #1a4875;
+    border: 1px solid #a8ccf0;
+  }
+  .loss-highlight strong { color: #1a4875; font-weight: 700; }
+
+  /* 키워드 테이블 */
+  .kwt { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+  .kwt th {
+    background: #1a4875;
+    color: #fff;
+    padding: 3mm;
+    font-size: 10px;
+    font-weight: 600;
+    text-align: left;
+  }
+  .kwt th:first-child { border-radius: 6px 0 0 0; }
+  .kwt th:last-child  { border-radius: 0 6px 0 0; }
+  .kwt td { padding: 3mm; border-bottom: 1px solid #f0f4f8; background: #fff; }
+  .kwt tr:nth-child(even) td { background: #fafcff; }
+  .kwt .num { text-align: right; font-weight: 700; color: #1a4875; }
+  .vb { background: #e0e8f0; height: 6px; border-radius: 3px; width: 70px; }
+  .vf { height: 100%; background: linear-gradient(90deg, #1a4875, #2d7dd2); border-radius: 3px; }
+
+  /* 패키지 카드 */
+  .pkg-g { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3mm; margin-bottom: 5mm; }
+  .pc { background: #fff; border-radius: 12px; overflow: hidden; border: 1.5px solid #e0e8f0; }
+  .pc.rec { border-color: #1a4875; box-shadow: 0 4px 16px rgba(26,72,117,0.15); }
+  .ph { padding: 4mm; text-align: center; background: #f4f8ff; }
+  .ph.rh { background: linear-gradient(135deg, #1a4875, #2d7dd2); }
+  .pn { font-size: 15px; font-weight: 800; color: #1a2332; }
+  .ph.rh .pn { color: #fff; }
+  .rtag {
+    display: inline-block;
+    background: rgba(255,255,255,0.25);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-top: 1mm;
+    border: 1px solid rgba(255,255,255,0.4);
+  }
+  .pb { padding: 4mm; }
+  .ppl { font-size: 9px; color: #b0bec5; text-decoration: line-through; }
+  .pp { font-size: 20px; font-weight: 900; color: #1a4875; letter-spacing: -0.5px; }
+  .ppu { font-size: 11px; font-weight: 400; color: #9aabb8; }
+  .ps { height: 1px; background: #e8f0f8; margin: 3mm 0; }
+  .pi { font-size: 10px; color: #3a4a5a; padding: 1.5mm 0; display: flex; gap: 2mm; line-height: 1.4; }
+  .pi::before { content: '✓'; color: #1a4875; font-size: 11px; flex-shrink: 0; font-weight: 700; }
+
+  /* 연간 기회손실 */
+  .annual-loss-highlight {
+    background: #fff5f5;
+    border: 2px solid #e74c3c;
+    border-radius: 10px;
+    padding: 5mm 6mm;
+    text-align: center;
+    margin: 5mm 0;
+  }
+  .annual-loss-label {
+    font-size: 10px;
+    color: #888;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 2mm;
+  }
+  .annual-loss-value {
+    font-size: 42px;
+    font-weight: 900;
+    color: #d63031;
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+  .annual-loss-sub {
+    font-size: 11px;
+    color: #c0392b;
+    margin-top: 1.5mm;
+    font-weight: 600;
+  }
+
+  /* CTA */
+  .cta-box {
+    background: #1a4875;
+    border-radius: 10px;
+    padding: 5mm 6mm;
+    text-align: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    margin-top: 4mm;
+  }
+  .cta-box span { color: #f0b429; }
+
+  /* 로드맵 */
+  .roadmap {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2mm;
+    margin-bottom: 5mm;
+  }
+  .rm-step {
+    background: #f4f8ff;
+    border: 1px solid #d0e4f8;
+    border-radius: 8px;
+    padding: 4mm;
+  }
+  .rm-step.highlight { background: #1a4875; border-color: #1a4875; }
+  .rm-month { font-size: 9px; font-weight: 700; color: #2d7dd2; margin-bottom: 2mm; letter-spacing: 1px; }
+  .rm-step.highlight .rm-month { color: #f0b429; }
+  .rm-title { font-size: 12px; font-weight: 700; color: #1a2332; margin-bottom: 1.5mm; }
+  .rm-step.highlight .rm-title { color: #fff; }
+  .rm-items { font-size: 10px; color: #4a6a8a; line-height: 1.7; }
+  .rm-step.highlight .rm-items { color: rgba(255,255,255,0.85); }
+
+  /* 비교 테이블 (기회손실 vs 투자) */
+  .invest-compare {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 3mm;
+    align-items: center;
+    margin-bottom: 5mm;
+  }
+  .invest-box {
+    border-radius: 10px;
+    padding: 5mm;
+    text-align: center;
+  }
+  .invest-box.loss { background: #fff5f5; border: 2px solid #fab8b8; }
+  .invest-box.gain { background: #f0f7ff; border: 2px solid #a8ccf0; }
+  .invest-vs { font-size: 20px; font-weight: 900; color: #dee2e6; text-align: center; }
+  .invest-label { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: #6b7a8d; margin-bottom: 2mm; }
+  .invest-box.loss .invest-label { color: #c0392b; }
+  .invest-box.gain .invest-label { color: #1a4875; }
+  .invest-value { font-size: 28px; font-weight: 900; letter-spacing: -1.5px; }
+  .invest-box.loss .invest-value { color: #d63031; }
+  .invest-box.gain .invest-value { color: #1a4875; }
+  .invest-unit { font-size: 9px; color: #9aabb8; margin-top: 1mm; }
+
+  .sig { text-align: right; font-size: 10px; color: #9aabb8; line-height: 1.8; }
+  .sig strong { color: #1a4875; font-size: 11px; }
+
+  @media print {
+    body { background: #fff; }
+    .page { margin: 0; }
+    .page + .page { page-break-before: always; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 표지 -->
+<div class="page">
+  <div class="cover-wrap">
+    <div class="cover-nav">
+      <div class="nav-brand">
+        <div class="nav-logo">R</div>
+        <div>
+          <div class="nav-name">리안 컴퍼니</div>
+          <div class="nav-tagline">소상공인 마케팅 전문</div>
+        </div>
+      </div>
+      <div class="nav-badge">무료 진단 리포트 2026</div>
+    </div>
+
+    <div style="margin-bottom: 6mm;">
+      <div class="cover-eyebrow">헤어 사장님을 위한 진단</div>
+      <div class="cover-h1">헤어림은 지금<br>'있지만 보이지 않는 가게'입니다.</div>
+      <div class="cover-accent"></div>
+      <p style="font-size:12px; color:#6b7a8d; line-height:1.7; margin-bottom:4mm;">
+        네이버 플레이스 공개 데이터 기반 무료 분석 결과입니다.<br>
+        경쟁사와의 격차, 그리고 해결책을 솔직하게 보여드립니다.
+      </p>
+      <!-- 성과 사례 스트립 — 업계 평균 -->
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:2mm; margin-bottom:5mm;">
+        <div style="background:#f4faf6; border:1px solid #a8d8b8; border-radius:8px; padding:3mm; text-align:center;">
+          <div style="font-size:22px; font-weight:900; color:#27ae60; letter-spacing:-1px;">248%</div>
+          <div style="font-size:8px; color:#4a6a5a; margin-top:1mm; line-height:1.4;">음식점 방문자 증가<br>관리 3개월 후</div>
+        </div>
+        <div style="background:#f4faf6; border:1px solid #a8d8b8; border-radius:8px; padding:3mm; text-align:center;">
+          <div style="font-size:22px; font-weight:900; color:#27ae60; letter-spacing:-1px;">89%</div>
+          <div style="font-size:8px; color:#4a6a5a; margin-top:1mm; line-height:1.4;">미용실 신규 고객<br>관리 3개월 후</div>
+        </div>
+        <div style="background:#f4faf6; border:1px solid #a8d8b8; border-radius:8px; padding:3mm; text-align:center;">
+          <div style="font-size:22px; font-weight:900; color:#27ae60; letter-spacing:-1px;">73%</div>
+          <div style="font-size:8px; color:#4a6a5a; margin-top:1mm; line-height:1.4;">피부과 예약률 개선<br>관리 3개월 후</div>
+        </div>
+      </div>
+      <div style="font-size:8px; color:#9aabb8; text-align:center; margin-bottom:4mm;">* 업계 평균 성과 (유사 업종 3개월 기준)</div>
+    </div>
+
+    <div class="biz-card">
+      <div class="biz-avatar">📍</div>
+      <div>
+        <div class="biz-name">헤어림</div>
+        <div class="biz-meta">미용실 · 경기 양주시</div>
+      </div>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kc danger">
+        <div class="kc-l">현재 순위</div>
+        <div class="kc-v kv-danger">8위</div>
+        <div class="kc-n">지역 내 8위</div>
+      </div>
+      <div class="kc danger">
+        <div class="kc-l">월 기회손실</div>
+        <div class="kc-v kv-danger">약 182~273만원 * 업계 평균 기반</div>
+        <div class="kc-n">경쟁사로 유출</div>
+      </div>
+      <div class="kc info">
+        <div class="kc-l">월 검색량</div>
+        <div class="kc-v kv-info">830</div>
+        <div class="kc-n">키워드 합계</div>
+      </div>
+    </div>
+
+    <div class="rec-bar">
+      추천 서비스: <strong>A 패키지</strong> — 지금 이 숫자를 바꿀 수 있습니다.
+    </div>
+
+    <div class="cover-foot">
+      <div class="cf-d">진단번호: 345678 · 분석일: 2026. 04. 20</div>
+      <div class="cf-a">
+        <strong>리안 컴퍼니</strong><br>
+        김리안 대표 · 010-5641-1803
+      </div>
+    </div>
+    <div class="disclaimer">
+      본 진단서는 네이버 플레이스 공개 데이터 기반으로 작성되었습니다. 실제 매출과의 정확한 상관관계는 여러 요인에 따라 달라질 수 있습니다.
+    </div>
+  </div>
+</div>
+
+<!-- 업체 현황 + 진단 체크리스트 -->
+<div class="page">
+  <div class="page-tag">
+    <div class="pt-dot"></div>
+    <div class="pt-l">업체 현황 요약</div>
+    <div class="pt-sub">헤어림</div>
+  </div>
+  <div class="inner-wrap">
+
+    <div class="sr">
+      <div class="sc danger">
+        <div class="sc-l">검색 순위</div>
+        <div class="sc-v sv-danger">8</div>
+        <div class="sc-n">지역 내 8위</div>
+      </div>
+      <div class="sc danger">
+        <div class="sc-l">월 기회손실</div>
+        <div class="sc-v sv-danger">약 182~273만원 * 업계 평균 기반</div>
+        <div class="sc-n">약 35명 × 약 5~7만원 * 업계 평균 기반원</div>
+      </div>
+      <div class="sc info">
+        <div class="sc-l">월 검색량</div>
+        <div class="sc-v sv-info">830</div>
+        <div class="sc-n">PC 249 + 모바일 581</div>
+      </div>
+    </div>
+
+    <div class="prob">
+      <strong>핵심 문제 :</strong> 개선 필요 — 이 부분이 방문객 손실의 가장 큰 원인입니다.
+    </div>
+
+    <div class="sh" style="margin-bottom:4mm;"><div class="sh-t">10개 항목 진단 체크리스트</div></div>
+    <div class="dg"><div class="di ok"><div class="di-s ds-ok">✓</div><div class="di-name">대표사진 최적화</div><div class="di-tag dt-ok">양호</div></div><div class="di bad"><div class="di-s ds-bad">✗</div><div class="di-name">대표 키워드 설정</div><div class="di-tag dt-bad">미흡</div></div><div class="di bad"><div class="di-s ds-bad">✗</div><div class="di-name">소개 · 오시는 길</div><div class="di-tag dt-bad">미흡</div></div><div class="di bad"><div class="di-s ds-bad">✗</div><div class="di-name">알림 · 이벤트 설정</div><div class="di-tag dt-bad">미흡</div></div><div class="di bad"><div class="di-s ds-bad">✗</div><div class="di-name">메뉴 · 가격 세팅</div><div class="di-tag dt-bad">미흡</div></div><div class="di bad"><div class="di-s ds-bad">✗</div><div class="di-name">예약 시스템 세팅</div><div class="di-tag dt-bad">미흡</div></div><div class="di bad"><div class="di-s ds-bad">✗</div><div class="di-name">영수증 리뷰 관리</div><div class="di-tag dt-bad">미흡</div></div><div class="di bad"><div class="di-s ds-bad">✗</div><div class="di-name">블로그 노출 현황</div><div class="di-tag dt-bad">미흡</div></div><div class="di bad"><div class="di-s ds-bad">✗</div><div class="di-name">지역 커뮤니티 연계</div><div class="di-tag dt-bad">미흡</div></div><div class="di bad"><div class="di-s ds-bad">✗</div><div class="di-name">외부 채널 연동</div><div class="di-tag dt-bad">미흡</div></div></div>
+
+    <div style="margin-top:5mm; background:#f8f9fa; border-radius:8px; padding:4mm 5mm; font-size:10.5px; color:#6b7a8d; line-height:1.7; border:1px solid #e0e8f0;">
+      <strong style="color:#1a4875;">진단 기준:</strong>
+      미흡 항목이 많을수록 네이버 알고리즘이 업체를 낮게 평가합니다.
+      상위 노출은 정보 완성도·리뷰 수·업데이트 빈도가 결정합니다.
+    </div>
+    <div style="margin-top:3mm; background:#fffbf0; border-left:3px solid #f0b429; border-radius:0 8px 8px 0; padding:3mm 4mm; font-size:10px; color:#7a5200; line-height:1.6;">
+      <strong>2025 네이버 업데이트:</strong> 리뷰 수보다 '저장·길찾기·예약 클릭' 등 <strong>행동 데이터</strong>가 순위에 더 큰 영향을 미칩니다. 위 미흡 항목들이 방문자 행동을 막고 있습니다.
+    </div>
+
+  </div>
+</div>
+
+<!-- 경쟁사 비교 + 손실 계산 -->
+<div class="page">
+  <div class="page-tag">
+    <div class="pt-dot"></div>
+    <div class="pt-l">경쟁사 비교 분석</div>
+    <div class="pt-sub">헤어림</div>
+  </div>
+  <div class="inner-wrap">
+
+    <div class="sh" style="margin-bottom:4mm;"><div class="sh-t">이 지역 상위 업체와 비교</div></div>
+
+    <div class="comparison-section">
+      <div class="comp-card">
+        <div class="comp-title">현재 우리 업체</div>
+        <div class="comp-rank">8<span style="font-size:14px; font-weight:600; color:#6b7a8d;">위</span></div>
+        <div class="comp-metric">
+          <span class="comp-label">방문자 리뷰</span>
+          <span class="comp-value bad">127개</span>
+        </div>
+        <div class="comp-metric">
+          <span class="comp-label">대표 사진</span>
+          <span class="comp-value bad">45장</span>
+        </div>
+        <div class="comp-metric">
+          <span class="comp-label">검색 순위</span>
+          <span class="comp-value bad">8위</span>
+        </div>
+      </div>
+
+      <div class="comp-card winner">
+        <div class="comp-title">지역 상위 경쟁사</div>
+        <div class="comp-rank">1<span style="font-size:14px; font-weight:600; color:#6b7a8d;">위</span></div>
+        <div class="comp-metric">
+          <span class="comp-label">방문자 리뷰</span>
+          <span class="comp-value good">700개</span>
+        </div>
+        <div class="comp-metric">
+          <span class="comp-label">대표 사진</span>
+          <span class="comp-value good">250장</span>
+        </div>
+        <div class="comp-metric">
+          <span class="comp-label">검색 순위</span>
+          <span class="comp-value good">1위</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#fff9e6; border-left:4px solid #f0b429; border-radius:0 8px 8px 0; padding:4mm 5mm; margin-bottom:5mm; font-size:12px; color:#7a5200;">
+      <strong>이 격차가 매달 약 약 35명의 차이를 만들고 있습니다.</strong><br>
+      <span style="font-size:11px;">월 830건 검색 발생</span>
+    </div>
+
+    <div class="sh" style="margin-bottom:4mm;"><div class="sh-t">매달 기회비용 계산</div></div>
+
+    <div class="loss-card">
+      <div class="loss-title">▲ 매월 사라지는 잠재 매출</div>
+      <div class="loss-equation">
+        경쟁사로 이탈하는 고객 <strong>35명</strong><br>
+        × 업종 평균 객단가 <strong>약 5~7만원 * 업계 평균 기반원</strong><br>
+        = 월 <strong>약 182~273만원 * 업계 평균 기반원</strong> 기회비용
+      </div>
+      <div class="loss-highlight">
+        이 중 단 <strong>7명</strong>만 더 오면 리안 컴퍼니 비용 본전입니다
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:3mm; margin-top:3mm;">
+      <div style="background:#f0f7ff; border:1.5px solid #a8ccf0; border-radius:10px; padding:4mm; text-align:center;">
+        <div style="font-size:9px; font-weight:700; color:#1a4875; letter-spacing:1px; margin-bottom:2mm;">이 키워드 월 검색</div>
+        <div style="font-size:26px; font-weight:900; color:#1a4875; letter-spacing:-1.5px;">830</div>
+        <div style="font-size:9px; color:#9aabb8; margin-top:1mm;">월 830건 검색 발생</div>
+      </div>
+      <div style="background:#1a4875; border-radius:10px; padding:4mm; text-align:center;">
+        <div style="font-size:9px; font-weight:700; color:rgba(255,255,255,0.7); letter-spacing:1px; margin-bottom:2mm;">헤어림이 받는 비율</div>
+        <div style="font-size:26px; font-weight:900; color:#f0b429; letter-spacing:-1.5px;">약 3%</div>
+        <div style="font-size:9px; color:rgba(255,255,255,0.6); margin-top:1mm;">검색량 대부분 경쟁사 흡수 중</div>
+      </div>
+    </div>
+
+    <div style="margin-top:4mm; background:#fff5f5; border:1.5px solid #e74c3c; border-radius:8px; padding:4mm 5mm; font-size:11px; color:#c0392b; line-height:1.6;">
+      <strong>현재 상태 유지 시나리오:</strong> 아무것도 안 바꾸고 6개월이 지나면 <strong>1,638만원</strong>의 잠재 매출 기회가 사라집니다.
+    </div>
+
+  </div>
+</div>
+
+<!-- 키워드 분석 -->
+<div class="page">
+  <div class="page-tag">
+    <div class="pt-dot"></div>
+    <div class="pt-l">지금 검색에서 안 보이는 이유</div>
+    <div class="pt-sub">헤어림</div>
+  </div>
+  <div class="inner-wrap">
+
+    <table class="kwt">
+      <thead>
+        <tr>
+          <th style="width:24px;">#</th>
+          <th>키워드</th>
+          <th style="text-align:right;">PC</th>
+          <th style="text-align:right;">모바일</th>
+          <th style="text-align:right;">합계</th>
+          <th>볼륨</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>양주 미용실</td><td class="num">-</td><td class="num">-</td><td class="num">450</td><td><div class="vb"><div class="vf" style="width:90%"></div></div></td></tr>
+        <tr><td>2</td><td>양주 헤어샵</td><td class="num">-</td><td class="num">-</td><td class="num">380</td><td><div class="vb"><div class="vf" style="width:76%"></div></div></td></tr>
+        <tr><td>3</td><td>-</td><td class="num">-</td><td class="num">-</td><td class="num">-</td><td><div class="vb"><div class="vf" style="width:5%"></div></div></td></tr>
+        <tr><td>4</td><td>-</td><td class="num">-</td><td class="num">-</td><td class="num">-</td><td><div class="vb"><div class="vf" style="width:5%"></div></div></td></tr>
+        <tr><td>5</td><td>-</td><td class="num">-</td><td class="num">-</td><td class="num">-</td><td><div class="vb"><div class="vf" style="width:5%"></div></div></td></tr>
+        <tr><td>6</td><td>-</td><td class="num">-</td><td class="num">-</td><td class="num">-</td><td><div class="vb"><div class="vf" style="width:5%"></div></div></td></tr>
+        <tr><td>7</td><td>-</td><td class="num">-</td><td class="num">-</td><td class="num">-</td><td><div class="vb"><div class="vf" style="width:5%"></div></div></td></tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:5mm; background:#f0f7ff; border:1.5px solid #a8ccf0; border-radius:10px; padding:5mm;">
+      <div style="font-size:11px; font-weight:700; color:#1a4875; margin-bottom:3mm;">키워드 분석 해석</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:3mm;">
+        <div style="text-align:center; padding:3mm; background:#fff; border-radius:8px;">
+          <div style="font-size:9px; font-weight:700; color:#1a4875; letter-spacing:1px; margin-bottom:2mm;">월 총 검색량</div>
+          <div style="font-size:28px; font-weight:900; color:#1a4875; letter-spacing:-1.5px;">830</div>
+          <div style="font-size:9px; color:#9aabb8; margin-top:1mm;">PC 249 + 모바일 581</div>
+        </div>
+        <div style="text-align:center; padding:3mm; background:#fff3f0; border-radius:8px; border:1px solid #fab8b8;">
+          <div style="font-size:9px; font-weight:700; color:#c0392b; letter-spacing:1px; margin-bottom:2mm;">현재 플레이스 순위</div>
+          <div style="font-size:28px; font-weight:900; color:#d63031; letter-spacing:-1.5px;">8위</div>
+          <div style="font-size:9px; color:#c0392b; margin-top:1mm;">검색량 대부분 경쟁사가 가져감</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:4mm; display:grid; grid-template-columns:1fr 1fr; gap:3mm;">
+      <div style="background:#f8f9fa; border:1px solid #dee2e6; border-radius:10px; padding:4mm; text-align:center;">
+        <div style="font-size:9px; font-weight:700; color:#6b7a8d; letter-spacing:1px; margin-bottom:2mm;">지역 1위 브랜드 검색</div>
+        <div style="font-size:22px; font-weight:900; color:#1a2332; letter-spacing:-1px;">0</div>
+        <div style="font-size:9px; color:#9aabb8; margin-top:1mm;">회/월</div>
+      </div>
+      <div style="background:#f8f9fa; border:1px solid #dee2e6; border-radius:10px; padding:4mm; text-align:center;">
+        <div style="font-size:9px; font-weight:700; color:#6b7a8d; letter-spacing:1px; margin-bottom:2mm;">헤어림 브랜드 검색</div>
+        <div style="font-size:22px; font-weight:900; color:#d63031; letter-spacing:-1px;">0</div>
+        <div style="font-size:9px; color:#9aabb8; margin-top:1mm;">회/월</div>
+      </div>
+    </div>
+
+    <div style="margin-top:4mm; background:#1a4875; border-radius:10px; padding:4mm 5mm; text-align:center;">
+      <div style="font-size:12px; color:#fff; font-weight:600; line-height:1.8;">
+        "왜 검색해도 우리 가게가 안 보이지?" — 바로 이 키워드들 때문입니다.<br>
+        대부분의 검색량이 상위 업체들에 의해 흡수되고 있으며,<br>
+        <strong style="color:#f0b429;">헤어림이 현재 받는 비율: 약 3%</strong>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 서비스 제안 + 패키지 + 견적 -->
+<div class="page">
+  <div class="page-tag">
+    <div class="pt-dot"></div>
+    <div class="pt-l">서비스 제안 · 견적서</div>
+    <div class="pt-sub">헤어림</div>
+  </div>
+  <div class="inner-wrap">
+
+    <!-- 기회손실 vs 투자 비교 -->
+    <div class="sh" style="margin-bottom:4mm;"><div class="sh-t">기회손실 vs 투자 비교</div></div>
+
+    <div style="background:#fff5f5; border:2px solid #fab8b8; border-radius:12px; padding:5mm; margin-bottom:4mm;">
+      <div style="display:grid; grid-template-columns:1fr 36px 1fr; gap:3mm; align-items:center; margin-bottom:3mm;">
+        <div style="text-align:center;">
+          <div style="font-size:9px; font-weight:700; color:#c0392b; letter-spacing:1px; margin-bottom:1.5mm;">월 기회손실</div>
+          <div style="font-size:30px; font-weight:900; color:#d63031; letter-spacing:-1.5px;">약 182~273만원 * 업계 평균 기반</div>
+          <div style="font-size:9px; color:#9aabb8; margin-top:1mm;">원/월</div>
+        </div>
+        <div style="text-align:center; font-size:18px; font-weight:700; color:#dee2e6;">VS</div>
+        <div style="text-align:center;">
+          <div style="font-size:9px; font-weight:700; color:#1a4875; letter-spacing:1px; margin-bottom:1.5mm;">월 투자비용</div>
+          <div style="font-size:30px; font-weight:900; color:#1a4875; letter-spacing:-1.5px;">380,000</div>
+          <div style="font-size:9px; color:#9aabb8; margin-top:1mm;">원/월</div>
+        </div>
+      </div>
+      <div style="background:#fff; border-radius:8px; padding:3mm 4mm; display:grid; grid-template-columns:1fr 1fr; gap:3mm; text-align:center;">
+        <div>
+          <div style="font-size:9px; font-weight:700; color:#1a4875; letter-spacing:1px; margin-bottom:1mm;">ROI 배수</div>
+          <div style="font-size:20px; font-weight:900; color:#1a4875;">4~7배 수준배</div>
+        </div>
+        <div>
+          <div style="font-size:9px; font-weight:700; color:#27ae60; letter-spacing:1px; margin-bottom:1mm;">하루 투자비</div>
+          <div style="font-size:20px; font-weight:900; color:#27ae60;">12,666원</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#f4faf6; border:1.5px solid #a8d8b8; border-radius:10px; padding:4mm 5mm; margin-bottom:5mm; text-align:center; font-size:13px; color:#1e6b3a;">
+      단 <strong>7명</strong>만 더 오면 — 첫 달 투자비 본전입니다
+    </div>
+
+    <!-- 유사 업종 성과 사례 -->
+    <div style="background:#f4faf6; border:1.5px solid #a8d8b8; border-radius:10px; padding:4mm 5mm; margin-bottom:4mm;">
+      <div style="font-size:9px; font-weight:700; color:#1e6b3a; letter-spacing:1px; margin-bottom:3mm;">
+        업계 평균 성과 사례<br>
+        <span style="font-size:8px; color:#9aabb8;">* 유사 업종 고객군 3개월 평균치</span>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:2mm;">
+        <div style="background:#fff; border-radius:8px; padding:3mm; text-align:center;">
+          <div style="font-size:18px; font-weight:900; color:#27ae60;">+248%</div>
+          <div style="font-size:8px; color:#6b7a8d; margin-top:1mm;">음식점 방문자</div>
+        </div>
+        <div style="background:#fff; border-radius:8px; padding:3mm; text-align:center;">
+          <div style="font-size:18px; font-weight:900; color:#27ae60;">+89%</div>
+          <div style="font-size:8px; color:#6b7a8d; margin-top:1mm;">미용실 신규 고객</div>
+        </div>
+        <div style="background:#fff; border-radius:8px; padding:3mm; text-align:center;">
+          <div style="font-size:18px; font-weight:900; color:#27ae60;">+73%</div>
+          <div style="font-size:8px; color:#6b7a8d; margin-top:1mm;">피부과 예약률</div>
+        </div>
+      </div>
+      <div style="font-size:8px; color:#9aabb8; margin-top:2mm; text-align:right;">* 유사 업종 기준 3개월 평균</div>
+    </div>
+
+    <!-- 3개 패키지 -->
+    <div class="sh" style="margin-bottom:4mm;"><div class="sh-t">3가지 패키지 선택</div></div>
+    <div class="pkg-g"><div class="pc rec"><div class="ph rh"><div class="pn">A. 플레이스 케어</div><div class="rtag">입문</div></div><div class="pb"><div class="ppl" style="text-decoration:line-through;color:#ccc;font-size:11px;">월 49만원</div><div class="pp">38만<span class="ppu">원/월 (약정)</span></div><div style="font-size:9px;color:#27ae60;font-weight:600;margin-bottom:2mm;">하루 12,666원</div><div class="ps"></div><div class="pi">N플레이스 기본정보 최적화</div><div class="pi">소식 3건/월</div><div class="pi">사장님 리뷰 응대 월 15건</div><div class="pi">월간 성과 리포트</div><div style="font-size:9px;color:#6b7a8d;margin-top:2mm;padding-top:2mm;border-top:1px dashed #e0e8f0;">3개월 내 미개선 시 1개월 무상 연장</div></div></div><div class="pc"><div class="ph"><div class="pn">B. 바이럴 성장</div></div><div class="pb"><div class="ppl" style="text-decoration:line-through;color:#ccc;font-size:11px;">월 72만원</div><div class="pp">56만<span class="ppu">원/월 (약정)</span></div><div style="font-size:9px;color:#27ae60;font-weight:600;margin-bottom:2mm;">하루 18,666원</div><div class="ps"></div><div class="pi">A 패키지 전체</div><div class="pi">블로그 체험단 2건/월</div><div class="pi">리워드 트래픽 연동</div><div class="pi">영수증 리뷰 이벤트</div><div class="pi">카카오채널 관리</div><div class="pi">성과 리포트</div><div style="font-size:9px;color:#6b7a8d;margin-top:2mm;padding-top:2mm;border-top:1px dashed #e0e8f0;">3개월 내 미개선 시 1개월 무상 연장</div></div></div><div class="pc"><div class="ph"><div class="pn">C. 광고 풀케어</div></div><div class="pb"><div class="ppl" style="text-decoration:line-through;color:#ccc;font-size:11px;">월 120만원</div><div class="pp">95만<span class="ppu">원/월 (약정)</span></div><div style="font-size:9px;color:#27ae60;font-weight:600;margin-bottom:2mm;">하루 31,666원</div><div class="ps"></div><div class="pi">B 패키지 전체</div><div class="pi">인스타 SNS 4건/월</div><div class="pi">메타·당근 광고 운영</div><div class="pi">커뮤니티 홍보 2건/월</div><div class="pi">전담 담당자 배정</div><div class="pi">월 전략 미팅</div><div style="font-size:9px;color:#6b7a8d;margin-top:2mm;padding-top:2mm;border-top:1px dashed #e0e8f0;">3개월 내 미개선 시 1개월 무상 연장</div></div></div></div>
+
+    <!-- 3개월 시작 로드맵 -->
+    <div class="sh" style="margin-bottom:3mm;"><div class="sh-t">3개월 성과 로드맵</div></div>
+    <div class="roadmap">
+      <div class="rm-step">
+        <div class="rm-month">1개월차</div>
+        <div class="rm-title">기반 정비</div>
+        <div class="rm-items">플레이스 최적화<br>사진·키워드 세팅<br>리뷰 응대 시작</div>
+      </div>
+      <div class="rm-step highlight">
+        <div class="rm-month">2개월차</div>
+        <div class="rm-title">노출 확대</div>
+        <div class="rm-items">블로그 체험단<br>리워드 트래픽<br>순위 상승 시작</div>
+      </div>
+      <div class="rm-step">
+        <div class="rm-month">3개월차</div>
+        <div class="rm-title">성과 확인</div>
+        <div class="rm-items">리뷰 수 증가<br>순위 변화 리포트<br>다음 단계 제안</div>
+      </div>
+    </div>
+
+    <div class="cta-box">
+      지금 시작하기 → <span>카카오톡 010-5641-1803</span>
+    </div>
+
+    <div style="margin-top:4mm; background:#f0f7ff; border:1.5px solid #a8ccf0; border-radius:8px; padding:3mm 5mm; display:flex; justify-content:space-between; align-items:center;">
+      <div style="font-size:10px; color:#1a4875; line-height:1.7;">
+        <strong>리안 컴퍼니</strong> · 김리안 대표 · 010-5641-1803<br>
+        <span style="font-size:9px; color:#6b7a8d;">계약서에 서비스 내용 전부 명시 · 구두 계약 없음</span>
+      </div>
+      <div style="text-align:right; font-size:9px; color:#1a4875; font-weight:700; background:#fff; border:1px solid #a8ccf0; border-radius:6px; padding:2mm 3mm; line-height:1.6;">
+        3개월 내 순위·리뷰 미개선 시<br><strong>1개월 무상 연장 보장</strong>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

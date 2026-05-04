@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}진단 이력 - 네이버 플레이스 진단{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <!-- 헤더 -->
+    <div class="bg-white rounded-2xl shadow-lg p-8 mb-6">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">진단 이력</h1>
+        <p class="text-gray-600">
+            지금까지 진단한 업체 목록입니다. 우선순위별로 필터링하여 영업 관리를 효율적으로 하세요.
+        </p>
+    </div>
+
+    <!-- 필터 탭 -->
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+        <div class="filter-tabs">
+            <div class="filter-tab active" data-filter="all" onclick="filterHistory('all')">
+                전체 <span id="count-all">({{ histories|length }})</span>
+            </div>
+            <div class="filter-tab" data-filter="1" onclick="filterHistory('1')">
+                1순위 <span id="count-1">(0)</span>
+            </div>
+            <div class="filter-tab" data-filter="2" onclick="filterHistory('2')">
+                2순위 <span id="count-2">(0)</span>
+            </div>
+            <div class="filter-tab" data-filter="pass" onclick="filterHistory('pass')">
+                패스 <span id="count-pass">(0)</span>
+            </div>
+        </div>
+
+        <!-- 정렬 옵션 -->
+        <div class="mt-4 flex items-center gap-4">
+            <label class="text-gray-700 font-semibold">정렬:</label>
+            <select id="sortSelect" onchange="sortHistory(this.value)" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                <option value="date-desc">최신순</option>
+                <option value="date-asc">오래된순</option>
+                <option value="score-desc">점수 높은순</option>
+                <option value="score-asc">점수 낮은순</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- 업체 카드 목록 -->
+    <div id="historyContainer">
+        {% if histories %}
+        {% for history in histories %}
+        <div class="business-card"
+             data-priority="{{ history.sales_priority|default('pass') }}"
+             data-score="{{ history.total_score }}"
+             data-date="{{ history.created_at.timestamp() }}">
+            <div class="flex items-start justify-between flex-wrap gap-4">
+                <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-2">
+                        <h3 class="text-xl font-bold text-gray-900">{{ history.business_name }}</h3>
+                        <div class="grade-badge grade-{{ history.grade.lower() }} text-sm">
+                            {{ history.grade }}등급
+                        </div>
+                        <div class="text-2xl font-bold text-gray-700">
+                            {{ history.total_score }}점
+                        </div>
+                        <div class="priority-badge priority-{{ history.sales_priority|default('pass') }}">
+                            {{ history.sales_priority_label|default('패스') }}
+                        </div>
+                    </div>
+
+                    <div class="text-sm text-gray-600 mb-2">
+                        {% if history.address %}
+                        <span class="mr-4">📍 {{ history.address }}</span>
+                        {% endif %}
+                        {% if history.category %}
+                        <span class="mr-4">🏪 {{ history.category }}</span>
+                        {% endif %}
+                        <span>📅 {{ history.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                    </div>
+
+                    <div class="flex gap-4 text-sm text-gray-700 flex-wrap">
+                        <span>리뷰 {{ history.receipt_review_count + history.visitor_review_count }}개</span>
+                        <span>사진 {{ history.photo_count }}장</span>
+                        {% if history.naver_place_rank > 0 %}
+                        <span>순위 {{ history.naver_place_rank }}위</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- 영업 단계 표시 -->
+                    <div class="mt-3">
+                        <label class="text-xs text-gray-600 font-semibold mb-1 block">영업 진행 단계:</label>
+                        <select class="text-xs border border-gray-300 rounded px-2 py-1 bg-white hover:border-blue-500 transition cursor-pointer"
+                                onchange="updateSalesStage({{ history.id }}, this.value)">
+                            <option value="미접촉" {% if (history.sales_stage|default('미접촉')) == '미접촉' %}selected{% endif %}>📌 미접촉</option>
+                            <option value="1차발송" {% if (history.sales_stage|default('미접촉')) == '1차발송' %}selected{% endif %}>📤 1차발송</option>
+                            <option value="2차발송" {% if (history.sales_stage|default('미접촉')) == '2차발송' %}selected{% endif %}>📤 2차발송</option>
+                            <option value="3차발송" {% if (history.sales_stage|default('미접촉')) == '3차발송' %}selected{% endif %}>📤 3차발송</option>
+                            <option value="4차발송" {% if (history.sales_stage|default('미접촉')) == '4차발송' %}selected{% endif %}>📤 4차발송</option>
+                            <option value="계약완료" {% if (history.sales_stage|default('미접촉')) == '계약완료' %}selected{% endif %}>✅ 계약완료</option>
+                            <option value="거절" {% if (history.sales_stage|default('미접촉')) == '거절' %}selected{% endif %}>❌ 거절</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <a href="/result/{{ history.id }}"
+                       class="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition text-center text-sm">
+                        결과 보기
+                    </a>
+                    <a href="/result/{{ history.id }}#messages"
+                       class="bg-kakao-yellow text-black px-6 py-2 rounded-lg font-semibold hover:bg-yellow-400 transition text-center text-sm">
+                        메시지 보기
+                    </a>
+                    <button onclick="downloadPPT({{ history.id }}, this)"
+                            class="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg font-semibold hover:bg-gray-300 transition text-sm">
+                        PPT 다운
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="bg-white rounded-2xl shadow-lg p-12 text-center">
+            <svg class="w-20 h-20 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">진단 이력이 없습니다</h2>
+            <p class="text-gray-600 mb-6">첫 진단을 시작해보세요!</p>
+            <a href="/" class="inline-flex items-center bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                진단 시작하기
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- 통계 요약 (하단) -->
+    {% if histories %}
+    <div class="bg-white rounded-2xl shadow-lg p-6 mt-6">
+        <h3 class="text-lg font-bold text-gray-900 mb-4">통계 요약</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div>
+                <div class="text-3xl font-bold text-blue-600">{{ histories|length }}</div>
+                <div class="text-sm text-gray-600">총 진단 업체</div>
+            </div>
+            <div>
+                <div class="text-3xl font-bold text-priority-red" id="stat-priority-1">0</div>
+                <div class="text-sm text-gray-600">1순위 업체</div>
+            </div>
+            <div>
+                <div class="text-3xl font-bold text-priority-orange" id="stat-priority-2">0</div>
+                <div class="text-sm text-gray-600">2순위 업체</div>
+            </div>
+            <div>
+                <div class="text-3xl font-bold text-gray-500" id="stat-avg-score">0</div>
+                <div class="text-sm text-gray-600">평균 점수</div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script src="/static/js/history_filter.js"></script>
+<script src="/static/js/result.js"></script>
+{% endblock %}

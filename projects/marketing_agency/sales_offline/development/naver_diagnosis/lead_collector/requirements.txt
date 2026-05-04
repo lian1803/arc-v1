@@ -1,0 +1,10 @@
+playwright==1.40.0
+httpx==0.26.0
+openpyxl==3.1.2
+pandas==2.1.4
+SQLAlchemy==2.0.23
+phonenumbers==8.13.27
+python-dotenv==1.0.0
+PyQt6==6.6.1
+beautifulsoup4==4.12.3
+requests==2.31.0

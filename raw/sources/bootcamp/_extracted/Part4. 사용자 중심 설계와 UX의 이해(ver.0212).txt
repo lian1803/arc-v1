@@ -1,0 +1,1453 @@
+Intro
+Prev
+1
+/
+51
+Next
+🎨
+UI/UX Design & AI Agent
+AI와 함께 만드는 사용자 중심 서비스
+Part 1: Lean Startup 가설 복습
+Part 2: 사용자 여정
+Part 3: UI/UX with AI
+Part 4: UI/UX 프롬프트 심화 실습
+키보드 방향키(
+←
+→
+) 또는
+Space
+로 이동
+1
+Part 1
+오늘 학습 목표
+4가지 파트로 나눠서 진행합니다
+📖
+Part 1: Lean Startup 가설 복습
+Ash Maurya의 Running Lean - 4가지 가설을 빠르게 복습하고 실습합니다
+Customer, Problem, Solution, Business 가설을 정리하고, 본인 프로젝트에 적용합니다.
+🛤
+Part 2: 사용자 여정
+User Journey Map을 AI로 분석하고 직접 작성합니다
+기존 서비스 유저저니 분석 + 내 서비스 유저저니 작성 + AI 피드백
+🎨
+Part 3: UI/UX with AI
+AI 시대의 디자인 프로세스와 프롬프팅 기법을 배웁니다
+좋은 질문 하기, 키워드 조합, Stitch, Figma, Readdy AI 활용법
+📝
+Part 4: 프롬프트 심화 실습
+다양한 화면별 UI/UX 프롬프트를 직접 작성하고 개선합니다
+화면별 프롬프트 실습 + 디자인 피드백 루프 + 포트폴리오 완성
+2
+Part 1 - Lean Startup
+Running Lean 핵심 복습
+"Life is too short to build something nobody wants."
+- Ash Maurya, Running Lean
+Plan A를 빠르게 세우고, 빠르게 검증하고, 빠르게 수정하는 것이 핵심입니다.
+4가지 핵심 가설
+👥
+고객 가설
+누가 이 문제를 겪고 있는가?
+⚠️
+문제 가설
+그들이 겪는 Top 3 문제는?
+💡
+솔루션 가설
+각 문제의 해결책은 무엇인가?
+💰
+비즈니스 가설
+어떻게 돈을 벌 것인가?
+핵심 원칙
+가설은 "정답"이 아니라 "검증할 대상"입니다. 빠르게 세우고, 빠르게 틀려야 합니다.
+3
+Part 1 - 고객 가설
+고객 가설 (Customer Hypothesis)
+정의:
+"누가 이 문제를 겪고 있는가?"를 구체적으로 정의하는 것
+왜 Early Adopter를 찾아야 하는가?
+모든 사람을 타겟하면 아무도 만족시킬 수 없다
+Early Adopter = 문제를 가장 심하게 겪고 있어서 불완전한 솔루션도 기꺼이 사용할 사람
+이들의 피드백이 제품의 방향을 결정한다
+구체적인 예시
+🍜
+배달앱
+"혼자 사는 20-30대 직장인 중 매일 저녁 뭐 먹을지 고민하는 사람"
+🏋
+운동앱
+"작심삼일로 운동을 포기하는 30대 직장인"
+💡
+Key Point
+"20대 여성" 같은 인구통계학적 정보만으로는 부족합니다.
+행동과 상황
+을 함께 정의하세요.
+4
+Part 1 - 실습
+고객 가설 실습
+본인 프로젝트의 고객 가설을 작성해보세요
+고객 가설 템플릿
+[누가]
+[어떤 상황에서]
+[어떤 불편함]
+을 겪고 있다
+실습 과제
+5분
+위 템플릿을 채워 본인 프로젝트의 고객 가설을 작성하세요
+작성 후 옆 사람과 공유하고 피드백을 받으세요
+아래 체크리스트로 자가 점검하세요
+충분히 구체적인가? (좁은 범위)
+실제로 찾을 수 있는 사람인가?
+직접 인터뷰할 수 있는가?
+이 사람이 돈을 낼 만큼 문제가 심각한가?
+5
+Part 1 - 문제 가설
+문제 가설 (Problem Hypothesis)
+정의:
+고객이 겪고 있는 Top 3 문제를 정의하는 것
+"문제를 이해하지 못하면 올바른 솔루션을 만들 수 없다"
+- Ash Maurya
+예시: 배달앱의 Top 3 문제
+1
+메뉴 선택 장애
+매일 저녁 뭘 먹을지 결정하는 데 너무 많은 시간과 에너지를 소모한다
+2
+배달비 부담
+음식값 + 배달비를 합치면 부담이 크다. 특히 1인분 주문 시 배달비 비율이 높다
+3
+배달 시간 불확실
+예상 시간보다 늦게 오거나, 실시간 위치를 정확히 알 수 없다
+기존 대안(Existing Alternatives) 파악이 중요!
+고객이 현재 이 문제를 어떻게 해결하고 있는지 파악해야 합니다. 기존 대안이 없다면, 문제가 충분히 심각하지 않을 수 있습니다.
+6
+Part 1 - 실습
+문제 가설 실습
+실습 과제
+7분
+본인 프로젝트의 고객이 겪는
+Top 3 문제
+를 작성하세요
+각 문제마다
+기존 대안
+을 최소 1개 이상 적으세요
+아래 AI 프롬프트를 활용하여 검증해보세요
+당신은 10년차 UX 리서처입니다.
+[서비스 설명]
+의 타겟 사용자가 겪는 Top 3 문제와
+각 문제에 대한 기존 대안을 분석해주세요.
+
+분석 형식:
+- 문제 1: [문제 설명]
+  - 심각도: (상/중/하)
+  - 기존 대안: [현재 해결 방법]
+  - 대안의 한계: [불편한 점]
+✨
+AI 활용 팁
+AI가 제시한 문제를 그대로 쓰지 마세요. 반드시 실제 사용자에게 확인(인터뷰)해야 합니다. AI는 "가설 생성"을 도와줄 뿐입니다.
+7
+Part 1 - 솔루션 가설
+솔루션 가설 (Solution Hypothesis)
+정의:
+각 문제에 대한 해결책을 정의하는 것
+핵심: MVP(Minimum Viable Product)로 가장 작게 시작!
+완벽한 제품을 만들지 마세요. 핵심 가치 하나만 검증할 수 있는 최소 기능 제품부터 시작하세요.
+예시: 배달앱 - 문제별 솔루션
+문제
+솔루션
+MVP 범위
+메뉴 선택 장애
+AI 메뉴 추천
+과거 주문 기반 Top 3 추천
+배달비 부담
+무료배달 구독
+월 9,900원 무료배달 패스
+배달 시간 불확실
+실시간 배달 추적
+GPS 기반 라이더 위치 표시
+순서
+Demo
+→
+그 다음
+Sell
+→
+마지막
+Build
+Demo로 보여주고 → 판매 가능성을 확인하고 → 그 다음에 만들어라!
+8
+Part 1 - 실습
+솔루션 가설 실습
+실습 과제
+7분
+앞서 작성한 Top 3 문제에 매칭되는 솔루션을 작성하세요
+각 솔루션의
+MVP 범위
+를 정의하세요 (가장 작게!)
+AI를 활용하여 솔루션 아이디어를 확장해보세요
+당신은 린스타트업 전문가입니다.
+
+다음 문제들에 대한 솔루션을 제안해주세요.
+각 솔루션은 MVP 수준에서 구현 가능한 최소 범위로 제안해주세요.
+
+타겟 고객:
+[고객 가설]
+문제 1:
+[문제]
+문제 2:
+[문제]
+문제 3:
+[문제]
+각 솔루션에 대해:
+- 솔루션 설명
+- MVP 범위 (1주 안에 만들 수 있는 수준)
+- 검증 방법 (어떻게 성공 여부를 판단?)
+9
+Part 1 - 비즈니스 가설
+비즈니스 가설 (Business Hypothesis)
+💵
+Revenue Streams
+어떻게 돈을 벌 것인가?
+구독, 수수료, 광고, 프리미엄, 라이선스 등
+📊
+Cost Structure
+핵심 비용은 무엇인가?
+개발비, 서버비, 인건비, 마케팅비, 물류비 등
+📏
+Key Metrics
+어떤 지표로 성공을 측정?
+MAU, 전환율, 리텐션, LTV, CAC 등
+🛡
+Unfair Advantage
+쉽게 복제할 수 없는 경쟁 우위
+독점 데이터, 네트워크 효과, 브랜드, 특허, 커뮤니티 등
+예시: 배달앱의 비즈니스 가설
+항목
+내용
+Revenue
+주문당 수수료 15% + 구독 모델 (월 9,900원)
+Cost
+배달 인건비, 서버/인프라, 마케팅
+Key Metrics
+MAU, 주문 전환율, 재주문율, 평균 주문 금액
+Unfair Advantage
+축적된 주문 데이터 기반 AI 추천 엔진
+10
+Part 1 - 실습
+비즈니스 가설 실습
+실습 과제
+7분
+본인 프로젝트의
+수익 모델
+을 1가지 이상 작성하세요
+핵심 비용
+항목을 3가지 이상 나열하세요
+성공 지표
+(Key Metrics)를 3가지 정의하세요
+경쟁 우위
+가 될 수 있는 요소를 1가지 이상 작성하세요
+당신은 스타트업 비즈니스 모델 전문가입니다.
+
+다음 서비스의 비즈니스 모델을 분석해주세요.
+
+서비스:
+[서비스 설명]
+타겟:
+[고객 가설]
+솔루션:
+[솔루션 설명]
+다음 항목을 채워주세요:
+1. Revenue Streams (수익 모델 2-3가지)
+2. Cost Structure (핵심 비용 항목)
+3. Key Metrics (성공 측정 지표 3가지)
+4. Unfair Advantage (경쟁 우위 요소)
+11
+Part 1 - 정리
+4가지 가설 종합 정리
+각 가설의 핵심 질문을 기억하세요
+👥
+고객 가설
+"누가 겪고 있는가?"
+Early Adopter를 구체적으로 정의
+⚠️
+문제 가설
+"무엇이 고통인가?"
+Top 3 문제 + 기존 대안
+💡
+솔루션 가설
+"어떻게 해결하나?"
+MVP로 가장 작게 시작
+💰
+비즈니스 가설
+"어떻게 돈 버나?"
+수익, 비용, 지표, 경쟁우위
+핵심 메시지
+4가지 가설을
+완벽하게 작성하는 것
+이 아니라,
+빠르게 작성하고 빠르게 검증
+하는 것이 목표입니다. 틀려도 괜찮습니다. 틀린 것을 빨리 발견하는 것이 중요합니다.
+12
+Part 2 - 사용자 여정
+사용자 여정 맵이란?
+정의:
+사용자가 서비스를 이용하는 전체 과정을 시각화한 도구
+핵심 구성요소
+페르소나
+누가 사용하는가
+단계 & 행동
+어떤 순서로 무엇을 하는가
+감정곡선
+각 단계에서 어떤 기분인가
+페인포인트
+어디서 불편함을 느끼는가
+예시: 운동앱 사용자 여정 (간략)
+단계
+행동
+감정
+페인포인트
+인지
+SNS 광고 클릭
+호기심
+광고가 너무 과장됨
+온보딩
+앱 설치 + 회원가입
+기대감
+가입 절차 복잡
+첫 사용
+운동 루틴 선택
+설렘 → 혼란
+어떤 루틴을 골라야 할지 모름
+정기 사용
+매일 운동 기록
+성취감 or 귀찮음
+동기부여 부족, 단조로움
+이탈/추천
+사용 중단 or 친구 추천
+포기 or 만족
+혼자 하니까 재미없음
+13
+Part 2 - AI 분석
+기존 서비스 유저저니 AI로 분석하기
+이미 존재하는 서비스의 유저저니를 AI에게 분석시켜 보세요
+당신은 10년차 UX 디자이너입니다.
+[서비스명]
+의 사용자 여정을 분석해주세요.
+
+다음 형식으로 정리해주세요:
+| 단계 | 행동 | 터치포인트 | 감정 | 페인포인트 | 개선 기회 |
+
+단계는 다음을 포함해주세요:
+인지 → 고려 → 온보딩 → 첫 사용 → 정기 사용 → 추천/이탈
+
+각 단계마다 구체적인 사용자 행동과 감정을 포함해주세요.
+Pro Tip: 스크린샷 첨부
+앱의 주요 화면 스크린샷 3-5개를 함께 첨부하면 훨씬 정확한 분석이 가능합니다
+ChatGPT, Claude 모두 이미지 분석을 지원합니다
+"이 스크린샷들을 바탕으로 사용자 여정을 분석해주세요"라고 요청하세요
+14
+Part 2 - 실습
+실습: AI로 기존 서비스 유저저니 분석
+실습 과제
+10분
+본인이 좋아하는/자주 쓰는 앱 1개를 골라주세요
+아래 3단계를 따라 진행하세요
+1
+앱 스크린샷 3-5개 캡처
+메인 화면, 핵심 기능 화면, 결제/설정 화면 등 주요 화면을 캡처하세요
+2
+AI에게 분석 프롬프트 입력
+위 슬라이드의 프롬프트 + 스크린샷을 함께 입력하세요
+3
+결과 정리
+AI 분석 결과를 노션이나 메모에 정리하고, 가장 큰 페인포인트 1개를 골라보세요
+15
+Part 2 - 작성
+노션에 내 서비스 유저저니 직접 작성하기
+Notion에 테이블을 만들어 내 서비스의 유저저니를 직접 작성합니다
+유저저니 6단계
+🔍
+인지
+→
+🤔
+고려
+→
+👋
+온보딩
+→
+⭐
+첫 사용
+→
+🔄
+정기 사용
+→
+📢
+추천
+각 단계별 채울 항목
+행동
+- 사용자가 무엇을 하는가
+생각/기대
+- 무엇을 기대하는가
+감정
+- 어떤 기분인가
+터치포인트
+- 어디서 접하는가
+페인포인트
+- 어디서 불편한가
+기회요소
+- 어떻게 개선할 수 있는가
+16
+Part 2 - AI 피드백
+AI로 유저저니 피드백 받기
+작성한 유저저니를 AI에게 보여주고 피드백을 받으세요
+제가 작성한 사용자 여정 맵을 분석하고 개선해주세요.
+
+[여기에 작성한 유저저니 테이블을 붙여넣기]
+
+다음 관점에서 피드백해주세요:
+1. 빠진 단계나 터치포인트가 있는지
+2. 각 단계의 페인포인트가 충분히 구체적인지
+3. 추가로 고려해야 할 페인포인트
+4.
+개선 효과가 가장 클 Top 3 지점
+5. 각 Top 3 지점에 대한 구체적 개선 방안
+AI 활용 워크플로우
+Step 1:
+내가 직접 유저저니를 작성 (AI 없이)
+Step 2:
+AI에게 피드백 요청 (빠진 부분 발견)
+Step 3:
+피드백 반영하여 수정
+Step 4:
+수정된 버전을 다시 AI에게 검증 요청
+17
+Part 2 - 정리
+핵심 정리
+"사용자 여정의 진짜 가치는 예쁜 도표를 만드는 것이 아니라, 사용자의 고통을 발견하고 그것을 해결하는 것이다."
+🔍
+발견
+사용자가 어디서 불편함을 느끼는지 시각화한다
+🎯
+집중
+가장 큰 페인포인트에 리소스를 집중한다
+💡
+개선
+개선 기회를 솔루션으로 연결한다
+다음 단계
+유저저니에서 발견한 페인포인트를 해결하는
+UI/UX 디자인
+을 AI와 함께 만들어봅니다!
+18
+Part 3 - UI/UX with AI
+AI가 잘하는 것 vs 사람이 해야 할 것
+AI가 잘하는 것
+반복 작업
+비슷한 디자인을 다양한 변형으로 빠르게 생성
+조합
+여러 스타일, 레이아웃, 컬러를 조합하여 시안 생성
+확장
+하나의 디자인을 다양한 플랫폼/사이즈로 확장
+사람이 해야 할 것
+전략적 설계
+무엇을 만들지, 왜 만드는지 결정
+우선순위 판단
+여러 옵션 중 최적의 선택
+톤 조율 & 관계 설정
+브랜드 정체성과 사용자 신뢰 구축
+핵심 메시지
+"우리는 디자이너가 아니다. 하지만 디자인도 AI가 해준다."
+중요한 것은
+무엇을 만들지 결정하는 능력
+과
+좋은 지시를 내리는 능력
+입니다.
+19
+Part 3 - 핵심 능력
+AI 시대에 필요한 4가지 핵심 능력
+AI를 잘 다루기 위해 우리에게 필요한 것들
+❓
+1. 질문 능력
+좋은 질문이 좋은 결과를 만든다. AI에게 명확하고 구체적으로 요청하는 힘
+역할 부여, 맥락 제공, 구체적 요구사항, 제약 조건, 결과물 형태를 포함한 프롬프트 작성 능력
+🏷
+2. 키워드를 다루는 힘
+스타일, 분위기, 트렌드를 키워드로 조합하여 원하는 결과를 이끌어내는 능력
+"미니멀 + 뉴트로 + 파스텔" 같은 키워드 조합으로 디자인 방향을 정확히 전달
+⚡
+3. 실행력과 실험정신
+빠르게 여러 버전을 만들고 비교하는 습관. 완벽보다 속도!
+같은 화면을 3가지 스타일로 30분 안에 만들어보고, 가장 좋은 것을 선택하는 방식
+❤️
+4. 인간에 대한 깊은 이해
+결국 사용자는 사람. 페르소나 기반 사고와 공감 능력이 핵심
+"50대 부모님도 쉽게 쓸 수 있도록..." 같은 사용자 중심 프롬프팅
+20
+Part 3 - 질문 능력
+좋은 질문의 구조
+AI가 이해하기 쉬운 5가지 핵심 요소
+🎭
+역할 (Role)
+너는 10년차 UI 디자이너야
+🌍
+맥락 (Context)
+20대 여성을 위한 쇼핑몰이야
+🎯
+요구 (Task)
+메인 화면 레이아웃을 잡아줘
+⛔
+제약 (Constraints)
+복잡하지 않게, 모바일 우선으로
+📄
+형식 (Format)
+HTML/CSS 코드로 줘
+나쁜 질문 vs 좋은 질문
+나쁜 예시 ❌
+좋은 예시 ✅
+"쇼핑몰 디자인해줘"
+"
+20대 여성을 타겟
+으로 하는
+의류 쇼핑몰
+의 메인 페이지를 디자인해줘.
+미니멀하고 세련된 느낌
+이어야 하고,
+파스텔 톤
+을 사용해. 결과는
+React 컴포넌트 코드
+로 줘."
+"로고 만들어줘"
+"
+친환경 유기농 식품 브랜드
+'EcoFarm'의 로고 아이디어를 3개 제안해줘.
+신뢰감과 자연
+을 상징하는
+초록색 계열
+을 쓰고,
+심플한 심볼
+형태여야 해."
+21
+Part 3 - 키워드
+키워드 조합의 힘
+디자인 의도를 정확히 전달하는 공식
+스타일
++
+분위기
++
+컬러
++
+레이아웃
+=
+완벽한 결과
+스타일 (Style)
+Minimal (미니멀)
+Material (매터리얼)
+Glassmorphism (글래스)
+Neumorphism (뉴모피즘)
+Flat (플랫)
+분위기 (Mood)
+Professional (전문적인)
+Playful (장난기 있는)
+Luxurious (고급스러운)
+Trustworthy (신뢰감)
+Energetic (활기찬)
+컬러 (Color)
+Pastel (파스텔)
+Vivid (선명한)
+Dark Mode (다크모드)
+Monochrome (단색)
+Gradient (그라데이션)
+레이아웃 (Layout)
+Grid System (그리드)
+Card UI (카드형)
+Split Screen (분할)
+Full Screen (전체화면)
+Sidebar (사이드바)
+"Create a
+Minimal
+and
+Professional
+dashboard UI with
+Dark Mode
+and
+Card Layout
+."
+22
+Part 3 - 실습
+실습: AI에게 UI 디자인 요청하기
+실습 과제
+10분
+본인 서비스의
+메인 화면
+을 AI에게 텍스트로 묘사해보세요.
+위에서 배운
+5가지 요소
+와
+키워드 조합
+을 활용하세요.
+ChatGPT나 Claude에게 프롬프트를 입력하고, 어떤 답변이 나오는지 확인하세요.
+당신은 전문 UI/UX 디자이너입니다.
+[서비스명]
+이라는 서비스를 만들고 있습니다.
+타겟 유저는
+[타겟]
+입니다.
+
+메인 화면의 UI 디자인을 제안해주세요.
+- 스타일:
+[키워드 1]
+- 분위기:
+[키워드 2]
+- 주요 컬러:
+[키워드 3]
+- 레이아웃:
+[키워드 4]
+구체적인 섹션 구성과 각 섹션에 들어갈 내용을 텍스트로 상세히 묘사해주세요.
+📝
+Tip
+AI가 그려주는 이미지가 아니라,
+"텍스트 묘사"
+를 먼저 받는 것이 좋습니다. 이 묘사를 바탕으로 나중에 실제 디자인 도구를 사용할 것입니다.
+23
+Part 3 - 도구
+AI 디자인 도구 소개
+우리의 아이디어를 시각화해줄 강력한 도구들
+🧵
+Stitch
+Google의 무료 AI 웹 디자인 도구. 프롬프트로 웹사이트 초안 생성
+stitch.withgoogle.com - 빠르고 쉬운 프로토타이핑에 최적
+🖌️
+Figma
+업계 표준 디자인 툴. 다양한 AI 플러그인 활용 가능
+Wireframe Designer, Magician 등 플러그인으로 생산성 향상
+🚀
+Readdy AI
+readdy.ai - AI 기반 웹사이트 생성기. 편집 기능 강력함
+구조적인 웹사이트를 빠르게 만들고 커스터마이징 가능
+💻
+v0.dev
+Vercel의 AI UI 생성기. 디자인을 바로 React 코드로 변환
+프롬프트 하나로 Tailwind CSS + React 컴포넌트 생성. 개발자 친화적
+도구 선택 가이드
+아이디어 단계:
+Stitch
+디자인 디테일:
+Figma
+빠른 웹사이트:
+Readdy AI
+개발 직전/구현:
+v0.dev
+24
+Part 3 - 실습
+Stitch 실습: 초안 만들기
+Google Stitch로 5분 만에 랜딩페이지 초안 만들기
+Stitch 접속
+stitch.withgoogle.com
+(구글 계정 필요)
+실습 과제
+10분
+Stitch에 접속하여 "Create New" 클릭
+본인 서비스에 대한 설명을 프롬프트로 입력 (영어 추천)
+생성된 디자인의 스타일을 변경해보기 (Style 탭)
+마음에 드는 버전을 캡처하거나 저장
+A landing page for a
+fitness app
+targeting
+office workers
+.
+Modern and energetic style.
+Sections: Hero, Features, Testimonials, Pricing, Footer.
+Main color:
+Orange
+.
+25
+Part 3 - 도구 심화
+Figma + AI 활용법
+AI 플러그인 추천
+Wireframe Designer
+텍스트 설명만으로 모바일/데스크탑 와이어프레임 생성
+Relume Ipsum
+실제 콘텐츠로 채워진 카피라이팅 자동 생성
+Ando - AI Copilot
+아이콘, 이미지 생성 및 디자인 영감 제공
+무료 리소스 활용
+Figma Community
+처음부터 다 그리지 마세요! "UI Kit", "Design System", "App Template"을 검색해서 복사(Duplicate)해서 시작하세요.
+Material Design 3
+- 구글 공식 키트
+iOS 17 UI Kit
+- 애플 공식 키트
+Untitled UI
+- 방대한 컴포넌트
+26
+Part 3 - 실습
+Readdy AI 실습
+구조가 잡힌 완성형 웹사이트 만들기
+Readdy AI 접속
+readdy.ai
+(무료 계정 생성)
+실습 과제
+10분
+Readdy AI에서 "Generate Project" 클릭
+서비스 설명 입력 (아까 작성한 고객 가설 활용!)
+생성된 결과물의 텍스트나 이미지를 클릭해서 수정해보기
+"Export" 기능 확인해보기
+Create a website for a
+pet sitting service
+called "HappyPaws".
+Target audience: Busy pet owners.
+Key value: Trusted sitters, Real-time photo updates.
+Mood: Warm, Trustworthy, Cute.
+Colors: Soft Yellow and Brown.
+27
+Part 3 - 코드 생성
+v0.dev - 디자인을 코드로
+Vercel이 만든 생성형 UI 시스템
+🧑‍💻
+Prompt to UI
+자연어로 설명하면 React + Tailwind CSS 코드를 짜줍니다.
+"Login screen with email and password, social login buttons, and a forgot password link. Minimal style."
+📋
+Copy & Paste
+생성된 코드를 복사해서 내 프로젝트에 바로 붙여넣으면 끝!
+shadcn/ui 호환
+반응형 자동 적용
+다크모드 지원
+개발자가 아니어도 괜찮아요!
+v0가 만들어준 코드를 Claude에게 주면서 "이 코드 수정해줘"라고 하면 됩니다. 우리는
+디렉터
+가 되어야 합니다.
+28
+Part 3 - 원칙
+반드시 지켜야 할 디자인 원칙
+AI가 만들어줘도, 사람을 위해 검수해야 합니다
+👀
+1. 접근성 (Accessibility)
+누구나 사용할 수 있어야 합니다.
+글자 크기가 충분히 큰가?
+배경과 글자의 명도 대비가 확실한가?
+색맹 사용자도 구분 가능한가?
+📏
+2. 일관성 (Consistency)
+학습 비용을 줄여줍니다.
+버튼 모양이 통일되어 있는가?
+같은 기능은 같은 위치에 있는가?
+용어가 통일되어 있는가?
+🗣️
+3. 피드백 (Feedback)
+내 행동에 시스템이 반응해야 합니다.
+버튼을 눌렀을 때 눌린 효과가 있는가?
+로딩 중에 로딩 표시가 나오는가?
+에러 발생 시 이유를 알려주는가?
+29
+Part 3 - 비교
+좋은 UI vs 나쁜 UI
+상황
+나쁜 UI ❌
+좋은 UI ✅
+회원가입
+입력 항목이 10개 넘고, 다 입력하고 나서야 에러를 알려줌
+꼭 필요한 정보만 입력받고, 입력 즉시 유효성 검사 (실시간 피드백)
+버튼
+"확인", "취소" 버튼의 색상과 크기가 똑같아서 헷갈림
+주요 행동(CTA) 버튼은 눈에 띄는 색상, 취소는 회색이나 테두리만
+에러 메시지
+"오류가 발생했습니다. (Error 404)"
+"페이지를 찾을 수 없어요. 주소를 다시 확인해주세요." (친절한 설명 + 해결책)
+로딩
+아무 반응 없이 화면이 멈춤
+스켈레톤(Skeleton) UI나 스피너로 진행 중임을 표시
+🤖
+AI에게 검수 요청하기
+"이 디자인 시안에서
+UX 원칙에 위배되는 요소
+를 찾아줘"라고 물어보면 AI가 훌륭한 리뷰어가 되어줍니다.
+30
+Part 3 - 모바일 퍼스트
+모바일 퍼스트 (Mobile First)
+작은 화면부터 디자인해야 하는 이유
+Why Mobile First?
+핵심에 집중:
+화면이 좁아서 정말 중요한 기능만 남기게 됨
+트래픽:
+이미 모바일 트래픽이 PC를 넘어섬 (대부분의 서비스)
+확장성:
+작은 것 → 큰 것으로 확장은 쉽지만, 반대는 어려움
+"Design the
+mobile version first
+.
+Screen width: 375px.
+Use a hamburger menu for navigation.
+Stack elements vertically.
+Ensure touch targets are at least 44x44px."
+Touch Target
+- 손가락 터치 영역 확보
+Readable Text
+- 최소 16px 이상
+Simple Nav
+- 복잡한 메뉴 숨기기
+31
+Part 3 - 핸드오프
+디자인 → 개발 핸드오프
+디자인을 개발자(또는 AI 개발자)에게 넘겨주는 과정
+Design
+Figma / Stitch
+→
+Handoff
+Spec & Assets
+→
+Develop
+Code (React/HTML)
+Figma Dev Mode
+개발자를 위한 모드. CSS 코드를 바로 확인하고 복사할 수 있음
+Image Export
+이미지, 아이콘은 SVG나 PNG로 미리 추출해서 전달
+Design Token
+컬러, 폰트 사이즈 등을 변수(Variable)로 정리해서 전달
+🤝
+AI 시대의 핸드오프
+이제는
+"Figma 디자인을 캡처해서 Claude에게 주고 코드를 짜달라고 하는 방식"
+이 가장 빠른 핸드오프가 되고 있습니다.
+32
+Part 3 - 마무리
+UI/UX with AI 정리
+오늘 배운 3가지 핵심
+도구 활용:
+Stitch, Readdy, v0, Figma AI 등 적재적소에 도구를 활용하세요.
+질문 능력:
+역할, 맥락, 요구, 제약, 형식을 갖춘 프롬프트가 퀄리티를 결정합니다.
+사용자 중심:
+AI가 만들어도, 결국 쓰는 건 사람입니다. 기본 원칙(접근성, 피드백)을 지키세요.
+이제 디자인은 "손재주"의 영역이 아니라
+"상상력과 커뮤니케이션"
+의 영역입니다.
+Next: Part 4 - UI/UX 프롬프트 심화 실습 →
+33
+Part 4 - 실전
+프롬프트 심화 실습
+도구를 배웠으니 이제 실전입니다. 내 서비스의 화면을 직접 만들어봅니다.
+📱
+화면별 프롬프트
+로그인, 온보딩, 메인, 리스트, 상세 등 필수 화면 정복
+🔄
+반복 개선 (Iteration)
+한 번에 완벽할 수 없습니다. 원하는 결과가 나올 때까지 수정하는 법
+📁
+포트폴리오 완성
+오늘 실습한 결과물을 모아서 하나의 프로젝트로 정리
+실습 준비
+각자 선택한
+AI 도구(Stitch, Figma+AI, v0 등)
+와
+LLM(Claude, ChatGPT)
+을 준비해주세요.
+34
+Part 4 - 로그인
+회원가입/로그인 화면
+가장 기본적이면서도 이탈률이 높은 화면입니다. 간결함이 생명입니다.
+Design a login screen for
+[App Name]
+.
+Target:
+[Target Audience]
+Style: Minimal & Clean
+Components:
+- Email/Password Input Fields
+- "Sign In" Button (Primary Color)
+- "Sign Up" Link
+- Social Login (Google, Apple) buttons
+- "Forgot Password?" Link
+
+Constraint: Center aligned, White background, Round corners (8px).
+실습 과제
+7분
+본인 서비스의 로그인 화면 프롬프트를 작성하세요.
+소셜 로그인
+포함 여부,
+브랜드 컬러
+등을 명시하세요.
+AI 도구에 입력하여 결과를 확인하세요.
+🔑
+Tip
+로그인 화면은 "신뢰감"이 중요합니다.
+"Trustworthy"
+,
+"Secure"
+같은 키워드를 추가해보세요.
+35
+Part 4 - 온보딩
+온보딩 화면 (Onboarding)
+사용자가 처음 앱을 열었을 때 가치를 전달하는 3-5장의 슬라이드
+Short
+3장 이내로 짧게
+Value First
+기능보다 '가치' 전달
+Skippable
+건너뛰기 버튼 필수
+Create 3 onboarding screens for
+[Service]
+.
+Screen 1: Problem (
+Illustration showing user pain point
+)
+Screen 2: Solution (
+Core feature demonstration
+)
+Screen 3: Benefit (
+Happy user outcome + "Get Started" button
+)
+
+Style: Friendly illustrations, Large typography, Dots indicator at bottom.
+실습 과제
+7분
+우리 서비스의 핵심 가치 3가지를 온보딩 화면으로 기획하고 프롬프트를 작성하세요.
+36
+Part 4 - 대시보드
+대시보드/메인 화면
+정보 밀도(Information Density) 조절이 핵심입니다.
+정보 과다 (Bad) ❌
+적절한 밀도 (Good) ✅
+모든 데이터를 한 번에 보여줌
+가장 중요한 KPI 3개만 상단에 배치
+여백 없이 빽빽함
+카드 UI로 구분하고 충분한 여백(Whitespace)
+강조 색상이 너무 많음
+중요한 정보에만 포인트 컬러 사용
+Design a main dashboard for
+[User Persona]
+.
+Layout:
+1. Top: Greeting & Key Metrics (3 Cards)
+2. Middle: Recent Activity Graph (Line chart)
+3. Bottom: "Quick Actions" grid (4 icons)
+
+Style: Card UI with soft shadows, Dashboard Layout, Data Visualization.
+실습 과제
+10분
+사용자가 앱을 켰을 때
+가장 먼저 봐야 할 정보 3가지
+는 무엇인가요? 이를 중심으로 메인 화면을 설계하세요.
+37
+Part 4 - 리스트
+리스트/검색 결과 화면
+데이터를 어떻게 보여줄 것인가? (List vs Grid)
+📄
+Table List
+정보 비교가 중요할 때
+(예: 주식, 관리자 페이지)
+🖼️
+Card Grid
+이미지가 중요할 때
+(예: 쇼핑몰, 인스타)
+📱
+Row List
+모바일 표준
+(예: 메신저, 설정)
+Design a search result page for
+[Item]
+.
+Components:
+- Search Bar & Filter Chips (Top)
+- Result List (
+Card style with Image, Title, Price, Rating
+)
+- Floating Action Button (Filter)
+
+Interaction: Infinite scroll style.
+실습 과제
+7분
+본인 서비스에 가장 적합한 리스트 패턴(Table/Grid/Row)을 선택하고 프롬프트를 작성하세요.
+38
+Part 4 - 상세 페이지
+상세 페이지 (Detail Page)
+사용자의 결심(Conversion)을 이끌어내는 페이지입니다.
+CTA(Call to Action)
+버튼이 주인공이어야 합니다.
+Design a product detail page for
+[Product]
+.
+Key Elements:
+1. High-quality Image Carousel (Top, 40% height)
+2. Product Info: Title (Bold), Price (Highlight), Description
+3. Reviews: Star rating summary + Top 3 reviews
+4.
+Sticky Bottom Bar
+: "Add to Cart" and "Buy Now" buttons
+
+Hierarchy: "Buy Now" button must be the most prominent element on the page.
+Sticky CTA
+스크롤해도 구매 버튼은 항상 하단에 고정
+Social Proof
+별점, 리뷰 수, "N명이 보고 있음" 등으로 신뢰 부여
+실습 과제
+7분
+상세 페이지에서 사용자가 취해야 할
+단 하나의 핵심 행동
+은 무엇인가요? 그 행동을 강조하는 프롬프트를 작성하세요.
+39
+Part 4 - 반복 개선
+프롬프트 반복 개선 (Iteration)
+AI와의 대화는 '한 번'으로 끝나지 않습니다. 계속 다듬어가세요.
+🤖
+1. 초안 생성
+Make a basic UI...
+→
+👀
+2. 문제 발견
+Too cluttered...
+→
+🔧
+3. 구체적 수정
+Remove bg, add padding
+실제 대화 예시 (Dialogue)
+User:
+"로그인 화면 만들어줘." (초안)
+AI:
+(결과물 생성)
+User:
+"너무 복잡해. 좀 더
+미니멀하게
+바꿔줘. 그리고
+배경색을 흰색
+으로 하고 그림자를 줄여줘." (구체적 수정)
+AI:
+(수정된 결과)
+User:
+"좋아. 이제 로그인 버튼 색상을
+#6366f1
+로 바꾸고, 모서리를 더 둥글게(20px) 해줘." (디테일)
+40
+Part 4 - 피드백
+디자인 피드백 프롬프트
+내가(혹은 AI가) 만든 디자인을 AI에게 냉정하게 평가받으세요.
+Act as a Senior UX Researcher.
+Review the attached UI design (or code) based on:
+1. Usability Heuristics (사용성)
+2. Visual Hierarchy (시각적 위계)
+3. Accessibility (접근성)
+
+Point out 3 bad UX patterns and suggest improvements.
+스크린샷 활용법
+Claude나 ChatGPT(Vision)에게
+스크린샷 이미지를 붙여넣고
+위 프롬프트를 입력하면, 색상 대비나 버튼 크기, 텍스트 가독성 등을 놀랍도록 정확하게 지적해줍니다.
+41
+Part 4 - 스타일 가이드
+스타일 가이드 만들기
+일관성 있는 디자인을 위해 "규칙"을 정의합니다.
+Create a Design System / Style Guide for my app.
+Brand Keywords:
+Professional, Trust, Blue
+Please define:
+1. Color Palette (Primary, Secondary, Neutral, Semantic colors) with Hex codes.
+2. Typography (Headings, Body, Caption) with font-family and sizes.
+3. Component Styles (Buttons, Cards, Inputs) with border-radius and shadow values.
+
+Output format: CSS Variables.
+🎨
+왜 필요한가요?
+이 스타일 가이드를 복사해서, 이후 모든 디자인 요청 시
+"Use these styles:"
+하고 붙여넣으면 항상 통일된 디자인을 얻을 수 있습니다.
+42
+Part 4 - 반응형
+반응형 디자인 프롬프트
+하나의 디자인을 다양한 화면 크기에 맞춰 변형합니다.
+Create responsive versions of this dashboard.
+1. Mobile (375px): Stack all cards vertically. Hide sidebar behind hamburger menu.
+2. Tablet (768px): 2-column grid. Simplified sidebar.
+3. Desktop (1440px): 4-column grid. Full sidebar visible.
+
+Maintain consistent branding and spacing across all versions.
+📱
+Mobile
+Single Column
+Essential Content
+💻
+Tablet
+Adaptive Grid
+Simplified Nav
+🖥️
+Desktop
+Multi Column
+Full Experience
+실습 과제
+10분
+본인 서비스의
+메인 화면
+을 모바일, 태블릿, 데스크탑 버전으로 각각 요청해보세요. 레이아웃이 어떻게 변하는지 관찰하세요.
+43
+Part 4 - 다크모드
+다크모드 & 라이트모드
+단순히 색상 반전이 아닙니다. 계층 구조와 가독성을 유지해야 합니다.
+다크모드 디자인 원칙
+Pure Black(000000) 지양:
+눈이 피로합니다. #121212 같은 짙은 회색을 사용하세요.
+채도 낮추기:
+밝은 배경보다 어두운 배경에서 채도가 높은 색은 눈이 부십니다.
+Elevation(깊이감):
+그림자 대신 배경색의 밝기로 높낮이를 표현하세요.
+Convert this design to Dark Mode.
+Background: #121212 (Surface), #1E1E1E (Cards)
+Text: #FFFFFF (Primary), #B3B3B3 (Secondary)
+Accent Color: Use a desaturated version of the primary blue (#818cf8).
+
+Ensure high contrast ratio for readability.
+실습 과제
+7분
+가장 마음에 드는 화면 하나를 골라
+다크모드 버전
+을 생성해보세요. 텍스트 가독성이 유지되는지 확인하세요.
+44
+Part 4 - 경쟁 분석
+경쟁 서비스 분석 프롬프트
+잘 만든 경쟁사의 UI에서 배울 점을 AI가 찾아줍니다.
+Analyze the UI/UX of
+[Competitor Name or Screenshot]
+.
+1. What are the key strengths of their layout?
+2. How do they handle user onboarding?
+3. What color psychology are they using?
+4.
+Suggest 3 ways we can differentiate our design from theirs.
+"훔쳐라, 아티스트처럼"
+경쟁사의 디자인을 그대로 베끼는 것이 아니라,
+"왜 이렇게 설계했을까?"
+라는 의도를 파악하고 우리의 맥락에 맞게 재해석하는 것이 목표입니다.
+실습 과제
+10분
+경쟁 서비스의 스크린샷을 AI에게 보여주고,
+"이 UI의 장점과 우리가 차별화할 수 있는 포인트"
+를 물어보세요.
+45
+Part 4 - 종합 실습
+종합 실습: 내 서비스 5화면 완성
+오늘 배운 모든 것을 활용하여 핵심 화면 5개를 완성합니다.
+1
+로그인/회원가입
+신뢰감을 주는 심플한 디자인
+2
+온보딩 (3장)
+핵심 가치 전달
+3
+메인 홈/대시보드
+핵심 정보와 네비게이션
+4
+리스트/검색
+원하는 정보를 찾기 쉽게
+5
+상세 페이지
+행동(Action)을 유도하는 구조
+Final Mission
+30분
+위 5가지 화면을 완성하고, 흐름이 자연스러운지 확인하세요.
+일관된 톤앤매너
+가 유지되어야 합니다.
+46
+Part 4 - 피어 리뷰
+결과물 공유 & 피어 리뷰
+옆 사람에게 내 결과물을 보여주고 피드백을 받으세요.
+😍
+첫인상 (First Impression)
+딱 봤을 때 무슨 서비스인지 알겠나요? 분위기는 어떤가요?
+👆
+행동 명확성 (Clarity)
+어디를 눌러야 할지 바로 알 수 있나요? 헤매지 않나요?
+🎨
+일관성 (Consistency)
+5개 화면이 하나의 앱처럼 느껴지나요?
+Peer Review
+10분
+짝과 서로의 화면을 보여주세요. (각 3분 설명)
+위 3가지 관점에서
+좋은 점 1개
+와
+개선점 1개
+를 이야기해주세요.
+AI에게도 피드백을 요청해보세요. (객관적 시선)
+47
+Part 4 - 정리
+Part 4 핵심 정리
+"좋은 디자인은 보이지 않는다. (Good design is invisible.)"
+- Jared Spool
+로그인
+신뢰와 간편함
+온보딩
+가치 전달
+메인
+우선순위와 밀도
+상세
+명확한 CTA
+프롬프트 엔지니어링의 핵심
+원하는 결과가 나올 때까지
+키워드를 조합
+하고,
+구체적으로 수정(Iteration)
+하는 과정 자체가 디자인입니다.
+48
+Part 4 - 실습
+Empty State 디자인 실습
+데이터가 없을 때 사용자에게 무엇을 보여줘야 할까요?
+Empty State의 3요소
+일러스트/아이콘:
+현재 상태를 시각적으로 설명
+설명 텍스트:
+왜 비어있는지, 무엇을 해야 하는지 안내
+CTA 버튼:
+다음 행동 유도 (예: "상품 담으러 가기")
+Design empty states for:
+1) No search results
+2) Empty cart
+3) First-time user with no data
+
+Each should have an illustration, message, and action button.
+실습 과제
+7분
+본인 서비스에서 빈 화면이 나올 수 있는 3가지 상황을 찾으세요.
+위 프롬프트를 참고하여 각 상황에 맞는 Empty State를 디자인하세요.
+49
+Part 4 - 실습
+에러/로딩 상태 디자인 실습
+사용자를 불안하게 만들지 않는 것이 핵심입니다.
+상황
+나쁜 예
+좋은 예
+로딩 중
+무한 스피너만 뱅글뱅글
+스켈레톤 UI로 대략적인 형태 미리 보여주기
+에러 발생
+"Error 500" 또는 "알 수 없는 오류"
+"일시적인 문제입니다. 다시 시도해주세요." + 재시도 버튼
+Design error and loading states:
+1) 404 page with friendly message
+2) Network error with retry button
+3) Skeleton loading screen for a feed page
+실습 과제
+7분
+서비스의 로딩 화면(스켈레톤)을 구상해보세요.
+예상치 못한 에러가 떴을 때 보여줄 친절한 메시지를 작성해보세요.
+50
+Part 4 - 실습
+컬러 팔레트 실습
+브랜드의 성격을 결정하는 컬러 시스템 만들기
+🔵
+Blue
+신뢰, 전문성, 기술
+🟢
+Green
+자연, 건강, 성장
+🔴
+Red
+열정, 긴급, 경고
+🟡
+Yellow
+활력, 주의, 긍정
+Generate a color palette for
+[service]
+.
+Brand personality:
+[keywords]
+.
+
+Include: Primary, Secondary, Accent, Neutral, Success, Warning, Error colors with hex codes and usage guidelines.
+실습 과제
+10분
+본인 서비스의 핵심 키워드 3개를 정하세요.
+위 프롬프트를 사용하여 전체 컬러 팔레트를 생성하세요.
+51
+Part 4 - 실습
+타이포그래피 실습
+가독성과 위계(Hierarchy)가 가장 중요합니다.
+한글 폰트 추천
+Pretendard, Noto Sans KR, Spoqa Han Sans Neo가 웹/앱에서 가장 널리 쓰입니다.
+Create a typography system for my Korean app.
+
+Heading font: bold and modern.
+Body font: clean and readable.
+
+Define sizes for:
+- H1 (32px)
+- H2 (24px)
+- H3 (20px)
+- Body (16px)
+- Caption (12px)
+
+Include line-height for each.
+실습 과제
+7분
+본인 서비스에 어울리는 폰트 느낌(Modern, Classic, Playful 등)을 정하세요.
+타이포그래피 시스템을 AI에게 요청하여 가이드라인을 만드세요.
+52
+Part 4 - 실습
+마이크로 인터랙션 디자인
+사용자에게 "살아있는" 느낌을 주는 디테일
+Button Hover
+마우스 오버 시 변화
+Toggle
+스위치 ON/OFF
+Like ❤️
+하트 애니메이션
+Refresh
+당겨서 새로고침
+Describe micro-interactions for:
+1) Like button tap (heart animation)
+2) Add to cart (item flies to cart icon)
+3) Pull to refresh (custom loading animation)
+4) Toggle switch (smooth slide with color change)
+
+Describe timing, easing, and visual feedback for each.
+실습 과제
+7분
+서비스에서 사용자가 가장 자주 누르는 버튼이 무엇인가요?
+그 버튼을 눌렀을 때 어떤 피드백(애니메이션)을 줄지 상상해서 적어보세요.
+53
+Part 4 - 실습
+설정/프로필 화면 실습
+정보를 그룹화하여 찾기 쉽게 만드는 것이 핵심입니다.
+Design a Settings page with sections:
+
+1. Account (name, email, avatar)
+2. Notifications (toggle switches)
+3. Privacy (radio buttons)
+4. Theme (light/dark toggle)
+
+Group related settings with section headers.
+실습 과제
+7분
+내 서비스에 필요한 설정 항목들을 나열해보세요.
+비슷한 항목끼리 묶어서 그룹화(Grouping)하세요.
+위 프롬프트를 활용해 설정 화면을 디자인하세요.
+54
+Part 4 - 실습
+결제/체크아웃 플로우 실습
+신뢰감, 단계 최소화, 진행률 표시
+1
+장바구니 확인
+2
+배송지 입력
+3
+결제수단 선택
+4
+주문 완료
+Design a 4-step checkout flow:
+1) Cart summary
+2) Shipping address form
+3) Payment method selection
+4) Order confirmation
+
+Include a progress indicator at top.
+The CTA button text should change per step: 'Continue' -> 'Continue' -> 'Place Order' -> 'Track Order'.
+실습 과제
+10분
+결제가 필요한 서비스라면 결제 단계를, 아니라면 가입/신청 단계를 설계하세요.
+각 단계에서 사용자가 이탈하지 않도록 안심시킬 요소를 고민해보세요.
+55
+Part 4 - 실습
+알림/토스트 메시지 디자인
+사용자의 행동에 대한 즉각적인 피드백입니다.
+✅
+Success
+⚠️
+Warning
+❌
+Error
+ℹ️
+Info
+Design a notification system with 4 types:
+Success (green, checkmark), Warning (yellow, exclamation), Error (red, X), Info (blue, i).
+
+Each should be a toast message that auto-dismisses after 3 seconds.
+Include position (top-right) and animation (slide-in).
+실습 과제
+7분
+어떤 상황에서 알림을 띄워야 할까요? (예: 저장 완료, 삭제 확인)
+너무 잦은 알림은 피로감을 줍니다. 꼭 필요한 순간을 정해보세요.
+56
+Part 4 - 심화
+A/B 테스트와 AI 활용
+정답이 없을 땐, 두 가지 모두 테스트해보세요.
+A/B 테스트란?
+두 가지 버전(A안, B안)을 만들어 동시에 테스트하고, 더 성과가 좋은 쪽을 선택하는 방법입니다. AI에게 처음부터 두 가지 시안을 요청하면 효과적입니다.
+Create TWO versions of a landing page hero section.
+
+Version A: Large hero image with centered text overlay.
+Version B: Split layout with text on left, image on right.
+
+Both should have the same CTA button 'Start Free Trial'.
+Which version would likely convert better for
+[target audience]
+?
+실습 과제
+7분
+가장 중요한 화면(랜딩페이지 등)을 하나 고르세요.
+AI에게 서로 다른 레이아웃의 두 가지 버전을 요청해보세요.
+57
+Part 4 - 심화
+AI 페르소나 사용성 테스트
+AI를 가상의 사용자로 빙의시켜 피드백을 받아보세요.
+🤖
+페르소나 설정의 힘
+"같은 디자인이라도
+10대 학생
+과
+50대 주부
+의 반응은 다릅니다. 다양한 페르소나를 AI에게 부여하세요."
+You are a
+[persona: 55-year-old who is not tech-savvy]
+.
+Look at this UI design. Walk me through:
+
+1) What do you think this app does?
+2) What would you tap first?
+3) Is anything confusing?
+4) Would you trust this app with your personal information?
+
+Be honest and specific.
+실습 과제
+10분
+본인 서비스의 타겟 페르소나와, 정반대되는 페르소나를 설정하세요.
+두 페르소나에게 각각 디자인에 대한 피드백을 요청하여 비교해보세요.
+58
+전체 요약
+전체 강의 정리
+오늘 우리는 아이디어에서 디자인까지의 전체 여정을 경험했습니다.
+📝
+Part 1: 가설
+누구의 어떤 문제를 어떻게 해결할 것인가?
+Customer, Problem, Solution
+🗺️
+Part 2: 여정
+사용자는 어떤 과정을 통해 우리에게 오는가?
+User Journey Map, Pain Points
+🤖
+Part 3: 도구
+AI와 함께 디자인하는 방법
+Prompting, Stitch, Figma, v0
+🎨
+Part 4: 실전
+실제 서비스 화면 구현
+5 Key Screens, Iteration
+59
+Action Items
+오늘 이후, 무엇을 해야 할까요?
+강의는 끝났지만, 여러분의 프로젝트는 이제 시작입니다.
+1
+Figma에 정리하기
+오늘 만든 5개의 화면을 Figma로 가져와서 흐름을 연결(Prototyping)해보세요.
+2
+사용자 피드백 받기
+주변 사람 3명에게 보여주고 "이게 무슨 서비스 같아?"라고 물어보세요.
+3
+개발 착수 (with AI)
+Figma 디자인을 캡처해서 v0나 Claude에게 주고 코드로 변환을 시작하세요.
+One More Thing
+완벽하지 않아도 괜찮습니다.
+"Done is better than perfect."
+일단 완성하고, 사용자의 반응을 보고 고쳐나가는 것이 린 스타트업의 핵심입니다.
+60
+🚀
+Keep Building,
+Keep Iterating!
+여러분의 아이디어가 세상에 나오는 그날까지 응원합니다.
+"The best way to predict the future is to create it."
+- Peter Drucker
+수고하셨습니다. 질문이 있다면 언제든 연락주세요!
+ozcoding.ai
+#UIUX
+#AIAgent
+61

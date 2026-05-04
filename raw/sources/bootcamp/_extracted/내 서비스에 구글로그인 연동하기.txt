@@ -1,0 +1,437 @@
+Supabase + 바이브 코딩
+내 서비스에
+구글 로그인
+연동하기
+세팅부터 구현까지, 한 번에 끝내는 완전 가이드
+안티그래비티 + Supabase + Google Cloud Platform
+myservice.com
+내 서비스에 로그인
+Google로 로그인
+↑ 이걸 만들 거예요!
+왜
+구글 로그인
+이 중요한가?
+❌ 이런 로그인 페이지를 보면?
+• 이메일로 회원가입하기
+• 아이디/패스워드 만들기
+• 이메일 인증, 비밀번호 규칙...
+→ 대부분 "귀찮아서 그냥 닫아버림"
+✅ 이런 로그인이 있으면?
+• 구글 로그인 버튼 클릭 한 번
+• 2초 만에 로그인 완료
+• 비밀번호 기억할 필요 없음
+→ "오 편하네, 바로 쓸게요"
+이메일 회원가입 → 복잡
+ID, PW, 이메일 인증, 약관 동의...
+😩
+구글 로그인 → 클릭 한 번
+버튼 클릭 → 구글 계정 선택 → 끝!
+🎉
+서비스를 만들 때
+소셜 로그인 = 기본 중의 기본!
+AI가 잘하는 것 vs
+사람이 해야 하는 것
+🤖 AI(바이브 코딩)가 잘하는 것
+구글 로그인
+코드 짜기
+실제 코드는 이게 전부:
+google-login.js
+const
+{ data, error } =
+await
+supabase.auth.
+signInWithOAuth
+({
+provider
+:
+'google'
+})
+→ 코드 자체는 이게 끝! 4줄!
+🧑 사람이 직접 해야 하는 것
+구글 로그인
+세팅하기
+AI가 못하는 이유:
+• Supabase 홈페이지 접속 → 클릭
+• Google Cloud 접속 → 프로젝트 생성
+• API 키 복사 → 붙여넣기
+• 리다이렉트 URI 설정
+→ 토시 하나라도 틀리면 안 됨!
+이번 슬라이드의 핵심:
+코드는 AI가 해주지만,
+세팅은 여러분이 직접
+해야 합니다!
+전체 과정
+한눈에 보기
+🔧
+1. Supabase
+구글 프로바이더 켜기
+→
+🔑
+2. Google Cloud
+Client ID 발급
+→
+🔗
+3. 서로 연결
+키 값 교환
+→
+💻
+4. 안티그래비티
+코드 생성
+→
+⚙️
+5. API 키 입력
+환경 설정
+→
+✅
+6. 완성!
+구글 로그인 성공
+📋 필요한 것
+•
+Supabase
+계정 (무료)
+•
+Google
+계정
+• 안티그래비티 (바이브 코딩 도구)
+⏱️ 예상 소요 시간
+• 세팅 (1~3번):
+약 15분
+• 구현 (4~6번):
+약 5분
+• 총 20분이면 완성!
+개념 이해
+프로바이더(Provider)란? —
+로그인 방식
+의 종류
+Supabase에서
+프로바이더
+= 로그인 방식
+"어떤 방법으로 로그인할 수 있게 할 거야?"를 선택하는 겁니다.
+Google
+← 오늘 할 것!
+💬
+Kakao
+카카오 로그인
+🍎
+Apple
+애플 로그인
+GH
+GitHub
+깃허브 로그인
+💡 비유로 이해하기
+건물에 들어가는
+출입 방법
+과 같아요:
+🔑 열쇠 = 이메일/비밀번호
+📱 카드키 = 구글 로그인
+👆 지문 = 애플 로그인
+여러 출입 방법 중
+구글이라는 카드키
+를
+만들어 주는 겁니다!
+Step 1
+Supabase에서
+구글 프로바이더
+켜기
+supabase.com/dashboard
+Authentication → Sign-in Providers
+📧
+Email
+Enabled
+Google
+Disabled →
+Enable!
+🍎
+Apple
+Disabled
+👆 Google을 눌러서 Enable 시키기!
+1
+Supabase 프로젝트 접속
+dashboard에서 내 프로젝트 클릭
+2
+Authentication 메뉴 클릭
+왼쪽 사이드바에서 찾기
+3
+Sign-in Providers 탭
+여기서 Google 클릭
+4
+Google Enable 토글 ON
+저장 누르면... 에러! 😱
+🔴
+Client ID가 없어서 에러 발생!
+→ 이 Client ID를
+Google Cloud Platform
+에서 받아와야 합니다.
+Step 2
+Google Cloud Platform에서
+Client ID
+발급받기
+Google Cloud Platform
+이란? 구글이 제공하는 개발자 관리 도구입니다. 여기서 "내 서비스에 구글 로그인을 달겠다"고
+등록
+하는 거예요.
+1️⃣
+GCP 접속 & 로그인
+console.cloud.google.com
+구글 계정으로 로그인
+국가/동의 진행
+2️⃣
+새 프로젝트 만들기
+프로젝트 이름 입력
+(예: "MyProject")
+만들기 클릭
+3️⃣
+OAuth 동의 화면
+앱 이름 입력
+지원 이메일 입력
+외부
+선택 → 만들기
+4️⃣
+사용자 인증 정보
+OAuth 2.0 클라이언트 ID
+웹 애플리케이션
+선택
+이름 입력
+5️⃣
+JavaScript 원본 입력
+내 서비스 도메인 입력
++ 개발환경 주소:
+http://localhost:5173
+6️⃣
+리다이렉트 URI 입력
+Supabase에서 복사
+해서
+여기에 붙여넣기!
+→ 만들기 클릭
+Step 2 — 핵심
+리다이렉트 URI가 뭐예요? —
+Supabase ↔ Google 연결 고리
+🟢
+Supabase
+Redirect URI 복사
+(Callback URL)
+🔵
+Google Cloud
+리다이렉트 URI에 붙여넣기
+(승인된 리디렉션 URI)
+URI 복사 →
+← Client ID
+💡 비유: "택배 반송 주소"와 같아요!
+구글: "로그인 성공하면 어디로 보내줄까?"
+Supabase: "이 주소로 보내주세요!" (= Redirect URI)
+⚠️
+리다이렉트 URI 복사 방법
+Supabase → Authentication → Google Provider → 아래
+Callback URL
+의 Copy 버튼 클릭!
+📋 URI 형태 예시
+https://
+xxxx
+.supabase.co/auth/v1/callback
+이걸 복사해서 Google Cloud에
+그대로 붙여넣기하세요!
+Step 3
+Client ID를 받아서
+Supabase에 넣기
+Google Cloud
+Client ID 생성됨!
+📋 복사하기 클릭
+Supabase
+Client ID 칸에 붙여넣기
+→ 저장! ✅
+복사!
+🎉 구글 프로바이더 Enable 성공!
+초록색으로 Enabled 표시됨
+📌 여기까지 정리 (세팅 파트)
+1. Supabase → Google Provider → Enable 시도 → Client ID 필요!
+2. Google Cloud → 프로젝트 생성 → OAuth → Client ID 발급
+3. Supabase의 Redirect URI → Google Cloud에 등록
+4. Client ID → Supabase에 입력 → 저장 → 성공! 🎉
+🎯 핵심 정리
+결국 Supabase와 Google Cloud가
+서로를
+인증
+하는 과정입니다.
+Google → Supabase:
+"이 Client ID로 나를 확인해"
+Supabase → Google:
+"로그인 끝나면 이 주소로 보내줘"
+(= Redirect URI)
+✅ 세팅 파트 완료!
+여기까지가 AI가 해줄 수 없는 부분입니다.
+이제부터는
+바이브 코딩
+의 시간!
+Step 4 — 구현
+안티그래비티에서
+구글 로그인 코드
+만들기
+1
+프로젝트 폴더 만들기
+바탕화면에 "구글 로그인" 폴더 생성
+2
+안티그래비티에서 폴더 열기
+드래그 앤 드랍으로 폴더 넣기
+3
+AI에게 프롬프트 입력
+아래 프롬프트 참고!
+프롬프트 예시
+여기에다가 Supabase 이용해서
+구글 로그인 기능 만들 거야.
+웹 프로그래밍 할 거고
+간단하게 HTML, JS, CSS로 구현해줘.
+서버는 없어.
+// + Supabase JS CDN 문서 링크 첨부!
+💡
+Supabase CDN 문서를 함께 주세요!
+AI가 Supabase를 모를 수 있으니
+supabase.com/docs/reference/javascript
+의
+#install-cdn
+링크를 붙여주면
+훨씬 정확한 코드를 생성합니다.
+🔧 AI가 만들어주는 파일들
+📄
+index.html
+— 화면 구조
+📄
+script.js
+— 로그인 로직
+📄
+style.css
+— 디자인
+→ AI가 수정을 제안하면 "수락(Accept)" 클릭!
+Step 5
+Supabase
+API 키
+를 코드에 넣기
+AI가 만든 코드에는
+빈칸 2개
+가 있어요.
+Supabase에서 값을 복사해서 넣어주면 됩니다!
+script.js
+// TODO: 아래 값들을 실제 Supabase 정보로 바꾸세요
+const
+SUPABASE_URL =
+'여러분의_URL'
+// 예: https://xxx.supabase.co
+const
+SUPABASE_KEY =
+'여러분의_키'
+// 예: eyJhbGciOiJIUzI1NiIs...
+supabase.com → Settings → API
+📍 Supabase에서 복사할 것 2가지
+① Project URL
+https://xxx.supabase.co
+→ script.js의 SUPABASE_URL에 붙여넣기
+② anon public Key
+eyJhbGciOiJIUz... (긴 문자열)
+→ script.js의 SUPABASE_KEY에 붙여넣기
+💾
+붙여넣기 후 반드시 저장!
+Windows:
+Ctrl+S
+/ Mac:
+Cmd+S
+Step 6
+Client Secret 넣기 —
+마지막 퍼즐 조각
+첫 번째 테스트에서 에러가 납니다!
+아직
+Client Secret
+을 안 넣었기 때문이에요.
+1
+Google Cloud Console
+접속
+console.cloud.google.com
+2
+사용자 인증 정보 →
+웹 클라이언트
+클릭
+아까 만든 OAuth 클라이언트
+3
+Client Secret
+새로 생성 & 복사
+"보안 비밀번호 추가" 버튼
+4
+Supabase
+→ Google Provider →
+Client Secret 칸에 붙여넣기
+→ 저장!
+Google Cloud Console
+사용자 인증 정보 → 웹 클라이언트
+🔐 Client Secret: GOCSPX-xxx...
+📋 복사!
+붙여넣기
+Supabase
+Authentication → Google → Client Secret
+🔐 GOCSPX-xxx... ✅ 입력 완료!
+🎉
+구글 로그인
+성공!
+localhost:5173
+내 서비스
+Google로 로그인
+↓ 클릭! ↓
+✅ 로그인 성공!
+프로필 사진 | 홍길동 | hong@gmail.com
+🚀
+예전에는 이걸 만드는데
+며칠
+이 걸렸는데,
+Supabase + 안티그래비티 조합이면
+20분
+이면 완성!
+전체 흐름
+한눈에 정리
+🧑 사람이 하는 영역 (세팅)
+Supabase
+구글 Provider ON
+Google Cloud
+Client ID 발급
+키 교환
+ID+Secret+URI
+⏱️ 약 15분
+🤖 AI가 하는 영역 (코딩)
+안티그래비티
+프롬프트 입력
+코드 생성
+HTML+JS+CSS
+API 키 입력
+URL + Key 설정
+⏱️ 약 5분
+🎉 구글 로그인 완성!
+사람의 세팅 + AI의 코딩 = 20분이면 끝!
+핵심 요약
+— 구글 로그인 연동 체크리스트
+🧑 세팅 (사람이 하는 것)
+1
+Supabase 구글 Provider 켜기
+Authentication → Providers → Google
+2
+Google Cloud에서 Client ID 발급
+OAuth 2.0 → 웹 앱 → 만들기
+3
+Redirect URI 연결
+Supabase → 복사 → Google에 붙여넣기
+4
+Client ID + Secret → Supabase 입력
+복사 → 붙여넣기 → 저장
+🤖 구현 (AI가 하는 것)
+5
+안티그래비티에서 프롬프트 입력
+"Supabase로 구글 로그인 만들어줘"
+6
+AI가 만든 코드 수락
+HTML + JS + CSS 파일 Accept
+7
+API URL + Key 입력
+script.js에 Supabase 정보 넣기
+✅
+구글 로그인 완성!
+테스트 → 구글 계정으로 로그인 성공 🎉
+💡
+코드는 AI가, 세팅은 내가!
+이 원칙만 기억하면 어떤 소셜 로그인이든 붙일 수 있어요.
+‹
+›

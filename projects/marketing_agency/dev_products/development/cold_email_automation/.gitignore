@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.env
+cold_email_log.jsonl
+cold_email_replies.jsonl
+opt_out.txt
+leads*.jsonl
+drafts*.jsonl

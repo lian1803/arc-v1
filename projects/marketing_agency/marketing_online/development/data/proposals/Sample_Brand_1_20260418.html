@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>온라인 마케팅 현황 진단 보고서</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .document {
+            width: 210mm;
+            height: 297mm;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* 인쇄 모드 */
+        @media print {
+            html, body {
+                margin: 0;
+                padding: 0;
+                background: white;
+            }
+            .document {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                box-shadow: none;
+                page-break-after: always;
+            }
+            body {
+                margin: 0;
+                padding: 0;
+            }
+        }
+
+        /* 헤더 섹션 */
+        .header {
+            background: linear-gradient(135deg, #1a2744 0%, #243456 100%);
+            color: white;
+            padding: 30px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid #f97316;
+        }
+
+        .header-left h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header-left p {
+            font-size: 13px;
+            margin-top: 4px;
+            opacity: 0.9;
+        }
+
+        .header-right {
+            text-align: right;
+        }
+
+        .header-right p {
+            font-size: 12px;
+            opacity: 0.85;
+            margin-bottom: 4px;
+        }
+
+        .header-right .date {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* 메인 콘텐츠 */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px;
+        }
+
+        /* 브랜드 현황 진단 섹션 */
+        .section {
+            margin-bottom: 35px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a2744;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f97316;
+        }
+
+        .diagnosis-container {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        /* 종합 점수 박스 */
+        .score-box {
+            background: linear-gradient(135deg, #1a2744 0%, #243456 100%);
+            border-radius: 12px;
+            padding: 30px;
+            color: white;
+            min-width: 200px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(26, 39, 68, 0.15);
+        }
+
+        .score-box .label {
+            font-size: 12px;
+            opacity: 0.85;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .score-box .score-number {
+            font-size: 64px;
+            font-weight: 700;
+            margin: 8px 0;
+        }
+
+        .score-box .max-score {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 16px;
+        }
+
+        .score-box .grade-badge {
+            display: inline-block;
+            background: #f97316;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        /* 세부 점수 바 */
+        .score-items {
+            flex: 1;
+        }
+
+        .score-item {
+            margin-bottom: 18px;
+        }
+
+        .score-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .score-item-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a2744;
+        }
+
+        .score-item-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: #f97316;
+        }
+
+        .score-bar {
+            background: #e5e7eb;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .score-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f97316 0%, #fb923c 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* 문제점 섹션 */
+        .problems-section {
+            background: #fff5f0;
+            border-left: 4px solid #f97316;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .problem-item {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+
+        .problem-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .problem-icon {
+            min-width: 28px;
+            width: 28px;
+            height: 28px;
+            background: #ef4444;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .problem-text {
+            font-size: 13px;
+            color: #1a2744;
+            line-height: 1.6;
+        }
+
+        /* 추천 패키지 섹션 */
+        .recommended-package {
+            background: linear-gradient(135deg, #1a2744 0%, #243456 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(26, 39, 68, 0.15);
+        }
+
+        .recommended-package .label {
+            font-size: 12px;
+            opacity: 0.85;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .recommended-package .package-name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #f97316;
+        }
+
+        .recommended-package .package-price {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .recommended-package .package-period {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 16px;
+        }
+
+        .recommended-package .package-desc {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* 패키지 비교 표 */
+        .package-comparison {
+            margin-top: 30px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin-top: 16px;
+        }
+
+        .comparison-table th {
+            background: #f3f4f6;
+            padding: 12px 16px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: #1a2744;
+            border: 1px solid #e5e7eb;
+        }
+
+        .comparison-table td {
+            padding: 14px 16px;
+            text-align: center;
+            font-size: 13px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .comparison-table tr:nth-child(even) td {
+            background: #f9fafb;
+        }
+
+        .comparison-table .package-name {
+            font-weight: 600;
+            color: #1a2744;
+        }
+
+        .comparison-table .package-price {
+            color: #f97316;
+            font-weight: 700;
+        }
+
+        .comparison-table .recommended-row td {
+            background: #fef3f2;
+        }
+
+        .comparison-table .recommended-badge {
+            display: inline-block;
+            background: #f97316;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* CTA 섹션 */
+        .cta-section {
+            background: linear-gradient(135deg, #1a2744 0%, #243456 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            border-top: 4px solid #f97316;
+        }
+
+        .cta-section h3 {
+            font-size: 20px;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .cta-section p {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 4px;
+        }
+
+        .cta-section .contact-info {
+            font-size: 16px;
+            color: #f97316;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        .cta-section .agency-name {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-top: 12px;
+        }
+
+        /* 푸터 */
+        .footer {
+            background: #f3f4f6;
+            padding: 16px 40px;
+            font-size: 11px;
+            color: #6b7280;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+        }
+
+        /* 인쇄 최적화 */
+        @media print {
+            html, body {
+                margin: 0;
+                padding: 0;
+            }
+
+            .document {
+                box-shadow: none;
+                width: 100%;
+                height: 100%;
+            }
+
+            .header, .recommended-package, .cta-section {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .score-bar-fill {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .score-box, .problems-section, .comparison-table {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="document">
+        <!-- 헤더 -->
+        <div class="header">
+            <div class="header-left">
+                <h1>LIANCP 마케팅 에이전시</h1>
+                <p>온라인 마케팅 현황 진단 보고서</p>
+            </div>
+            <div class="header-right">
+                <p>진단일</p>
+                <div class="date">2026-04-18</div>
+            </div>
+        </div>
+
+        <!-- 메인 콘텐츠 -->
+        <div class="content">
+            <!-- 브랜드 현황 진단 -->
+            <div class="section">
+                <h2 class="section-title">Sample_Brand_1 온라인 마케팅 현황 진단</h2>
+
+                <div class="diagnosis-container">
+                    <!-- 종합 점수 -->
+                    <div class="score-box">
+                        <div class="label">종합 점수</div>
+                        <div class="score-number">32</div>
+                        <div class="max-score">/ 100</div>
+                        <div class="grade-badge">D등급</div>
+                    </div>
+
+                    <!-- 세부 점수 -->
+                    <div class="score-items">
+                        <div class="score-item">
+                            <div class="score-item-header">
+                                <span class="score-item-label">퍼포먼스 광고</span>
+                                <span class="score-item-value">12/30</span>
+                            </div>
+                            <div class="score-bar">
+                                <div class="score-bar-fill" style="width: 40.0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="score-item">
+                            <div class="score-item-header">
+                                <span class="score-item-label">SNS 운영</span>
+                                <span class="score-item-value">0/25</span>
+                            </div>
+                            <div class="score-bar">
+                                <div class="score-bar-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="score-item">
+                            <div class="score-item-header">
+                                <span class="score-item-label">이커머스 최적화</span>
+                                <span class="score-item-value">10/25</span>
+                            </div>
+                            <div class="score-bar">
+                                <div class="score-bar-fill" style="width: 40.0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="score-item">
+                            <div class="score-item-header">
+                                <span class="score-item-label">SEO/콘텐츠</span>
+                                <span class="score-item-value">10/20</span>
+                            </div>
+                            <div class="score-bar">
+                                <div class="score-bar-fill" style="width: 50.0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 핵심 문제점 -->
+            <div class="section">
+                <h2 class="section-title">지금 당장 손해 보고 있는 것들</h2>
+
+                <div class="problems-section">
+                    <div class="problem-item">
+                        <div class="problem-icon">1</div>
+                        <div class="problem-text">광고 집행 여부 미확인 (API 오류)</div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-icon">2</div>
+                        <div class="problem-text">스마트스토어 정보 미제공</div>
+                    </div>
+                    <div class="problem-item">
+                        <div class="problem-icon">3</div>
+                        <div class="problem-text">네이버 블로그 운영 미확인 (수동 확인 필요)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 추천 패키지 -->
+            <div class="section">
+                <div class="recommended-package">
+                    <div class="label">Sample_Brand_1을(를) 위한 추천 솔루션</div>
+                    <div class="package-name">Growth Starter</div>
+                    <div class="package-price">70만원</div>
+                    <div class="package-period">/ 월</div>
+                    <div class="package-desc">퍼포먼스+SNS 기초 세팅 — 광고 학습 기간 3개월</div>
+                </div>
+
+                <!-- 패키지 비교 -->
+                <div class="package-comparison">
+                    <h3 style="font-size: 14px; color: #1a2744; margin-bottom: 12px; font-weight: 600;">패키지 비교</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>패키지</th>
+                                <th>월 비용</th>
+                                <th>포함 서비스</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="package-name">Starter</td>
+                                <td class="package-price">70만원</td>
+                                <td style="font-size: 12px;">SNS 운영</td>
+                            </tr>
+                            <tr class="recommended-row">
+                                <td><span class="recommended-badge">추천</span> <span class="package-name">Growth Plus</span></td>
+                                <td class="package-price">330만원</td>
+                                <td style="font-size: 12px;">퍼포먼스 + SNS + 콘텐츠</td>
+                            </tr>
+                            <tr>
+                                <td class="package-name">Full Stack</td>
+                                <td class="package-price">800만원</td>
+                                <td style="font-size: 12px;">모든 서비스 포함</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="section">
+                <div class="cta-section">
+                    <h3>무료 30분 전략 미팅 신청</h3>
+                    <p>Sample_Brand_1의 온라인 마케팅 현황을 함께 분석하고</p>
+                    <p>맞춤형 성장 전략을 수립해보세요.</p>
+                    <div class="contact-info">gonggu.l.1803@gmail.com</div>
+                    <div class="agency-name">LIANCP 마케팅 에이전시</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 푸터 -->
+        <div class="footer">
+            본 보고서는 Sample_Brand_1의 온라인 마케팅 성과를 진단하기 위해 작성되었습니다. 추가 문의는 위 연락처로 부탁드립니다.
+        </div>
+    </div>
+
+    <script>
+        // Jinja2 변수 처리 후 백분율 계산용 스크립트
+        // Python에서 주입 시 다음 변수들도 함께 계산해서 넣어주면 됨:
+        // perf_score_percent, sns_score_percent, ec_score_percent, seo_score_percent
+    </script>
+</body>
+</html>

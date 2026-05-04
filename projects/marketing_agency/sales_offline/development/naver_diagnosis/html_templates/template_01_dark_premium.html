@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>네이버 플레이스 진단 — {{업체명}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #0a0d1a;
+    color: #e8e0cc;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* 페이지 공통 */
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 14mm 14mm;
+    background: #0d1120;
+    position: relative;
+    overflow: hidden;
+  }
+  .page + .page {
+    page-break-before: always;
+    border-top: 3px solid #c9a94a;
+  }
+
+  /* 장식 요소 */
+  .page::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #c9a94a, #f0d070, #c9a94a);
+  }
+  .corner-deco {
+    position: absolute;
+    bottom: 10mm; right: 12mm;
+    width: 40px; height: 40px;
+    border-right: 2px solid rgba(201,169,74,0.3);
+    border-bottom: 2px solid rgba(201,169,74,0.3);
+  }
+
+  /* 표지 */
+  .cover {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 269mm;
+  }
+  .cover-top {
+    padding-top: 20mm;
+    text-align: center;
+  }
+  .cover-logo {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: #c9a94a;
+    text-transform: uppercase;
+    margin-bottom: 8mm;
+  }
+  .cover-divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #c9a94a, transparent);
+    margin: 0 auto 8mm;
+  }
+  .cover-title {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    color: #ffffff;
+    line-height: 1.2;
+    margin-bottom: 4mm;
+  }
+  .cover-subtitle {
+    font-size: 13px;
+    color: rgba(232,224,204,0.5);
+    letter-spacing: 2px;
+  }
+  .cover-business {
+    margin-top: 16mm;
+    padding: 8mm 12mm;
+    border: 1px solid rgba(201,169,74,0.4);
+    border-radius: 4px;
+    background: rgba(201,169,74,0.05);
+    display: inline-block;
+    min-width: 200px;
+  }
+  .cover-business-name {
+    font-size: 32px;
+    font-weight: 700;
+    color: #c9a94a;
+    letter-spacing: -1px;
+  }
+  .cover-business-type {
+    font-size: 13px;
+    color: rgba(232,224,204,0.6);
+    margin-top: 2px;
+  }
+  .cover-address {
+    font-size: 11px;
+    color: rgba(232,224,204,0.4);
+    margin-top: 4px;
+  }
+  .cover-bottom {
+    padding-bottom: 6mm;
+  }
+  .cover-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 5mm 0;
+    border-top: 1px solid rgba(201,169,74,0.2);
+  }
+  .cover-meta-label { font-size: 10px; color: rgba(232,224,204,0.4); margin-bottom: 2px; }
+  .cover-meta-value { font-size: 13px; color: #c9a94a; font-weight: 500; }
+  .cover-agency {
+    text-align: right;
+    font-size: 12px;
+    color: rgba(232,224,204,0.6);
+    line-height: 1.7;
+  }
+
+  /* 섹션 헤더 */
+  .section-header {
+    margin-bottom: 6mm;
+    padding-bottom: 3mm;
+    border-bottom: 1px solid rgba(201,169,74,0.3);
+  }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: #c9a94a;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+  }
+
+  /* 종합 현황 카드 */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4mm;
+    margin-bottom: 5mm;
+  }
+  .summary-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,169,74,0.2);
+    border-radius: 6px;
+    padding: 5mm;
+    text-align: center;
+  }
+  .summary-card-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(232,224,204,0.4);
+    text-transform: uppercase;
+    margin-bottom: 2mm;
+  }
+  .summary-card-value {
+    font-size: 36px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+  .summary-card-sub {
+    font-size: 10px;
+    color: rgba(232,224,204,0.5);
+    margin-top: 1mm;
+  }
+  .val-gold { color: #c9a94a; }
+  .val-red { color: #e05252; }
+  .val-white { color: #ffffff; }
+
+  /* 경고 배너 */
+  .alert-banner {
+    background: rgba(224,82,82,0.12);
+    border: 1px solid rgba(224,82,82,0.4);
+    border-left: 4px solid #e05252;
+    border-radius: 4px;
+    padding: 4mm 5mm;
+    margin-bottom: 5mm;
+    display: flex;
+    align-items: center;
+    gap: 3mm;
+  }
+  .alert-icon { font-size: 20px; flex-shrink: 0; }
+  .alert-text { font-size: 13px; color: #f0a0a0; line-height: 1.5; }
+  .alert-text strong { color: #e05252; font-weight: 700; }
+
+  /* 진단 항목 */
+  .diagnosis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3mm;
+    margin-bottom: 5mm;
+  }
+  .diagnosis-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 5px;
+    padding: 3.5mm 4mm;
+    display: flex;
+    align-items: center;
+    gap: 3mm;
+  }
+  .diagnosis-item.bad {
+    border-color: rgba(224,82,82,0.4);
+    background: rgba(224,82,82,0.06);
+  }
+  .diagnosis-item.good {
+    border-color: rgba(80,200,120,0.3);
+    background: rgba(80,200,120,0.05);
+  }
+  .diagnosis-status {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .status-bad { background: rgba(224,82,82,0.2); }
+  .status-good { background: rgba(80,200,120,0.2); }
+  .diagnosis-name {
+    font-size: 12px;
+    color: rgba(232,224,204,0.7);
+    flex: 1;
+  }
+  .diagnosis-score {
+    font-size: 14px;
+    font-weight: 700;
+    color: #c9a94a;
+  }
+
+  /* 키워드 테이블 */
+  .keyword-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .keyword-table th {
+    background: rgba(201,169,74,0.15);
+    color: #c9a94a;
+    font-weight: 600;
+    padding: 3mm 4mm;
+    text-align: left;
+    border-bottom: 1px solid rgba(201,169,74,0.3);
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .keyword-table td {
+    padding: 3mm 4mm;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    color: rgba(232,224,204,0.8);
+  }
+  .keyword-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+  .keyword-table .num {
+    font-size: 14px;
+    font-weight: 700;
+    color: #f0d070;
+    text-align: right;
+  }
+  .keyword-bar-wrap {
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    height: 4px;
+    width: 80px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 4px;
+  }
+  .keyword-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #c9a94a, #f0d070);
+    border-radius: 2px;
+  }
+
+  /* 패키지 비교 */
+  .package-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4mm;
+    margin-bottom: 5mm;
+  }
+  .package-card {
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .package-card.recommended {
+    border-color: #c9a94a;
+    box-shadow: 0 0 20px rgba(201,169,74,0.2);
+  }
+  .package-header {
+    padding: 4mm;
+    text-align: center;
+    background: rgba(255,255,255,0.04);
+  }
+  .package-header.recommended-header {
+    background: linear-gradient(135deg, #c9a94a, #f0d070);
+  }
+  .package-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+  .package-header.recommended-header .package-name { color: #0d1120; }
+  .package-badge {
+    display: inline-block;
+    background: #e05252;
+    color: #fff;
+    font-size: 9px;
+    padding: 1px 5px;
+    border-radius: 20px;
+    margin-top: 1mm;
+    font-weight: 600;
+  }
+  .package-body {
+    padding: 4mm;
+    background: rgba(255,255,255,0.02);
+  }
+  .package-price-label { font-size: 9px; color: rgba(232,224,204,0.4); }
+  .package-price {
+    font-size: 22px;
+    font-weight: 900;
+    color: #c9a94a;
+    letter-spacing: -1px;
+    line-height: 1.1;
+  }
+  .package-price-unit { font-size: 11px; font-weight: 400; color: rgba(232,224,204,0.5); }
+  .package-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    margin: 3mm 0;
+  }
+  .package-item {
+    font-size: 10px;
+    color: rgba(232,224,204,0.6);
+    padding: 1.5mm 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 2mm;
+    line-height: 1.3;
+  }
+  .package-item::before { content: '•'; color: #c9a94a; flex-shrink: 0; }
+
+  /* 제안서 */
+  .proposal-box {
+    border: 1px solid rgba(201,169,74,0.4);
+    border-radius: 8px;
+    padding: 6mm;
+    background: rgba(201,169,74,0.04);
+    margin-bottom: 5mm;
+  }
+  .proposal-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #c9a94a;
+    margin-bottom: 4mm;
+    letter-spacing: 1px;
+  }
+  .proposal-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2.5mm 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 12px;
+  }
+  .proposal-row:last-child { border-bottom: none; }
+  .proposal-key { color: rgba(232,224,204,0.5); }
+  .proposal-val { color: #ffffff; font-weight: 600; }
+  .proposal-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3mm 0;
+    margin-top: 2mm;
+    border-top: 2px solid rgba(201,169,74,0.5);
+  }
+  .proposal-total-key { font-size: 13px; font-weight: 700; color: #c9a94a; }
+  .proposal-total-val { font-size: 24px; font-weight: 900; color: #f0d070; letter-spacing: -1px; }
+
+  /* 0값 조건부 숨김 (생성 코드에서 처리) */
+  .hidden-if-zero { /* JavaScript에서 동적으로 display: none 적용 */ }
+
+  /* 연간 기회손실 강조 스타일 */
+  .annual-loss-highlight {
+    background: rgba(224,82,82,0.15);
+    border: 2px solid rgba(224,82,82,0.6);
+    border-radius: 8px;
+    padding: 4mm 6mm;
+    text-align: center;
+    margin: 5mm 0;
+  }
+  .annual-loss-label {
+    font-size: 11px;
+    color: rgba(232,224,204,0.5);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 2mm;
+  }
+  .annual-loss-value {
+    font-size: 40px;
+    font-weight: 900;
+    color: #e05252;
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+  .annual-loss-sub {
+    font-size: 11px;
+    color: #e05252;
+    margin-top: 1.5mm;
+    font-weight: 600;
+  }
+
+  .sign-area {
+    margin-top: 8mm;
+    text-align: right;
+    font-size: 11px;
+    color: rgba(232,224,204,0.4);
+    line-height: 1.8;
+  }
+  .sign-company {
+    font-size: 14px;
+    font-weight: 700;
+    color: #c9a94a;
+    margin-bottom: 1mm;
+  }
+
+  @media print {
+    body { background: #0d1120; }
+    .page { margin: 0; }
+    .page + .page { page-break-before: always; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== 표지 ===== -->
+<div class="page">
+  <div class="corner-deco"></div>
+  <div class="cover">
+    <div class="cover-top">
+      <div class="cover-logo">Naver Place Diagnosis Report</div>
+      <div class="cover-divider"></div>
+      <div class="cover-title">네이버 플레이스<br>마케팅 진단 보고서</div>
+      <div class="cover-subtitle">MARKETING DIAGNOSIS · 2025</div>
+      <div style="margin-top: 12mm; text-align: center;">
+        <div class="cover-business">
+          <div class="cover-business-name">{{업체명}}</div>
+          <div class="cover-business-type">{{업종}}</div>
+          <div class="cover-address">{{주소}}</div>
+        </div>
+      </div>
+      <div style="margin-top: 10mm; display: inline-flex; gap: 6mm;">
+        <div style="text-align: center; padding: 4mm 6mm; border: 1px solid rgba(201,169,74,0.3); border-radius: 4px;">
+          <div style="font-size: 9px; color: rgba(232,224,204,0.4); letter-spacing: 2px; margin-bottom: 1mm;">RANK</div>
+          <div style="font-size: 28px; font-weight: 900; color: #e05252; letter-spacing: -1px;">{{순위}}위</div>
+        </div>
+        <div style="text-align: center; padding: 4mm 6mm; border: 1px solid rgba(224,82,82,0.3); border-radius: 4px;">
+          <div style="font-size: 9px; color: rgba(232,224,204,0.4); letter-spacing: 2px; margin-bottom: 1mm;">ANNUAL LOSS</div>
+          <div style="font-size: 28px; font-weight: 900; color: #e05252; letter-spacing: -1px;">{{연간기회손실}}만원</div>
+          <div style="font-size: 9px; color: rgba(232,224,204,0.4);">월 {{가망고객분석}}명 × 12개월</div>
+        </div>
+        <div style="text-align: center; padding: 4mm 6mm; border: 1px solid rgba(201,169,74,0.3); border-radius: 4px;">
+          <div style="font-size: 9px; color: rgba(232,224,204,0.4); letter-spacing: 2px; margin-bottom: 1mm;">GRADE</div>
+          <div style="font-size: 28px; font-weight: 900; color: #c9a94a; letter-spacing: -1px;">D등급</div>
+        </div>
+      </div>
+    </div>
+    <div class="cover-bottom">
+      <div class="cover-meta">
+        <div>
+          <div class="cover-meta-label">진단번호</div>
+          <div class="cover-meta-value">{{진단번호}}</div>
+        </div>
+        <div>
+          <div class="cover-meta-label">수집일</div>
+          <div class="cover-meta-value">{{수집일}}</div>
+        </div>
+        <div class="cover-agency">
+          <strong style="color: #c9a94a;">솔직한 마케팅</strong><br>
+          김리안 지점장<br>
+          010-5641-1803
+        </div>
+      </div>
+      <div style="margin-top: 4mm; padding-top: 4mm; border-top: 1px solid rgba(201,169,74,0.2); font-size: 9px; color: rgba(232,224,204,0.4); line-height: 1.6; text-align: center;">
+        본 진단서는 네이버 플레이스 공개 데이터 기반으로 작성되었습니다.<br>
+        실제 매출과의 정확한 상관관계는 여러 요인에 따라 달라질 수 있습니다.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 업체 현황 요약 ===== -->
+<div class="page">
+  <div class="corner-deco"></div>
+  <div class="section-header">
+    <div class="section-label">Overview</div>
+    <div class="section-title">업체 현황 요약</div>
+  </div>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-card-label">이 지역 검색 순위</div>
+      <div class="summary-card-value val-red">{{순위}}위</div>
+      <div class="summary-card-sub">상위 10위 밖 = 사실상 비노출</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-label">연간 기회손실</div>
+      <div class="summary-card-value val-red">{{연간기회손실}}만원</div>
+      <div class="summary-card-sub">월 {{가망고객분석}}명 × 12개월 × 6만원</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-label">월 검색 노출 수</div>
+      <div class="summary-card-value val-white">{{전체검색량}}</div>
+      <div class="summary-card-sub">PC {{PC검색량}} + 모바일 {{모바일검색량}}</div>
+    </div>
+  </div>
+
+  <div class="alert-banner">
+    <div class="alert-icon">⚠</div>
+    <div class="alert-text">
+      <strong>핵심 문제:</strong> {{주요문제}}<br>
+      이 상태가 지속되면 매월 잠재 고객이 경쟁사로 계속 유입됩니다.
+    </div>
+  </div>
+
+  <div class="section-header" style="margin-top: 5mm;">
+    <div class="section-label">Diagnosis</div>
+    <div class="section-title">10개 항목 진단 결과</div>
+  </div>
+
+  <div class="diagnosis-grid">
+    <div class="diagnosis-item {{진단_대표사진}}">
+      <div class="diagnosis-status {{진단_대표사진 == 'bad' ? 'status-bad' : 'status-good'}}">
+        {{진단_대표사진 == 'bad' ? '✗' : '✓'}}
+      </div>
+      <div class="diagnosis-name">대표사진 최적화</div>
+      <div class="diagnosis-score">{{진단_대표사진}}</div>
+    </div>
+    <div class="diagnosis-item bad">
+      <div class="diagnosis-status status-bad">✗</div>
+      <div class="diagnosis-name">대표 키워드 설정</div>
+      <div class="diagnosis-score">{{진단_대표키워드}}</div>
+    </div>
+    <div class="diagnosis-item bad">
+      <div class="diagnosis-status status-bad">✗</div>
+      <div class="diagnosis-name">소개 · 오시는 길</div>
+      <div class="diagnosis-score">{{진단_소개오시는길}}</div>
+    </div>
+    <div class="diagnosis-item bad">
+      <div class="diagnosis-status status-bad">✗</div>
+      <div class="diagnosis-name">알림 · 이벤트 설정</div>
+      <div class="diagnosis-score">{{진단_알림이벤트}}</div>
+    </div>
+    <div class="diagnosis-item bad">
+      <div class="diagnosis-status status-bad">✗</div>
+      <div class="diagnosis-name">메뉴 · 가격 세팅</div>
+      <div class="diagnosis-score">{{진단_메뉴세팅}}</div>
+    </div>
+    <div class="diagnosis-item bad">
+      <div class="diagnosis-status status-bad">✗</div>
+      <div class="diagnosis-name">예약 시스템 세팅</div>
+      <div class="diagnosis-score">{{진단_예약세팅}}</div>
+    </div>
+    <div class="diagnosis-item bad">
+      <div class="diagnosis-status status-bad">✗</div>
+      <div class="diagnosis-name">영수증 리뷰 관리</div>
+      <div class="diagnosis-score">{{진단_영수증리뷰}}</div>
+    </div>
+    <div class="diagnosis-item bad">
+      <div class="diagnosis-status status-bad">✗</div>
+      <div class="diagnosis-name">블로그 노출 현황</div>
+      <div class="diagnosis-score">{{진단_블로그노출}}</div>
+    </div>
+    <div class="diagnosis-item bad">
+      <div class="diagnosis-status status-bad">✗</div>
+      <div class="diagnosis-name">지역 커뮤니티 연계</div>
+      <div class="diagnosis-score">{{진단_지역커뮤니티}}</div>
+    </div>
+    <div class="diagnosis-item bad">
+      <div class="diagnosis-status status-bad">✗</div>
+      <div class="diagnosis-name">외부 채널 연동</div>
+      <div class="diagnosis-score">{{진단_외부채널}}</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 키워드 분석 ===== -->
+<div class="page">
+  <div class="corner-deco"></div>
+  <div class="section-header">
+    <div class="section-label">Keyword Analysis</div>
+    <div class="section-title">검색 키워드 분석표</div>
+  </div>
+
+  <div style="margin-bottom: 5mm; font-size: 12px; color: rgba(232,224,204,0.5); line-height: 1.6;">
+    아래는 <strong style="color: #c9a94a;">{{업체명}}</strong> 관련 키워드의 월 검색량입니다.
+    이 키워드에서 현재 몇 위에 노출되는지가 매출을 결정합니다.
+  </div>
+
+  <table class="keyword-table">
+    <thead>
+      <tr>
+        <th style="width: 30px;">#</th>
+        <th>검색 키워드</th>
+        <th style="text-align: right;">PC 검색량</th>
+        <th style="text-align: right;">모바일 검색량</th>
+        <th style="text-align: right;">월 합계</th>
+        <th>볼륨</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color: rgba(232,224,204,0.3); font-size: 10px;">1</td>
+        <td>{{키워드1}}</td>
+        <td class="num">-</td>
+        <td class="num">-</td>
+        <td class="num">{{검색량1}}</td>
+        <td><div class="keyword-bar-wrap"><div class="keyword-bar" style="width:90%"></div></div></td>
+      </tr>
+      <tr>
+        <td style="color: rgba(232,224,204,0.3); font-size: 10px;">2</td>
+        <td>{{키워드2}}</td>
+        <td class="num">-</td>
+        <td class="num">-</td>
+        <td class="num">{{검색량2}}</td>
+        <td><div class="keyword-bar-wrap"><div class="keyword-bar" style="width:75%"></div></div></td>
+      </tr>
+      <tr>
+        <td style="color: rgba(232,224,204,0.3); font-size: 10px;">3</td>
+        <td>{{키워드3}}</td>
+        <td class="num">-</td>
+        <td class="num">-</td>
+        <td class="num">{{검색량3}}</td>
+        <td><div class="keyword-bar-wrap"><div class="keyword-bar" style="width:60%"></div></div></td>
+      </tr>
+      <tr>
+        <td style="color: rgba(232,224,204,0.3); font-size: 10px;">4</td>
+        <td>{{키워드4}}</td>
+        <td class="num">-</td>
+        <td class="num">-</td>
+        <td class="num">{{검색량4}}</td>
+        <td><div class="keyword-bar-wrap"><div class="keyword-bar" style="width:50%"></div></div></td>
+      </tr>
+      <tr>
+        <td style="color: rgba(232,224,204,0.3); font-size: 10px;">5</td>
+        <td>{{키워드5}}</td>
+        <td class="num">-</td>
+        <td class="num">-</td>
+        <td class="num">{{검색량5}}</td>
+        <td><div class="keyword-bar-wrap"><div class="keyword-bar" style="width:40%"></div></div></td>
+      </tr>
+      <tr>
+        <td style="color: rgba(232,224,204,0.3); font-size: 10px;">6</td>
+        <td>{{키워드6}}</td>
+        <td class="num">-</td>
+        <td class="num">-</td>
+        <td class="num">{{검색량6}}</td>
+        <td><div class="keyword-bar-wrap"><div class="keyword-bar" style="width:30%"></div></div></td>
+      </tr>
+      <tr>
+        <td style="color: rgba(232,224,204,0.3); font-size: 10px;">7</td>
+        <td>{{키워드7}}</td>
+        <td class="num">-</td>
+        <td class="num">-</td>
+        <td class="num">{{검색량7}}</td>
+        <td><div class="keyword-bar-wrap"><div class="keyword-bar" style="width:20%"></div></div></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top: 6mm; padding: 4mm 5mm; background: rgba(201,169,74,0.08); border: 1px solid rgba(201,169,74,0.2); border-radius: 5px;">
+    <div style="font-size: 10px; color: #c9a94a; font-weight: 600; margin-bottom: 2mm;">검색량이 의미하는 것</div>
+    <div style="font-size: 11px; color: rgba(232,224,204,0.6); line-height: 1.6;">
+      월 <strong style="color: #f0d070;">{{전체검색량}}명</strong>이 관련 키워드를 검색합니다.
+      현재 {{순위}}위에 노출 중이며, 상위 3위 내 업체가 이 검색량의 대부분을 가져갑니다.
+      1위와 {{순위}}위의 고객 유입 격차는 추정 <strong style="color: #e05252;">{{가망고객분석}}명</strong>입니다.
+    </div>
+  </div>
+</div>
+
+<!-- ===== 패키지 안내 + 제안서 ===== -->
+<div class="page">
+  <div class="corner-deco"></div>
+  <div class="section-header">
+    <div class="section-label">Solution Package</div>
+    <div class="section-title">서비스 패키지 안내</div>
+  </div>
+
+  <div class="package-grid">
+    <div class="package-card">
+      <div class="package-header">
+        <div class="package-name">시선</div>
+      </div>
+      <div class="package-body">
+        <div class="package-price-label">월 정기 구독</div>
+        <div class="package-price">56<span class="package-price-unit">만원/월</span></div>
+        <div class="package-divider"></div>
+        <div class="package-item">기본 정보 최적화</div>
+        <div class="package-item">대표 키워드 세팅</div>
+        <div class="package-item">월 성과 리포트</div>
+      </div>
+    </div>
+    <div class="package-card recommended">
+      <div class="package-header recommended-header">
+        <div class="package-name">집중</div>
+        <div class="package-badge">추천</div>
+      </div>
+      <div class="package-body">
+        <div class="package-price-label">월 정기 구독</div>
+        <div class="package-price">86<span class="package-price-unit">만원/월</span></div>
+        <div class="package-divider"></div>
+        <div class="package-item">시선 패키지 전체 포함</div>
+        <div class="package-item">전문 사진 촬영</div>
+        <div class="package-item">블로그 리뷰 등록</div>
+        <div class="package-item">리뷰 답글 대행</div>
+      </div>
+    </div>
+    <div class="package-card">
+      <div class="package-header">
+        <div class="package-name">주목</div>
+      </div>
+      <div class="package-body">
+        <div class="package-price-label">월 정기 구독</div>
+        <div class="package-price">127<span class="package-price-unit">만원/월</span></div>
+        <div class="package-divider"></div>
+        <div class="package-item">집중 패키지 전체 포함</div>
+        <div class="package-item">인스타그램 관리</div>
+        <div class="package-item">새소식 콘텐츠</div>
+        <div class="package-item">전담 매니저 배정</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header" style="margin-top: 6mm;">
+    <div class="section-label">Proposal</div>
+    <div class="section-title">맞춤 제안서 · 견적</div>
+  </div>
+
+  <div class="proposal-box">
+    <div class="proposal-title">견적 내역</div>
+    <div class="proposal-row">
+      <span class="proposal-key">상호명</span>
+      <span class="proposal-val">{{상호명}}</span>
+    </div>
+    <div class="proposal-row">
+      <span class="proposal-key">추천 패키지</span>
+      <span class="proposal-val">{{패키지}} 패키지</span>
+    </div>
+    <div class="proposal-row">
+      <span class="proposal-key">정상가</span>
+      <span class="proposal-val" style="text-decoration: line-through; color: rgba(232,224,204,0.4);">{{정상가}}</span>
+    </div>
+    <div class="proposal-row">
+      <span class="proposal-key">약정 할인가 (월)</span>
+      <span class="proposal-val" style="color: #c9a94a; font-size: 18px;">{{약정가}}</span>
+    </div>
+    <div class="proposal-total">
+      <span class="proposal-total-key">6개월 약정 합계</span>
+      <span class="proposal-total-val">{{합계6개월}}</span>
+    </div>
+  </div>
+
+  <div class="sign-area">
+    <div class="sign-company">솔직한 마케팅</div>
+    김리안 지점장 · 010-5641-1803<br>
+    본 제안서는 진단 결과를 바탕으로 작성된 맞춤 제안입니다.
+  </div>
+</div>
+
+</body>
+</html>

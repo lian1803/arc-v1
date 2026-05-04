@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}오류 발생 - 네이버 플레이스 진단{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="bg-white rounded-2xl shadow-lg p-12 text-center">
+        <!-- Error Icon -->
+        <div class="mb-6">
+            {% if error_type == 'not_found' %}
+            <svg class="w-24 h-24 text-yellow-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            {% elif error_type == 'crawl_failed' %}
+            <svg class="w-24 h-24 text-orange-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            {% else %}
+            <svg class="w-24 h-24 text-red-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            {% endif %}
+        </div>
+
+        <!-- Error Title -->
+        <h1 class="text-3xl font-bold text-gray-900 mb-4">
+            {% if error_type == 'not_found' %}
+            업체를 찾을 수 없습니다
+            {% elif error_type == 'crawl_failed' %}
+            정보 수집에 실패했습니다
+            {% else %}
+            오류가 발생했습니다
+            {% endif %}
+        </h1>
+
+        <!-- Error Message -->
+        <p class="text-lg text-gray-600 mb-8">
+            {{ message }}
+        </p>
+
+        <!-- Solution Guide -->
+        <div class="bg-gray-50 rounded-lg p-6 mb-8 text-left">
+            <h2 class="font-semibold text-gray-900 mb-3">해결 방법</h2>
+            <ul class="space-y-2 text-gray-700">
+                {% if error_type == 'not_found' %}
+                <li class="flex items-start">
+                    <svg class="w-5 h-5 mr-2 mt-0.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                    다른 키워드로 다시 검색해보세요
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-5 h-5 mr-2 mt-0.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                    업체명에 지역명을 추가해보세요 (예: 강남역 맛집)
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-5 h-5 mr-2 mt-0.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                    수동 입력 기능을 이용해보세요
+                </li>
+                {% elif error_type == 'crawl_failed' %}
+                <li class="flex items-start">
+                    <svg class="w-5 h-5 mr-2 mt-0.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                    잠시 후 다시 시도해주세요
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-5 h-5 mr-2 mt-0.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                    네이버 플레이스가 정상적으로 등록된 업체인지 확인해주세요
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-5 h-5 mr-2 mt-0.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                    문제가 계속되면 수동 입력을 이용해주세요
+                </li>
+                {% else %}
+                <li class="flex items-start">
+                    <svg class="w-5 h-5 mr-2 mt-0.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                    잠시 후 다시 시도해주세요
+                </li>
+                <li class="flex items-start">
+                    <svg class="w-5 h-5 mr-2 mt-0.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                    문제가 계속되면 관리자에게 문의해주세요
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-4 justify-center">
+            <button
+                onclick="history.back()"
+                class="bg-gray-200 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-300 transition flex items-center"
+            >
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                다시 시도
+            </button>
+
+            <a
+                href="/"
+                class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center"
+            >
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+                홈으로
+            </a>
+
+            {% if error_type in ['not_found', 'crawl_failed'] %}
+            <a
+                href="/manual"
+                class="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition flex items-center"
+            >
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                </svg>
+                수동 입력
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

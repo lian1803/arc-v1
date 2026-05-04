@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>네이버 플레이스 진단 — {{업체명}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #f0f2f5;
+    color: #1a2035;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 14mm;
+    background: #ffffff;
+    position: relative;
+  }
+  .page + .page { page-break-before: always; }
+
+  /* 상단 바 */
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #1d4ed8, #3b82f6, #60a5fa);
+  }
+  .bottom-bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: #e5e7eb;
+  }
+
+  /* 표지 */
+  .cover-wrap {
+    display: flex;
+    flex-direction: column;
+    min-height: 269mm;
+    padding-top: 6mm;
+  }
+  .cover-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 6mm;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 12mm;
+  }
+  .brand-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1d4ed8;
+    letter-spacing: -0.3px;
+  }
+  .brand-sub { font-size: 10px; color: #6b7280; }
+  .report-badge {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1d4ed8;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+
+  .cover-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .cover-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    color: #3b82f6;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 3mm;
+  }
+  .cover-h1 {
+    font-size: 38px;
+    font-weight: 900;
+    color: #111827;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    margin-bottom: 4mm;
+  }
+  .cover-h1 span { color: #1d4ed8; }
+  .cover-desc {
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.7;
+    margin-bottom: 10mm;
+    max-width: 120mm;
+  }
+
+  .cover-biz-card {
+    background: #f8faff;
+    border: 1.5px solid #dbeafe;
+    border-radius: 10px;
+    padding: 6mm 8mm;
+    margin-bottom: 8mm;
+    width: 100%;
+  }
+  .cover-biz-label { font-size: 10px; color: #93c5fd; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 2mm; }
+  .cover-biz-name { font-size: 28px; font-weight: 900; color: #1d4ed8; letter-spacing: -1px; }
+  .cover-biz-meta { font-size: 11px; color: #6b7280; margin-top: 1mm; }
+
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3mm;
+    width: 100%;
+  }
+  .kpi-box {
+    border-radius: 8px;
+    padding: 4mm;
+    text-align: center;
+  }
+  .kpi-box.danger { background: #fef2f2; border: 1px solid #fecaca; }
+  .kpi-box.warn { background: #fff7ed; border: 1px solid #fed7aa; }
+  .kpi-box.info { background: #f0f9ff; border: 1px solid #bae6fd; }
+  .kpi-label { font-size: 9px; font-weight: 600; color: #9ca3af; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 1.5mm; }
+  .kpi-value { font-size: 28px; font-weight: 900; letter-spacing: -1.5px; line-height: 1; }
+  .kpi-value.red { color: #dc2626; }
+  .kpi-value.orange { color: #ea580c; }
+  .kpi-value.blue { color: #2563eb; }
+  .kpi-sub { font-size: 9px; color: #9ca3af; margin-top: 1mm; }
+
+  .cover-footer {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 4mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-date { font-size: 11px; color: #9ca3af; }
+  .footer-agent {
+    text-align: right;
+    font-size: 11px;
+    color: #6b7280;
+    line-height: 1.7;
+  }
+  .footer-agent strong { color: #1d4ed8; font-size: 13px; }
+
+  /* 섹션 */
+  .sec-head {
+    display: flex;
+    align-items: center;
+    gap: 3mm;
+    margin-bottom: 5mm;
+    padding-bottom: 3mm;
+    border-bottom: 2px solid #f3f4f6;
+  }
+  .sec-icon {
+    width: 32px; height: 32px;
+    background: #eff6ff;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .sec-title { font-size: 18px; font-weight: 700; color: #111827; letter-spacing: -0.5px; }
+  .sec-sub { font-size: 11px; color: #9ca3af; margin-left: auto; }
+
+  /* 현황 카드 */
+  .stat-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4mm;
+    margin-bottom: 5mm;
+  }
+  .stat-card {
+    background: #f9fafb;
+    border-radius: 10px;
+    padding: 5mm;
+    border: 1px solid #f3f4f6;
+    text-align: center;
+  }
+  .stat-label { font-size: 10px; font-weight: 500; color: #9ca3af; margin-bottom: 2mm; }
+  .stat-val { font-size: 32px; font-weight: 900; letter-spacing: -2px; line-height: 1; }
+  .stat-val.red { color: #dc2626; }
+  .stat-val.blue { color: #2563eb; }
+  .stat-val.gray { color: #374151; }
+  .stat-note { font-size: 10px; color: #9ca3af; margin-top: 1.5mm; }
+
+  /* 경고 */
+  .warn-box {
+    background: #fef2f2;
+    border-left: 4px solid #dc2626;
+    border-radius: 0 8px 8px 0;
+    padding: 4mm 5mm;
+    margin-bottom: 5mm;
+    font-size: 13px;
+    color: #7f1d1d;
+    line-height: 1.6;
+  }
+  .warn-box strong { color: #dc2626; }
+
+  /* 진단 리스트 */
+  .diag-list { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+  .diag-item {
+    display: flex;
+    align-items: center;
+    gap: 3mm;
+    padding: 3.5mm 4mm;
+    border-radius: 8px;
+    border: 1px solid #f3f4f6;
+    background: #fafafa;
+  }
+  .diag-item.fail { border-color: #fee2e2; background: #fff5f5; }
+  .diag-item.pass { border-color: #d1fae5; background: #f0fdf4; }
+  .diag-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-fail { background: #ef4444; }
+  .dot-pass { background: #10b981; }
+  .diag-name { font-size: 12px; color: #374151; flex: 1; }
+  .diag-tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 20px;
+  }
+  .tag-fail { background: #fee2e2; color: #dc2626; }
+  .tag-pass { background: #d1fae5; color: #059669; }
+
+  /* 키워드 테이블 */
+  .kw-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .kw-table th {
+    background: #1d4ed8;
+    color: #fff;
+    font-weight: 600;
+    padding: 3mm 4mm;
+    text-align: left;
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+  .kw-table td {
+    padding: 3mm 4mm;
+    border-bottom: 1px solid #f3f4f6;
+    color: #374151;
+  }
+  .kw-table tr:nth-child(even) td { background: #f9fafb; }
+  .kw-table .num { text-align: right; font-weight: 700; color: #1d4ed8; font-size: 13px; }
+  .vol-bar { background: #e5e7eb; border-radius: 3px; height: 6px; width: 80px; }
+  .vol-fill { height: 100%; background: #3b82f6; border-radius: 3px; }
+
+  /* 패키지 */
+  .pkg-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4mm; margin-bottom: 6mm; }
+  .pkg-card { border-radius: 12px; overflow: hidden; border: 1.5px solid #e5e7eb; }
+  .pkg-card.rec { border-color: #1d4ed8; box-shadow: 0 4px 20px rgba(29,78,216,0.15); }
+  .pkg-top { padding: 5mm 4mm; text-align: center; background: #f9fafb; }
+  .pkg-top.rec { background: #1d4ed8; }
+  .pkg-n { font-size: 18px; font-weight: 800; color: #111827; }
+  .pkg-top.rec .pkg-n { color: #fff; }
+  .pkg-rec-tag {
+    display: inline-block;
+    background: #fbbf24;
+    color: #78350f;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 20px;
+    margin-top: 1mm;
+  }
+  .pkg-body { padding: 4mm; }
+  .pkg-price-l { font-size: 9px; color: #9ca3af; }
+  .pkg-price { font-size: 22px; font-weight: 900; color: #1d4ed8; letter-spacing: -1px; }
+  .pkg-price-u { font-size: 11px; font-weight: 400; color: #9ca3af; }
+  .pkg-sep { height: 1px; background: #f3f4f6; margin: 3mm 0; }
+  .pkg-item { font-size: 10px; color: #6b7280; padding: 1.5mm 0; display: flex; gap: 2mm; align-items: flex-start; }
+  .pkg-item::before { content: '✓'; color: #10b981; font-size: 11px; flex-shrink: 0; }
+
+  /* 제안서 */
+  .proposal {
+    background: #f8faff;
+    border: 1.5px solid #dbeafe;
+    border-radius: 12px;
+    padding: 6mm;
+    margin-bottom: 5mm;
+  }
+  .proposal-h { font-size: 13px; font-weight: 700; color: #1d4ed8; margin-bottom: 4mm; }
+  .p-row { display: flex; justify-content: space-between; padding: 2.5mm 0; border-bottom: 1px solid #e5e7eb; font-size: 12px; }
+  .p-row:last-child { border: none; }
+  .p-key { color: #6b7280; }
+  .p-val { font-weight: 600; color: #111827; }
+  .p-total { display: flex; justify-content: space-between; align-items: center; padding: 3mm 0; margin-top: 2mm; border-top: 2px solid #1d4ed8; }
+  .p-total-k { font-size: 13px; font-weight: 700; color: #1d4ed8; }
+  .p-total-v { font-size: 26px; font-weight: 900; color: #dc2626; letter-spacing: -1.5px; }
+
+  .sig { text-align: right; font-size: 11px; color: #9ca3af; line-height: 1.8; margin-top: 5mm; }
+  .sig strong { color: #1d4ed8; font-size: 13px; }
+
+  @media print {
+    body { background: #fff; }
+    .page { margin: 0; }
+    .page + .page { page-break-before: always; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 표지 -->
+<div class="page">
+  <div class="top-bar"></div>
+  <div class="bottom-bar"></div>
+  <div class="cover-wrap">
+    <div class="cover-header">
+      <div>
+        <div class="brand-name">솔직한 마케팅</div>
+        <div class="brand-sub">네이버 플레이스 전문 마케팅 대행</div>
+      </div>
+      <div class="report-badge">DIAGNOSIS REPORT 2025</div>
+    </div>
+
+    <div class="cover-main">
+      <div class="cover-eyebrow">Naver Place Marketing</div>
+      <div class="cover-h1">네이버 플레이스<br><span>마케팅 진단</span><br>보고서</div>
+      <div class="cover-desc">
+        {{업체명}}의 네이버 플레이스 현황을 분석한 결과입니다.<br>
+        현재 상태와 매출 기회 손실 규모를 확인하세요.
+      </div>
+
+      <div class="cover-biz-card">
+        <div class="cover-biz-label">Diagnosis Target</div>
+        <div class="cover-biz-name">{{업체명}}</div>
+        <div class="cover-biz-meta">{{업종}} · {{주소}}</div>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi-box danger">
+          <div class="kpi-label">현재 검색 순위</div>
+          <div class="kpi-value red">{{순위}}위</div>
+          <div class="kpi-sub">상위 노출 기준 미달</div>
+        </div>
+        <div class="kpi-box warn">
+          <div class="kpi-label">월 유출 고객 추정</div>
+          <div class="kpi-value orange">{{가망고객분석}}</div>
+          <div class="kpi-sub">경쟁사로 이탈/월</div>
+        </div>
+        <div class="kpi-box info">
+          <div class="kpi-label">추천 패키지</div>
+          <div class="kpi-value blue" style="font-size: 20px;">{{추천패키지}}</div>
+          <div class="kpi-sub">최적 솔루션</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cover-footer">
+      <div class="footer-date">진단일: 2025. 01. 15</div>
+      <div class="footer-agent">
+        <strong>솔직한 마케팅</strong><br>
+        김리안 지점장 · 010-5641-1803
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 현황 요약 + 진단 -->
+<div class="page">
+  <div class="top-bar"></div>
+  <div class="sec-head">
+    <div class="sec-icon">📊</div>
+    <div class="sec-title">업체 현황 요약</div>
+    <div class="sec-sub">{{업체명}} · {{업종}}</div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-label">이 지역 검색 순위</div>
+      <div class="stat-val red">{{순위}}위</div>
+      <div class="stat-note">10위 밖 = 사실상 비노출</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">월 예상 유출 고객</div>
+      <div class="stat-val red">{{가망고객분석}}</div>
+      <div class="stat-note">경쟁사로 이탈 추정/월</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">월 검색 노출</div>
+      <div class="stat-val blue">{{전체검색량}}</div>
+      <div class="stat-note">PC {{PC검색량}} + 모바일 {{모바일검색량}}</div>
+    </div>
+  </div>
+
+  <div class="warn-box">
+    <strong>핵심 문제:</strong> {{주요문제}}<br>
+    이 상태가 지속되면 월 {{가망고객분석}}명 이상의 잠재 고객이 경쟁사로 계속 이탈합니다.
+  </div>
+
+  <div class="sec-head">
+    <div class="sec-icon">🔍</div>
+    <div class="sec-title">10개 항목 진단 결과</div>
+  </div>
+
+  <div class="diag-list">
+    <div class="diag-item fail">
+      <div class="diag-dot dot-fail"></div>
+      <div class="diag-name">대표사진 최적화</div>
+      <div class="diag-tag tag-fail">미흡</div>
+    </div>
+    <div class="diag-item fail">
+      <div class="diag-dot dot-fail"></div>
+      <div class="diag-name">대표 키워드 설정</div>
+      <div class="diag-tag tag-fail">미흡</div>
+    </div>
+    <div class="diag-item fail">
+      <div class="diag-dot dot-fail"></div>
+      <div class="diag-name">소개 · 오시는 길</div>
+      <div class="diag-tag tag-fail">미흡</div>
+    </div>
+    <div class="diag-item fail">
+      <div class="diag-dot dot-fail"></div>
+      <div class="diag-name">알림 · 이벤트 설정</div>
+      <div class="diag-tag tag-fail">미흡</div>
+    </div>
+    <div class="diag-item fail">
+      <div class="diag-dot dot-fail"></div>
+      <div class="diag-name">메뉴 · 가격 세팅</div>
+      <div class="diag-tag tag-fail">미흡</div>
+    </div>
+    <div class="diag-item fail">
+      <div class="diag-dot dot-fail"></div>
+      <div class="diag-name">예약 시스템 세팅</div>
+      <div class="diag-tag tag-fail">미흡</div>
+    </div>
+    <div class="diag-item fail">
+      <div class="diag-dot dot-fail"></div>
+      <div class="diag-name">영수증 리뷰 관리</div>
+      <div class="diag-tag tag-fail">미흡</div>
+    </div>
+    <div class="diag-item fail">
+      <div class="diag-dot dot-fail"></div>
+      <div class="diag-name">블로그 노출 현황</div>
+      <div class="diag-tag tag-fail">미흡</div>
+    </div>
+    <div class="diag-item fail">
+      <div class="diag-dot dot-fail"></div>
+      <div class="diag-name">지역 커뮤니티 연계</div>
+      <div class="diag-tag tag-fail">미흡</div>
+    </div>
+    <div class="diag-item fail">
+      <div class="diag-dot dot-fail"></div>
+      <div class="diag-name">외부 채널 연동</div>
+      <div class="diag-tag tag-fail">미흡</div>
+    </div>
+  </div>
+</div>
+
+<!-- 키워드 분석 -->
+<div class="page">
+  <div class="top-bar"></div>
+  <div class="sec-head">
+    <div class="sec-icon">🔑</div>
+    <div class="sec-title">검색 키워드 분석</div>
+  </div>
+  <table class="kw-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>키워드</th>
+        <th style="text-align:right;">PC</th>
+        <th style="text-align:right;">모바일</th>
+        <th style="text-align:right;">합계</th>
+        <th>볼륨</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>{{키워드1}}</td><td class="num">-</td><td class="num">-</td><td class="num">{{검색량1}}</td><td><div class="vol-bar"><div class="vol-fill" style="width:90%"></div></div></td></tr>
+      <tr><td>2</td><td>{{키워드2}}</td><td class="num">-</td><td class="num">-</td><td class="num">{{검색량2}}</td><td><div class="vol-bar"><div class="vol-fill" style="width:75%"></div></div></td></tr>
+      <tr><td>3</td><td>{{키워드3}}</td><td class="num">-</td><td class="num">-</td><td class="num">{{검색량3}}</td><td><div class="vol-bar"><div class="vol-fill" style="width:60%"></div></div></td></tr>
+      <tr><td>4</td><td>{{키워드4}}</td><td class="num">-</td><td class="num">-</td><td class="num">{{검색량4}}</td><td><div class="vol-bar"><div class="vol-fill" style="width:45%"></div></div></td></tr>
+      <tr><td>5</td><td>{{키워드5}}</td><td class="num">-</td><td class="num">-</td><td class="num">{{검색량5}}</td><td><div class="vol-bar"><div class="vol-fill" style="width:35%"></div></div></td></tr>
+      <tr><td>6</td><td>{{키워드6}}</td><td class="num">-</td><td class="num">-</td><td class="num">{{검색량6}}</td><td><div class="vol-bar"><div class="vol-fill" style="width:25%"></div></div></td></tr>
+      <tr><td>7</td><td>{{키워드7}}</td><td class="num">-</td><td class="num">-</td><td class="num">{{검색량7}}</td><td><div class="vol-bar"><div class="vol-fill" style="width:15%"></div></div></td></tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top: 5mm; padding: 4mm; background: #eff6ff; border-radius: 8px; font-size: 11px; color: #1e40af; line-height: 1.6;">
+    월 <strong>{{전체검색량}}명</strong>이 관련 키워드를 검색합니다. 현재 {{순위}}위 노출로 인해 상위 3개 업체 대비
+    월 <strong>{{가망고객분석}}명</strong> 이상의 잠재 고객 유입 기회를 놓치고 있습니다.
+  </div>
+</div>
+
+<!-- 패키지 + 제안서 -->
+<div class="page">
+  <div class="top-bar"></div>
+  <div class="sec-head">
+    <div class="sec-icon">📦</div>
+    <div class="sec-title">서비스 패키지 안내</div>
+  </div>
+
+  <div class="pkg-grid">
+    <div class="pkg-card">
+      <div class="pkg-top">
+        <div class="pkg-n">시선</div>
+      </div>
+      <div class="pkg-body">
+        <div class="pkg-price-l">월 구독</div>
+        <div class="pkg-price">56<span class="pkg-price-u">만원/월</span></div>
+        <div class="pkg-sep"></div>
+        <div class="pkg-item">기본 정보 최적화</div>
+        <div class="pkg-item">대표 키워드 세팅</div>
+        <div class="pkg-item">월 성과 리포트</div>
+      </div>
+    </div>
+    <div class="pkg-card rec">
+      <div class="pkg-top rec">
+        <div class="pkg-n">집중</div>
+        <div class="pkg-rec-tag">추천 패키지</div>
+      </div>
+      <div class="pkg-body">
+        <div class="pkg-price-l">월 구독</div>
+        <div class="pkg-price">86<span class="pkg-price-u">만원/월</span></div>
+        <div class="pkg-sep"></div>
+        <div class="pkg-item">시선 패키지 전체</div>
+        <div class="pkg-item">전문 사진 촬영</div>
+        <div class="pkg-item">블로그 리뷰 등록</div>
+        <div class="pkg-item">리뷰 답글 대행</div>
+      </div>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-top">
+        <div class="pkg-n">주목</div>
+      </div>
+      <div class="pkg-body">
+        <div class="pkg-price-l">월 구독</div>
+        <div class="pkg-price">127<span class="pkg-price-u">만원/월</span></div>
+        <div class="pkg-sep"></div>
+        <div class="pkg-item">집중 패키지 전체</div>
+        <div class="pkg-item">인스타그램 관리</div>
+        <div class="pkg-item">새소식 콘텐츠</div>
+        <div class="pkg-item">전담 매니저 배정</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-head">
+    <div class="sec-icon">📋</div>
+    <div class="sec-title">맞춤 견적서</div>
+  </div>
+
+  <div class="proposal">
+    <div class="proposal-h">견적 내역 — {{업체명}}</div>
+    <div class="p-row"><span class="p-key">상호명</span><span class="p-val">{{상호명}}</span></div>
+    <div class="p-row"><span class="p-key">추천 패키지</span><span class="p-val">{{패키지}} 패키지</span></div>
+    <div class="p-row"><span class="p-key">정상가 (월)</span><span class="p-val" style="text-decoration:line-through; color:#9ca3af;">{{정상가}}</span></div>
+    <div class="p-row"><span class="p-key">약정 할인가 (월)</span><span class="p-val" style="color:#1d4ed8; font-size:16px;">{{약정가}}</span></div>
+    <div class="p-total">
+      <span class="p-total-k">6개월 약정 합계</span>
+      <span class="p-total-v">{{합계6개월}}</span>
+    </div>
+  </div>
+
+  <div class="sig">
+    <strong>솔직한 마케팅</strong><br>
+    김리안 지점장 · 010-5641-1803<br>
+    본 진단 보고서는 {{업체명}}를 위해 맞춤 작성되었습니다.
+  </div>
+</div>
+
+</body>
+</html>

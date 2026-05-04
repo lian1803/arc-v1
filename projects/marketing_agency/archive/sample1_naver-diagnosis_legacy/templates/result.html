@@ -1,0 +1,946 @@
+{% extends "base.html" %}
+
+{% block title %}진단 결과 - {{ history.business_name }} - 네이버 플레이스 진단{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto">
+    <!-- 헤더 바: 업체명 + 등급 + 우선순위 + 액션 버튼 -->
+    <div class="bg-white rounded-2xl shadow-lg p-8 mb-6">
+        <div class="flex items-start justify-between flex-wrap gap-4">
+            <div class="flex-1">
+                <h1 class="text-3xl font-bold text-gray-900 mb-1">{{ history.business_name }}</h1>
+                <p class="text-gray-600 mb-4">
+                    진단 일시: {{ history.created_at.strftime('%Y-%m-%d %H:%M') }}
+                </p>
+
+                <!-- 등급 + 점수 섹션 (강화된 임팩트) -->
+                <div class="flex items-center gap-6 mb-4">
+                    <!-- 등급 배지 (크고 시각적) -->
+                    <div class="grade-badge grade-{{ history.grade.lower() }} text-4xl px-8 py-4 rounded-xl font-bold">
+                        {{ history.grade }}등급
+                    </div>
+
+                    <!-- 종합 점수 -->
+                    <div class="text-right">
+                        <div class="text-sm text-gray-600 mb-1">종합 점수</div>
+                        <div class="text-5xl font-bold text-blue-600">{{ history.total_score }}</div>
+                        <div class="text-xs text-gray-500 mt-1">/100</div>
+                    </div>
+                </div>
+
+                <!-- 월 손실 고객 (빨간색, 강조) -->
+                {% if history.estimated_lost_customers and history.estimated_lost_customers > 0 %}
+                <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-4 rounded-r-lg">
+                    <div class="text-sm text-red-700 mb-1">⚠️ 매달 손실 중인 추정 고객</div>
+                    <div class="text-3xl font-bold text-red-600">약 {{ history.estimated_lost_customers }}명</div>
+                    <div class="text-xs text-red-600 mt-1">경쟁사로 넘어가고 있는 인원</div>
+                </div>
+                {% endif %}
+
+                <!-- 우선순위 버튼 -->
+                <div class="flex items-center gap-3">
+                    <div class="priority-badge priority-{{ history.sales_priority|default('pass') }}"
+                         id="priorityBadge"
+                         onclick="togglePriorityDropdown()"
+                         title="클릭해서 변경">
+                        {{ history.sales_priority_label|default('패스') }}
+                        <span style="font-size: 0.7em;">▼</span>
+                        <!-- 드롭다운 메뉴 -->
+                        <div class="dropdown-menu" id="priorityDropdown">
+                            <div class="dropdown-item" onclick="changePriority('1', '1순위')">1순위</div>
+                            <div class="dropdown-item" onclick="changePriority('2', '2순위')">2순위</div>
+                            <div class="dropdown-item" onclick="changePriority('pass', '패스')">패스</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col gap-2">
+                <button
+                    id="downloadPdfBtn"
+                    onclick="downloadPDF({{ history.id }})"
+                    class="bg-pink-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-pink-600 transition flex items-center shadow-md"
+                >
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span id="downloadPdfBtnText">PDF 제안서 다운로드</span>
+                    <svg id="downloadPdfBtnSpinner" class="hidden animate-spin ml-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+                <button
+                    id="downloadPptBtn"
+                    onclick="downloadPPT({{ history.id }})"
+                    class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center shadow-md"
+                >
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+                    </svg>
+                    <span id="downloadBtnText">PPT 다운로드</span>
+                    <svg id="downloadBtnSpinner" class="hidden animate-spin ml-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+                <a href="/history" class="bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition text-center">
+                    이력 보기
+                </a>
+                <a href="/static/sales_playbook.html" target="_blank" class="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition text-center flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                    영업 플레이북
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 영업 메시지 섹션 (최우선 — 항상 펼쳐진 상태) -->
+    {% if messages %}
+    <div class="bg-white rounded-2xl shadow-lg p-8 mb-6">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+            <svg class="w-7 h-7 mr-2 text-kakao-yellow" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 5.93 2 10.75c0 2.86 1.88 5.37 4.69 6.86-.2.74-.72 2.69-.82 3.12-.12.54.2.53.42.39.17-.11 2.54-1.74 3.51-2.42.71.1 1.44.15 2.2.15 5.52 0 10-3.93 10-8.75S17.52 2 12 2z"/>
+            </svg>
+            영업 메시지 (카톡/SMS 발송용)
+        </h2>
+
+        <!-- 비대면 영업 플로우 요약 (접을 수 있음) -->
+        <details class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 cursor-pointer">
+            <summary class="font-semibold text-blue-900 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                </svg>
+                비대면 영업 플로우 안내
+            </summary>
+            <div class="mt-4 pl-7 text-sm text-gray-700 space-y-2">
+                <div><strong>1단계:</strong> 콜드DM (1차 메시지 복사) → 카톡/문자 발송</div>
+                <div><strong>2단계:</strong> 응답 오면 PPT 다운로드 후 전송 + 2차 메시지</div>
+                <div><strong>3단계:</strong> 3차 메시지 (패키지 제안 + 손익분기 계산)</div>
+                <div><strong>4단계:</strong> 이의 있으면 4차 (보류/무응답/비싼/직접 대응)</div>
+                <div><strong>5단계:</strong> 계약 의향 → 5차 (결제 링크 + 계약서)</div>
+            </div>
+        </details>
+
+        <!-- 탭 네비게이션 -->
+        <div class="message-tabs">
+            <div class="message-tab active" data-tab="1" onclick="switchMessageTab(1)">
+                <div class="font-semibold">1차 콜드DM</div>
+                <div class="text-xs text-gray-500">첫 접촉 메시지</div>
+                {% if messages.first.versions|length > 1 %}
+                <span class="text-xs ml-1">({{ messages.first.versions|length }}개)</span>
+                {% endif %}
+            </div>
+            <div class="message-tab" data-tab="2" onclick="switchMessageTab(2)">
+                <div class="font-semibold">2차 진단결과</div>
+                <div class="text-xs text-gray-500">1차 응답 후</div>
+            </div>
+            <div class="message-tab" data-tab="3" onclick="switchMessageTab(3)">
+                <div class="font-semibold">3차 제안</div>
+                <div class="text-xs text-gray-500">패키지 소개</div>
+            </div>
+            <div class="message-tab" data-tab="4" onclick="switchMessageTab(4)">
+                <div class="font-semibold">4차 클로징</div>
+                <div class="text-xs text-gray-500">보류/무응답 대응</div>
+            </div>
+            <div class="message-tab" data-tab="5" onclick="switchMessageTab(5)">
+                <div class="font-semibold">5차 계약</div>
+                <div class="text-xs text-gray-500">결제/계약 완료</div>
+            </div>
+            <div class="message-tab" data-tab="lian" onclick="switchMessageTab('lian')" style="background:#1a1a2e;color:#e0e0ff;">
+                <div class="font-semibold">리안용 보고서</div>
+                <div class="text-xs" style="color:#a0a0cc;">내부 전략 문서</div>
+            </div>
+        </div>
+
+        <!-- 1차 메시지 탭 -->
+        <div id="tab-panel-1" class="tab-panel active">
+            {% if messages.first.auto_version %}
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4 text-sm">
+                <strong>자동 선택:</strong> {{ messages.first.auto_reason }}
+            </div>
+            {% endif %}
+
+            {% if messages.first.versions|length > 1 %}
+            <!-- 버전 선택 -->
+            <div class="version-selector">
+                {% for version in messages.first.versions %}
+                <div class="version-option">
+                    <input type="radio"
+                           id="version-{{ loop.index }}"
+                           name="first-version"
+                           value="{{ loop.index }}"
+                           {% if loop.first %}checked{% endif %}
+                           onchange="switchFirstVersion({{ loop.index }})">
+                    <label for="version-{{ loop.index }}">
+                        {{ version.label }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- 각 버전 메시지 -->
+            {% for version in messages.first.versions %}
+            <div id="first-message-{{ loop.index }}" class="first-version-content" style="{% if not loop.first %}display:none;{% endif %}">
+                <div class="message-bubble" id="first-bubble-{{ loop.index }}">{{ version.text }}</div>
+                <div class="flex gap-3 mt-4">
+                    <button class="btn-kakao" onclick="copyMessage('first-bubble-{{ loop.index }}', this)">
+                        카카오용 복사
+                    </button>
+                    {% if version.sms_text %}
+                    <button class="btn-sms" onclick="copyMessage('first-sms-{{ loop.index }}', this)">
+                        SMS용 복사
+                    </button>
+                    <div id="first-sms-{{ loop.index }}" style="display:none;">{{ version.sms_text }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <!-- 단일 버전 -->
+            <div class="message-bubble" id="first-bubble">{{ messages.first.text }}</div>
+            <div class="flex gap-3 mt-4">
+                <button class="btn-kakao" onclick="copyMessage('first-bubble', this)">
+                    카카오용 복사
+                </button>
+                {% if messages.first.sms_text %}
+                <button class="btn-sms" onclick="copyMessage('first-sms', this)">
+                    SMS용 복사
+                </button>
+                <div id="first-sms" style="display:none;">{{ messages.first.sms_text }}</div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- 2차 메시지 탭 -->
+        <div id="tab-panel-2" class="tab-panel">
+            <div class="message-bubble" id="second-bubble">{{ messages.second.text }}</div>
+            <div class="flex gap-3 mt-4">
+                <button class="btn-kakao" onclick="copyMessage('second-bubble', this)">
+                    카카오용 복사
+                </button>
+            </div>
+        </div>
+
+        <!-- 3차 메시지 탭 -->
+        <div id="tab-panel-3" class="tab-panel">
+            <div class="message-bubble" id="third-bubble">{{ messages.third.text }}</div>
+            <div class="flex gap-3 mt-4">
+                <button class="btn-kakao" onclick="copyMessage('third-bubble', this)">
+                    카카오용 복사
+                </button>
+            </div>
+        </div>
+
+        <!-- 4차 메시지 탭 -->
+        <div id="tab-panel-4" class="tab-panel">
+            {% if messages.fourth.versions|length > 1 %}
+            <!-- 버전 선택 -->
+            <div class="version-selector">
+                {% for version in messages.fourth.versions %}
+                <div class="version-option">
+                    <input type="radio"
+                           id="fourth-version-{{ loop.index }}"
+                           name="fourth-version"
+                           value="{{ loop.index }}"
+                           {% if loop.first %}checked{% endif %}
+                           onchange="switchFourthVersion({{ loop.index }})">
+                    <label for="fourth-version-{{ loop.index }}">
+                        {{ version.label }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- 각 버전 메시지 -->
+            {% for version in messages.fourth.versions %}
+            <div id="fourth-message-{{ loop.index }}" class="fourth-version-content" style="{% if not loop.first %}display:none;{% endif %}">
+                <div class="message-bubble" id="fourth-bubble-{{ loop.index }}">{{ version.text }}</div>
+                <div class="flex gap-3 mt-4">
+                    <button class="btn-kakao" onclick="copyMessage('fourth-bubble-{{ loop.index }}', this)">
+                        카카오용 복사
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <!-- 단일 버전 -->
+            <div class="message-bubble" id="fourth-bubble">{{ messages.fourth.text }}</div>
+            <div class="flex gap-3 mt-4">
+                <button class="btn-kakao" onclick="copyMessage('fourth-bubble', this)">
+                    카카오용 복사
+                </button>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- 5차 메시지 탭 -->
+        <div id="tab-panel-5" class="tab-panel">
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                <p class="text-sm text-green-900">
+                    <strong>ℹ️ 팁:</strong> 이 메시지는 계약 의향을 보인 고객에게만 발송합니다. 결제 링크와 계약서를 준비해둔 후 발송하세요.
+                </p>
+            </div>
+            {% if messages.fifth %}
+            <div class="message-bubble" id="fifth-bubble">{{ messages.fifth.text }}</div>
+            <div class="flex gap-3 mt-4">
+                <button class="btn-kakao" onclick="copyMessage('fifth-bubble', this)">
+                    카카오용 복사
+                </button>
+            </div>
+            {% else %}
+            <div class="bg-gray-100 rounded-lg p-6 text-center text-gray-600">
+                <p>5차 결제/계약 메시지는 아직 생성되지 않았습니다.</p>
+                <p class="text-sm mt-2">계약 의향이 확인되면 여기에 표시됩니다.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- 리안용 보고서 탭 -->
+        <div id="tab-panel-lian" class="tab-panel" style="display:none;">
+            <div class="bg-gray-900 border border-gray-700 rounded-lg p-4 mb-4">
+                <p class="text-sm text-yellow-300 font-bold">⚠️ 리안 내부 전용 — 업체에 절대 공유 금지</p>
+            </div>
+            {% if messages.lian_report %}
+            <pre class="message-bubble" id="lian-report-bubble" style="background:#1a1a2e;color:#e0e0ff;font-family:monospace;font-size:13px;white-space:pre-wrap;overflow-wrap:break-word;">{{ messages.lian_report }}</pre>
+            <div class="flex gap-3 mt-4">
+                <button class="btn-kakao" onclick="copyMessage('lian-report-bubble', this)" style="background:#4a4a8a;">
+                    복사
+                </button>
+            </div>
+            {% else %}
+            <div class="bg-gray-100 rounded-lg p-6 text-center text-gray-600">
+                <p>리안용 보고서가 없습니다.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- ─── 대화 관리: 발송 후 회신 처리 ─── -->
+        <div class="mt-8 border-t-2 border-dashed border-gray-200 pt-6">
+            <h3 class="text-base font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                </svg>
+                다음 메시지 생성 — 회신 처리
+                <span class="text-xs font-normal text-gray-400 ml-1">(발송 후 여기서 계속)</span>
+            </h3>
+
+            <!-- 단계 선택 -->
+            <div class="mb-4">
+                <p class="text-xs text-gray-500 mb-2 font-medium uppercase tracking-wide">어느 단계에서 회신이 왔나요?</p>
+                <div class="flex flex-wrap gap-2" id="stageButtons">
+                    <button class="stage-btn active" data-stage="1차_회신" onclick="setStage(this, '1차_회신')">1차 발송 후</button>
+                    <button class="stage-btn" data-stage="2차_회신" onclick="setStage(this, '2차_회신')">2차 발송 후</button>
+                    <button class="stage-btn" data-stage="3차_회신" onclick="setStage(this, '3차_회신')">3차 발송 후</button>
+                </div>
+            </div>
+
+            <!-- 회신 여부 -->
+            <div class="mb-4">
+                <p class="text-xs text-gray-500 mb-2 font-medium uppercase tracking-wide">회신이 왔나요?</p>
+                <div class="flex gap-3">
+                    <button id="btnReplyYes"
+                        class="px-4 py-2 rounded-lg border-2 border-green-400 text-green-700 font-semibold text-sm hover:bg-green-50 transition"
+                        onclick="setReplyType('yes')">
+                        ✉️ 회신 받음
+                    </button>
+                    <button id="btnReplyNo"
+                        class="px-4 py-2 rounded-lg border-2 border-gray-300 text-gray-600 font-semibold text-sm hover:bg-gray-50 transition"
+                        onclick="setReplyType('no')">
+                        ⏳ 아직 없음 (팔로업)
+                    </button>
+                </div>
+            </div>
+
+            <!-- 회신 내용 입력 -->
+            <div id="replyInputSection" class="hidden mb-4">
+                <p class="text-xs text-gray-500 mb-2 font-medium uppercase tracking-wide">회신 내용 붙여넣기</p>
+                <textarea id="replyTextInput"
+                    class="w-full border border-gray-300 rounded-lg p-3 text-sm text-gray-800 resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    rows="4"
+                    placeholder="사장님이 보낸 카톡/문자 내용을 그대로 붙여넣으세요..."></textarea>
+                <button onclick="generateReplyMessage()"
+                    class="mt-3 px-5 py-2 bg-blue-600 text-white rounded-lg font-semibold text-sm hover:bg-blue-700 transition flex items-center gap-2"
+                    id="genReplyBtn">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                    다음 메시지 생성
+                </button>
+            </div>
+
+            <!-- 팔로업 일정 (무응답) -->
+            <div id="noReplySection" class="hidden mb-4">
+                <p class="text-xs text-gray-500 mb-3 font-medium uppercase tracking-wide">무응답 팔로업 일정</p>
+                <div class="grid grid-cols-3 gap-3">
+                    <button onclick="generateFollowup('무응답_3일')"
+                        class="followup-day-btn border-2 border-orange-300 text-orange-700 rounded-lg p-3 text-center hover:bg-orange-50 transition">
+                        <div class="text-lg font-bold">D+3</div>
+                        <div class="text-xs mt-1">부드러운 재연락</div>
+                    </button>
+                    <button onclick="generateFollowup('무응답_7일')"
+                        class="followup-day-btn border-2 border-red-300 text-red-700 rounded-lg p-3 text-center hover:bg-red-50 transition">
+                        <div class="text-lg font-bold">D+7</div>
+                        <div class="text-xs mt-1">손실 수치 재강조</div>
+                    </button>
+                    <button onclick="generateFollowup('무응답_14일')"
+                        class="followup-day-btn border-2 border-gray-400 text-gray-700 rounded-lg p-3 text-center hover:bg-gray-50 transition">
+                        <div class="text-lg font-bold">D+14</div>
+                        <div class="text-xs mt-1">마지막 기회 압박</div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 생성된 메시지 출력 -->
+            <div id="generatedReplySection" class="hidden">
+                <div class="flex items-center justify-between mb-2">
+                    <p class="text-xs text-gray-500 font-medium uppercase tracking-wide">생성된 메시지</p>
+                    <span id="generatedStageLabel" class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium"></span>
+                </div>
+                <div id="generatedReplyBubble" class="message-bubble" style="min-height:60px;"></div>
+                <div class="flex gap-3 mt-3">
+                    <button class="btn-kakao" onclick="copyMessage('generatedReplyBubble', this)">
+                        카카오용 복사
+                    </button>
+                </div>
+                <div id="generatedReplySpinner" class="hidden text-center py-4">
+                    <svg class="animate-spin mx-auto h-6 w-6 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                    </svg>
+                    <p class="text-sm text-gray-500 mt-2">메시지 생성 중...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+<style>
+.stage-btn {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 2px solid #d1d5db;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    background: white;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.stage-btn.active {
+    border-color: #3b82f6;
+    color: #2563eb;
+    background: #eff6ff;
+}
+.followup-day-btn {
+    cursor: pointer;
+    font-family: inherit;
+}
+</style>
+
+<script>
+var _currentStage = '1차_회신';
+var _replyType = null;
+var _historyId = {{ history.id }};
+
+function setStage(btn, stage) {
+    _currentStage = stage;
+    document.querySelectorAll('.stage-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+}
+
+function setReplyType(type) {
+    _replyType = type;
+    var yes = document.getElementById('btnReplyYes');
+    var no = document.getElementById('btnReplyNo');
+    var replySection = document.getElementById('replyInputSection');
+    var noSection = document.getElementById('noReplySection');
+    var genSection = document.getElementById('generatedReplySection');
+    genSection.classList.add('hidden');
+    if (type === 'yes') {
+        yes.classList.add('border-green-500', 'bg-green-50');
+        no.classList.remove('border-orange-400', 'bg-orange-50');
+        no.classList.add('border-gray-300');
+        replySection.classList.remove('hidden');
+        noSection.classList.add('hidden');
+    } else {
+        no.classList.add('border-orange-400', 'bg-orange-50');
+        yes.classList.remove('border-green-500', 'bg-green-50');
+        yes.classList.add('border-green-400');
+        noSection.classList.remove('hidden');
+        replySection.classList.add('hidden');
+    }
+}
+
+function generateReplyMessage() {
+    var replyText = document.getElementById('replyTextInput').value.trim();
+    _callReplyAPI(_currentStage, replyText);
+}
+
+function generateFollowup(stage) {
+    _callReplyAPI(stage, '');
+}
+
+function _callReplyAPI(stage, replyText) {
+    var btn = document.getElementById('genReplyBtn');
+    var genSection = document.getElementById('generatedReplySection');
+    var spinner = document.getElementById('generatedReplySpinner');
+    var bubble = document.getElementById('generatedReplyBubble');
+    var label = document.getElementById('generatedStageLabel');
+
+    genSection.classList.remove('hidden');
+    spinner.classList.remove('hidden');
+    bubble.style.display = 'none';
+
+    var stageLabels = {
+        '1차_회신': '1차 회신 대응',
+        '2차_회신': '2차 회신 대응',
+        '3차_회신': '3차 회신 대응',
+        '무응답_3일': 'D+3 팔로업',
+        '무응답_7일': 'D+7 팔로업',
+        '무응답_14일': 'D+14 팔로업',
+    };
+    label.textContent = stageLabels[stage] || stage;
+
+    fetch('/message/reply/' + _historyId, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ stage: stage, reply_text: replyText })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        spinner.classList.add('hidden');
+        bubble.style.display = '';
+        if (data.success) {
+            bubble.textContent = data.message;
+        } else {
+            bubble.textContent = '메시지 생성 실패: ' + (data.detail || '알 수 없는 오류');
+        }
+    })
+    .catch(function(err) {
+        spinner.classList.add('hidden');
+        bubble.style.display = '';
+        bubble.textContent = '네트워크 오류: ' + err.message;
+    });
+}
+</script>
+
+    <!-- 핵심 수치 카드 — 경쟁사 비교 강화 -->
+    {% if key_metrics %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        {% for metric in key_metrics %}
+        <div class="key-metric-card {% if metric.level == 'warning' %}warning{% elif metric.level == 'good' %}good{% endif %} {% if metric.level == 'warning' %}border-2 border-red-300{% endif %}">
+            <div class="key-metric-label">{{ metric.label }}</div>
+            <div class="key-metric-number {% if metric.level == 'warning' %}text-red-600{% endif %}">{{ metric.value }}</div>
+            <div class="key-metric-desc">{{ metric.description }}</div>
+            {% if metric.level == 'warning' %}
+            <div class="mt-3 text-xs font-semibold text-red-600">⚠️ 긴급 개선 필요</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- 진단 상세 (아코디언 — 기본 접힘) -->
+    <details class="bg-white rounded-2xl shadow-lg mb-6">
+        <summary class="text-xl font-bold text-gray-900 p-6">
+            진단 상세 보기
+            <span class="accordion-arrow">▼</span>
+        </summary>
+        <div class="p-6 pt-0">
+            <!-- 7개 항목 점수 바 차트 (강화된 경고 표시) -->
+            {% if score_items %}
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-700 mb-4">항목별 점수 분석</h3>
+                {% for item in score_items %}
+                <div class="{% if item.score < 50 %}bg-red-50 border-l-4 border-red-500 pl-4{% else %}bg-gray-50{% endif %} py-3 px-4 rounded-lg mb-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-semibold text-gray-800 flex items-center gap-2">
+                            {{ item.name }}
+                            {% if item.score < 50 %}
+                            <span class="inline-block bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">❌ 위험</span>
+                            {% elif item.score < 70 %}
+                            <span class="inline-block bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded">⚠️ 주의</span>
+                            {% endif %}
+                        </span>
+                        <span class="font-bold {% if item.score < 50 %}text-red-600{% elif item.score < 70 %}text-yellow-600{% else %}text-green-600{% endif %}">{{ item.score }}/100</span>
+                    </div>
+                    <div style="width: 100%; height: 24px; background-color: #E5E7EB; border-radius: 4px; overflow: hidden; position: relative;">
+                        <div style="height: 100%; width: {{ item.score }}%; border-radius: 4px; transition: width 0.6s ease-out; background-color: {% if item.score < 40 %}#FF4757{% elif item.score < 60 %}#FFA502{% else %}#03C75A{% endif %};"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- 기존 Scores Grid (유지) -->
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-6">
+                <!-- Photo Score -->
+                <div class="bg-white rounded-xl shadow-md p-6 text-center">
+                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-900 mb-1">{{ history.photo_score }}</div>
+                    <div class="text-sm text-gray-600 mb-2">사진</div>
+                    <div class="text-xs text-gray-500">{{ history.photo_count }}장</div>
+                </div>
+
+                <!-- Review Score -->
+                <div class="bg-white rounded-xl shadow-md p-6 text-center">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-900 mb-1">{{ history.review_score }}</div>
+                    <div class="text-sm text-gray-600 mb-2">리뷰</div>
+                    <div class="text-xs text-gray-400 mt-1">영수증 {{ history.receipt_review_count }}개 / 방문자 {{ history.visitor_review_count }}개</div>
+                </div>
+
+                <!-- Blog Score -->
+                <div class="bg-white rounded-xl shadow-md p-6 text-center">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-900 mb-1">{{ history.blog_score }}</div>
+                    <div class="text-sm text-gray-600 mb-2">블로그</div>
+                    <div class="text-xs text-gray-500">{{ history.blog_review_count }}개</div>
+                </div>
+
+                <!-- Info Score -->
+                <div class="bg-white rounded-xl shadow-md p-6 text-center">
+                    <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-900 mb-1">{{ history.info_score }}</div>
+                    <div class="text-sm text-gray-600 mb-2">정보</div>
+                    <div class="text-xs text-gray-500">완성도</div>
+                </div>
+
+                <!-- Keyword Score -->
+                <div class="bg-white rounded-xl shadow-md p-6 text-center">
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-900 mb-1">{{ history.keyword_score }}</div>
+                    <div class="text-sm text-gray-600 mb-2">키워드</div>
+                    <div class="text-xs text-gray-500">노출도</div>
+                </div>
+
+                <!-- Convenience Score -->
+                <div class="bg-white rounded-xl shadow-md p-6 text-center">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-900 mb-1">{{ history.convenience_score }}</div>
+                    <div class="text-sm text-gray-600 mb-2">편의기능</div>
+                    <div class="text-xs text-gray-500">예약/톡톡</div>
+                </div>
+
+                <!-- Engagement Score -->
+                <div class="bg-white rounded-xl shadow-md p-6 text-center">
+                    <div class="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-900 mb-1">{{ history.engagement_score }}</div>
+                    <div class="text-sm text-gray-600 mb-2">고객참여</div>
+                    <div class="text-xs text-gray-500">소통/채널</div>
+                </div>
+            </div>
+
+            <!-- Service Status Check -->
+            <div class="bg-white rounded-lg p-6">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                    </svg>
+                    서비스 세팅 현황
+                </h3>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- 편의 기능 -->
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-700 mb-4">편의 기능</h4>
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                                <span class="text-gray-700">네이버 예약</span>
+                                {% if history.has_booking %}
+                                <span class="flex items-center text-green-600 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg> 등록
+                                </span>
+                                {% else %}
+                                <span class="flex items-center text-red-500 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg> 미등록
+                                </span>
+                                {% endif %}
+                            </div>
+
+                            <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                                <span class="text-gray-700">톡톡 상담</span>
+                                {% if history.has_talktalk %}
+                                <span class="flex items-center text-green-600 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg> 등록
+                                </span>
+                                {% else %}
+                                <span class="flex items-center text-red-500 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg> 미등록
+                                </span>
+                                {% endif %}
+                            </div>
+
+                            <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                                <span class="text-gray-700">스마트콜</span>
+                                {% if history.has_smartcall %}
+                                <span class="flex items-center text-green-600 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg> 등록
+                                </span>
+                                {% else %}
+                                <span class="flex items-center text-red-500 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg> 미등록
+                                </span>
+                                {% endif %}
+                            </div>
+
+                            <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                                <span class="text-gray-700">쿠폰</span>
+                                {% if history.has_coupon %}
+                                <span class="flex items-center text-green-600 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg> 등록
+                                </span>
+                                {% else %}
+                                <span class="flex items-center text-red-500 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg> 미등록
+                                </span>
+                                {% endif %}
+                            </div>
+
+                            <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                                <span class="text-gray-700">새소식</span>
+                                {% if history.has_news %}
+                                <span class="flex items-center text-green-600 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg> 등록
+                                </span>
+                                {% else %}
+                                <span class="flex items-center text-red-500 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg> 미등록
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 콘텐츠 / 채널 -->
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-700 mb-4">콘텐츠 & 채널</h4>
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                                <span class="text-gray-700">소개글</span>
+                                {% if history.has_intro %}
+                                <span class="flex items-center text-green-600 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg> 등록 ({{ history.intro_text_length }}자)
+                                </span>
+                                {% else %}
+                                <span class="flex items-center text-red-500 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg> 미등록
+                                </span>
+                                {% endif %}
+                            </div>
+
+                            <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                                <span class="text-gray-700">오시는 길</span>
+                                {% if history.has_directions %}
+                                <span class="flex items-center text-green-600 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg> 등록 ({{ history.directions_text_length }}자)
+                                </span>
+                                {% else %}
+                                <span class="flex items-center text-red-500 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg> 미등록
+                                </span>
+                                {% endif %}
+                            </div>
+
+                            <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                                <span class="text-gray-700">메뉴 설명</span>
+                                {% if history.has_menu_description %}
+                                <span class="flex items-center text-green-600 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg> 등록
+                                </span>
+                                {% else %}
+                                <span class="flex items-center text-red-500 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg> 미등록
+                                </span>
+                                {% endif %}
+                            </div>
+
+                            <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                                <span class="text-gray-700">사장님 댓글</span>
+                                {% if history.has_owner_reply %}
+                                <span class="flex items-center text-green-600 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg> 활동중
+                                </span>
+                                {% else %}
+                                <span class="flex items-center text-red-500 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg> 미활동
+                                </span>
+                                {% endif %}
+                            </div>
+
+                            <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                                <span class="text-gray-700">인스타그램</span>
+                                {% if history.has_instagram %}
+                                <span class="flex items-center text-green-600 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg> 연결됨
+                                </span>
+                                {% else %}
+                                <span class="flex items-center text-red-500 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg> 미연결
+                                </span>
+                                {% endif %}
+                            </div>
+
+                            <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                                <span class="text-gray-700">카카오톡 채널</span>
+                                {% if history.has_kakao %}
+                                <span class="flex items-center text-green-600 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg> 연결됨
+                                </span>
+                                {% else %}
+                                <span class="flex items-center text-red-500 font-medium text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg> 미연결
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 순위 정보 -->
+                {% if history.naver_place_rank > 0 %}
+                <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                        </svg>
+                        <span class="font-semibold text-blue-900">현재 플레이스 순위:</span>
+                        <span class="ml-2 text-2xl font-bold text-blue-600">{{ history.naver_place_rank }}위</span>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </details>
+
+    <!-- Related Keywords -->
+    {% if history.related_keywords %}
+    <div class="bg-white rounded-2xl shadow-lg p-8 mb-6">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+            <svg class="w-7 h-7 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+            </svg>
+            연관 키워드 제안
+        </h2>
+        <div class="flex flex-wrap gap-2">
+            {% for kw in history.related_keywords %}
+            <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium"># {{ kw }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Improvement Points -->
+    {% if history.improvement_points %}
+    <div class="bg-white rounded-2xl shadow-lg p-8 mb-6">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+            <svg class="w-7 h-7 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            개선 포인트
+        </h2>
+        <div class="space-y-4">
+            {% for point in history.improvement_points %}
+            <div class="border-l-4 border-blue-600 bg-blue-50 p-4 rounded-r-lg">
+                <p class="text-gray-700">
+                    <span class="inline-block px-2 py-1 bg-blue-600 text-white text-xs rounded mr-2">{{ point.category|upper }}</span>
+                    {{ point.message }}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Actions -->
+    <div class="flex gap-4 justify-center mb-8">
+        <a
+            href="/"
+            class="bg-gray-200 text-gray-700 px-8 py-4 rounded-lg font-semibold hover:bg-gray-300 transition flex items-center text-lg"
+        >
+            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            새 진단 시작
+        </a>
+    </div>
+</div>
+
+<script src="/static/js/result.js"></script>
+<script src="/static/js/message_tabs.js"></script>
+{% endblock %}

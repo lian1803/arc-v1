@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>영업 CRM | 리안</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #667eea;
+            color: white;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .controls {
+            margin-top: 16px;
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-refresh {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-refresh:hover {
+            background: #5568d3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f9f9f9;
+            border-bottom: 2px solid #efefef;
+        }
+
+        th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #666;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        tbody tr:hover {
+            background: #fafafa;
+        }
+
+        td {
+            padding: 16px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .phone {
+            font-weight: 600;
+            color: #667eea;
+            font-family: 'Monaco', monospace;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* 1차 */
+        .status.step1-waiting {
+            background: #fee;
+            color: #c33;
+        }
+
+        .status.step1-done {
+            background: #fef3cd;
+            color: #856404;
+        }
+
+        /* 2차 */
+        .status.step2-waiting {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .status.step2-done {
+            background: #f3e5f5;
+            color: #6a1b9a;
+        }
+
+        /* 3차 */
+        .status.step3-waiting {
+            background: #e0f2f1;
+            color: #00695c;
+        }
+
+        .status.step3-done {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        /* 4차 */
+        .status.step4-waiting {
+            background: #f1f8e9;
+            color: #558b2f;
+        }
+
+        .status.step4-done {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .action-cell {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .pdf-btn, .action-icon-btn {
+            padding: 6px 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .pdf-btn:hover, .action-icon-btn:hover {
+            background: #5568d3;
+            transform: translateY(-1px);
+        }
+
+        .action-icon-btn {
+            padding: 6px 8px;
+            font-size: 14px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 2px solid #f0f0f0;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .timestamp {
+            color: #999;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 영업 대시보드</h1>
+            <p style="color: #666; margin-bottom: 12px;">진행 중인 영업 업체 현황</p>
+            <div class="controls">
+                <button class="btn-refresh" onclick="loadBusinesses()">
+                    🔄 새로고침
+                </button>
+            </div>
+        </header>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 12%;">연락처</th>
+                        <th style="width: 35%;">업체명</th>
+                        <th style="width: 25%;">상태</th>
+                        <th style="width: 18%;">액션</th>
+                        <th style="width: 10%;">추가됨</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr>
+                        <td colspan="4" class="loading">
+                            <div class="spinner"></div>
+                            <p style="margin-top: 12px;">로드 중...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function getStatusClass(status) {
+            const classMap = {
+                '1차_발송_대기': 'step1-waiting',
+                '1차_발송_완료': 'step1-done',
+                '2차_생성': 'step2-waiting',
+                '2차_발송_대기': 'step2-waiting',
+                '2차_발송_완료': 'step2-done',
+                '3차_생성': 'step3-waiting',
+                '3차_발송_대기': 'step3-waiting',
+                '3차_발송_완료': 'step3-done',
+                '4차_생성': 'step4-waiting',
+                '4차_발송_대기': 'step4-waiting',
+                '4차_발송_완료': 'step4-done',
+                '계약완료': 'completed',
+            };
+            return classMap[status] || 'step1-waiting';
+        }
+
+        function getStatusText(status) {
+            const textMap = {
+                '1차_발송_대기': '1차 대기',
+                '1차_발송_완료': '1차 완료',
+                '2차_생성': '2차 생성',
+                '2차_발송_대기': '2차 대기',
+                '2차_발송_완료': '2차 완료',
+                '3차_생성': '3차 생성',
+                '3차_발송_대기': '3차 대기',
+                '3차_발송_완료': '3차 완료',
+                '4차_생성': '4차 생성',
+                '4차_발송_대기': '4차 대기',
+                '4차_발송_완료': '4차 완료',
+                '계약완료': '✓ 계약',
+            };
+            return textMap[status] || status;
+        }
+
+        async function downloadPDF(businessId, event) {
+            event.stopPropagation();
+            try {
+                const response = await fetch(`/api/business/${businessId}/pdf`);
+                const data = await response.json();
+                if (data.success) alert(data.message);
+                else alert('PDF 실패: ' + (data.error || ''));
+            } catch (err) {
+                alert('PDF 실패: ' + err.message);
+            }
+        }
+
+        async function downloadPhoto(businessId, event) {
+            event.stopPropagation();
+            try {
+                const response = await fetch(`/api/business/${businessId}/photo`);
+                const data = await response.json();
+                if (data.success) alert(data.message);
+                else alert('사진 실패: ' + (data.error || ''));
+            } catch (err) {
+                alert('사진 실패: ' + err.message);
+            }
+        }
+
+        async function openNaverPlace(businessId, event) {
+            event.stopPropagation();
+            try {
+                const response = await fetch(`/api/business/${businessId}/place`);
+                const data = await response.json();
+                if (data.place_url) {
+                    window.open(data.place_url, '_blank');
+                } else {
+                    alert('네이버 플레이스 URL을 찾을 수 없습니다');
+                }
+            } catch (err) {
+                console.error('네이버 플레이스 조회 실패:', err);
+                alert('네이버 플레이스 조회 실패: ' + err.message);
+            }
+        }
+
+        async function loadBusinesses() {
+            try {
+                const response = await fetch('/api/businesses');
+                const businesses = await response.json();
+
+                const tbody = document.getElementById('tableBody');
+
+                if (businesses.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="empty">
+                                <div class="empty-icon">📭</div>
+                                <p>아직 영업 업체가 없습니다</p>
+                                <p style="font-size: 12px; color: #ccc; margin-top: 8px;">PDF가 생성되면 자동으로 추가됩니다</p>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                tbody.innerHTML = businesses.map(b => {
+                    const statusClass = getStatusClass(b.status);
+                    const statusText = getStatusText(b.status);
+                    const created = new Date(b.created_at).toLocaleDateString('ko-KR');
+
+                    return `
+                        <tr>
+                            <td class="phone" style="cursor:pointer;" onclick="copyText('${b.phone}', this)" title="클릭하면 복사">${b.phone}</td>
+                            <td style="cursor: pointer; color: #667eea;" onclick="openChat(${b.id})">${b.name}</td>
+                            <td>
+                                <span class="status ${statusClass}">
+                                    ${statusText}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-cell">
+                                    <button class="action-icon-btn" onclick="downloadPDF(${b.id}, event)" title="제안서 PDF 다운로드">
+                                        📋
+                                    </button>
+                                    <button class="action-icon-btn" onclick="downloadPhoto(${b.id}, event)" title="진단 요약 사진 다운로드" style="background: #f0a500;">
+                                        📸
+                                    </button>
+                                    <button class="action-icon-btn" onclick="openNaverPlace(${b.id}, event)" title="네이버 플레이스 보기" style="background: #03c75a;">
+                                        🏪
+                                    </button>
+                                    <button class="pdf-btn" onclick="openChat(${b.id})" style="background: #50c878;">
+                                        💬 채팅
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="timestamp">${created}</td>
+                        </tr>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                console.error('업체 로드 실패:', err);
+                document.getElementById('tableBody').innerHTML = `
+                    <tr>
+                        <td colspan="5" class="empty">
+                            <p>⚠️ 데이터 로드 실패</p>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function copyText(text, el) {
+            event.stopPropagation();
+
+            // placeholder 체크 — "진단-xxx"면 복사 안 됨
+            if (!text || text === '-' || text.startsWith('진단')) {
+                alert('아직 유효한 전화번호가 없습니다');
+                return;
+            }
+
+            navigator.clipboard.writeText(text).then(() => {
+                const origText = el.textContent;
+                const origColor = el.style.color;
+
+                el.textContent = '✓ 복사됨!';
+                el.style.color = '#50c878';
+                el.style.fontWeight = 'bold';
+
+                setTimeout(() => {
+                    el.textContent = origText;
+                    el.style.color = origColor;
+                    el.style.fontWeight = '600';
+                }, 1500);
+            }).catch(err => {
+                alert('복사 실패: ' + err.message);
+            });
+        }
+
+        function openChat(businessId) {
+            window.location.href = `/business/${businessId}`;
+        }
+
+        // 페이지 로드 시 자동 새로고침
+        loadBusinesses();
+
+        // 5초마다 새로고침
+        setInterval(loadBusinesses, 5000);
+    </script>
+</body>
+</html>

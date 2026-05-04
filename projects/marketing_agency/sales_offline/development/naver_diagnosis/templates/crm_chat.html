@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>채팅 | 영업 CRM</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #efefef;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-info h2 { font-size: 18px; color: #333; margin-bottom: 4px; }
+        .header-info p { font-size: 13px; color: #999; }
+        .header-actions { display: flex; gap: 12px; }
+
+        .back-btn, .action-btn {
+            padding: 8px 16px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover, .action-btn:hover { background: #e0e0e0; }
+        .action-btn.primary { background: #667eea; color: white; }
+        .action-btn.primary:hover { background: #5568d3; }
+        .action-btn.success { background: #50c878; color: white; }
+        .action-btn.success:hover { background: #38a960; }
+
+        .chat-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: white;
+        }
+
+        .message-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+
+        .message {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            line-height: 1.5;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .message.ai { align-self: flex-start; background: #f0f0f0; color: #333; }
+        .message.customer { align-self: flex-end; background: #667eea; color: white; }
+
+        .response-options { align-self: flex-start; width: 100%; max-width: 100%; }
+
+        .option-box {
+            background: #f9f9f9;
+            border: 1px solid #efefef;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .option-title {
+            font-size: 12px;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .option-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            white-space: pre-wrap;
+        }
+
+        .copy-btn {
+            width: 100%;
+            padding: 8px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover { background: #f0f0f0; border-color: #667eea; color: #667eea; }
+        .copy-btn.copied { background: #667eea; color: white; border-color: #667eea; }
+
+        .input-area {
+            background: white;
+            border-top: 1px solid #efefef;
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+        }
+
+        textarea {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: none;
+            max-height: 100px;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); }
+
+        .send-btn {
+            padding: 12px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            align-self: flex-end;
+        }
+
+        .send-btn:hover { background: #5568d3; transform: translateY(-1px); }
+        .send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .loading { text-align: center; color: #999; padding: 20px; font-size: 13px; }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f0f0f0;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .message-box {
+            background: #f9f9f9;
+            border: 1px solid #efefef;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .message-box-title {
+            font-size: 12px;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .message-content {
+            background: white;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+            margin-bottom: 12px;
+            border-left: 3px solid #667eea;
+        }
+
+        .button-group { display: flex; gap: 8px; }
+
+        .copy-send-btn {
+            flex: 1;
+            padding: 10px;
+            background: white;
+            border: 1px solid #667eea;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: #667eea;
+            transition: all 0.2s;
+        }
+
+        .copy-send-btn:hover { background: #f0f0f0; }
+        .copy-send-btn.copied { background: #667eea; color: white; border-color: #667eea; }
+
+        .place-link {
+            display: inline-block;
+            padding: 8px 12px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .place-link:hover { background: #e8f0ff; border-color: #667eea; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-info">
+            <h2 id="businessName">로드 중...</h2>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <p id="businessPhone" style="cursor:pointer; color:#667eea; font-weight:600; margin: 0;" title="클릭하면 복사">-</p>
+                <button id="phoneBtn" class="copy-btn" style="width: auto; padding: 6px 10px; margin: 0;" onclick="copyPhone()" title="전화번호 복사">
+                    📋 복사
+                </button>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button class="action-btn primary" onclick="downloadPDF()">📋 제안서 PDF</button>
+            <button class="action-btn" style="background: #e94560;" onclick="downloadPhoto()">📸 진단 사진</button>
+            <button class="action-btn" style="background: #ff6b35; color: white;" onclick="openManual()">📖 영업 매뉴얼</button>
+            <button class="back-btn" onclick="history.back()">← 뒤로</button>
+        </div>
+    </div>
+
+    <div class="chat-container">
+        <div class="messages" id="messagesContainer">
+            <div class="loading">
+                <div class="spinner"></div>
+                로드 중...
+            </div>
+        </div>
+
+        <div id="messageSection" style="display: none; padding: 16px; background: white; border-top: 1px solid #efefef;">
+            <div class="message-box">
+                <div class="message-box-title">📮 현재 단계 메시지</div>
+                <div id="currentMessage" class="message-content"></div>
+                <div class="button-group">
+                    <button id="copyBtn" class="copy-send-btn" onclick="copyMessage()">
+                        📋 복사
+                    </button>
+                    <button id="markSentBtn" class="copy-send-btn" style="background: #50c878; border-color: #50c878; color: white;" onclick="markSent()">
+                        ✓ 발송 완료
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="nextMessageSection" style="display: none; padding: 16px; background: white; border-top: 1px solid #efefef;">
+            <button id="generateBtn" class="action-btn success" style="width: 100%;" onclick="generateNextMessage()">
+                ⚡ 다음 메시지 생성
+            </button>
+        </div>
+
+        <div class="input-area">
+            <textarea
+                id="customerInput"
+                placeholder="고객 응답을 여기에 복붙하세요..."
+                rows="3"
+            ></textarea>
+            <button class="send-btn" onclick="sendCustomerResponse()">
+                ⚡ 전송
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const pathParts = window.location.pathname.split('/');
+        const businessId = pathParts[pathParts.length - 1];
+        let currentBusiness = null;
+
+        const statusToStage = {
+            '1차_발송_대기': 1, '1차_발송_완료': 1,
+            '2차_생성': 2, '2차_발송_대기': 2, '2차_발송_완료': 2,
+            '3차_생성': 3, '3차_발송_대기': 3, '3차_발송_완료': 3,
+            '4차_생성': 4, '4차_발송_대기': 4,
+        };
+
+        function copyPhone() {
+            const phone = document.getElementById('businessPhone').textContent;
+            const btn = document.getElementById('phoneBtn');
+
+            if (!phone || phone === '-' || phone.startsWith('진단')) {
+                alert('아직 전화번호가 없습니다');
+                return;
+            }
+
+            navigator.clipboard.writeText(phone).then(() => {
+                const origText = btn.textContent;
+                const origBg = btn.style.background;
+                btn.textContent = '✓ 복사됨!';
+                btn.style.background = '#667eea';
+                btn.style.color = 'white';
+                setTimeout(() => {
+                    btn.textContent = origText;
+                    btn.style.background = origBg;
+                    btn.style.color = '#666';
+                }, 1500);
+            }).catch(err => {
+                alert('복사 실패: ' + err.message);
+            });
+        }
+
+        async function downloadPDF() {
+            try {
+                const response = await fetch(`/api/crm/business/${businessId}/pdf`);
+                const data = await response.json();
+                if (data.success) {
+                    alert(data.message + '\n' + data.folder);
+                } else {
+                    alert('PDF 실패: ' + (data.error || data.detail || ''));
+                }
+            } catch (err) {
+                alert('PDF 실패: ' + err.message);
+            }
+        }
+
+        async function downloadPhoto() {
+            try {
+                const response = await fetch(`/api/crm/business/${businessId}/photo`);
+                const data = await response.json();
+                if (data.success) {
+                    alert(data.message + '\n' + data.folder);
+                } else {
+                    alert('사진 실패: ' + (data.error || data.detail || ''));
+                }
+            } catch (err) {
+                alert('사진 실패: ' + err.message);
+            }
+        }
+
+        async function loadChat() {
+            try {
+                const bizResponse = await fetch(`/api/crm/business/${businessId}`);
+                currentBusiness = await bizResponse.json();
+
+                if (currentBusiness.id) {
+                    document.getElementById('businessName').textContent = currentBusiness.name;
+                    document.getElementById('businessPhone').textContent = currentBusiness.phone;
+                }
+
+                const chatResponse = await fetch(`/api/crm/business/${businessId}/chat`);
+                const messages = await chatResponse.json();
+
+                displayMessages(messages);
+                updateMessageSection();
+            } catch (err) {
+                console.error('로드 실패:', err);
+                document.getElementById('messagesContainer').innerHTML = `
+                    <div class="loading">⚠️ 로드 실패</div>
+                `;
+            }
+        }
+
+        function displayMessages(messages) {
+            const container = document.getElementById('messagesContainer');
+            container.innerHTML = '';
+
+            if (!messages || messages.length === 0) {
+                container.innerHTML = '<div class="loading">대화 시작...</div>';
+                return;
+            }
+
+            messages.forEach((msg) => {
+                const isAI = msg.speaker === 'AI';
+
+                if (isAI) {
+                    const groupEl = document.createElement('div');
+                    groupEl.style.display = 'flex';
+                    groupEl.style.gap = '12px';
+                    groupEl.style.marginBottom = '20px';
+                    groupEl.style.alignItems = 'flex-start';
+
+                    const messageEl = document.createElement('div');
+                    messageEl.className = 'message ai';
+                    messageEl.style.flex = '1';
+                    messageEl.textContent = msg.message;
+
+                    const copyBtn = document.createElement('button');
+                    copyBtn.className = 'copy-btn';
+                    copyBtn.style.width = 'auto';
+                    copyBtn.style.padding = '8px 12px';
+                    copyBtn.style.whiteSpace = 'nowrap';
+                    copyBtn.style.marginTop = '12px';
+                    copyBtn.textContent = '📋 복사';
+                    copyBtn.onclick = function(e) {
+                        e.preventDefault();
+                        copyToClipboard(copyBtn, msg.message);
+                    };
+
+                    groupEl.appendChild(messageEl);
+                    groupEl.appendChild(copyBtn);
+                    container.appendChild(groupEl);
+                } else {
+                    const messageEl = document.createElement('div');
+                    messageEl.className = 'message customer';
+                    messageEl.textContent = msg.message;
+                    container.appendChild(messageEl);
+                }
+            });
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function copyToClipboard(btn, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                btn.textContent = '✓ 복사됨!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '📋 복사';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        async function updateMessageSection() {
+            if (!currentBusiness) return;
+
+            const status = currentBusiness.status;
+
+            if (status === '1차_발송_대기') {
+                const chatResponse = await fetch(`/api/crm/business/${businessId}/chat`);
+                const messages = await chatResponse.json();
+
+                if (messages.length > 0) {
+                    const firstMsg = messages[0].message;
+                    document.getElementById('currentMessage').textContent = firstMsg;
+                    document.getElementById('messageSection').style.display = 'block';
+                    document.getElementById('nextMessageSection').style.display = 'none';
+                }
+            } else if (status.includes('생성')) {
+                document.getElementById('nextMessageSection').style.display = 'block';
+                document.getElementById('messageSection').style.display = 'none';
+            } else if (status.includes('발송_대기')) {
+                try {
+                    const msgResponse = await fetch(`/api/crm/business/${businessId}/next-message`);
+                    const msgData = await msgResponse.json();
+
+                    if (msgData.success && msgData.message) {
+                        document.getElementById('currentMessage').textContent = msgData.message;
+                        document.getElementById('messageSection').style.display = 'block';
+                        document.getElementById('nextMessageSection').style.display = 'none';
+                    }
+                } catch (err) {
+                    console.error('메시지 로드 실패:', err);
+                }
+            } else {
+                document.getElementById('messageSection').style.display = 'none';
+                document.getElementById('nextMessageSection').style.display = 'none';
+            }
+        }
+
+        function copyMessage() {
+            const text = document.getElementById('currentMessage').textContent;
+            copyToClipboard(document.getElementById('copyBtn'), text);
+        }
+
+        async function markSent() {
+            try {
+                document.getElementById('markSentBtn').disabled = true;
+                document.getElementById('markSentBtn').textContent = '처리 중...';
+
+                const response = await fetch(`/api/crm/business/${businessId}/mark-sent`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || data.detail || '처리 실패');
+                }
+
+                alert('발송 완료로 표시되었습니다!');
+                await loadChat();
+            } catch (err) {
+                alert('오류: ' + err.message);
+            } finally {
+                document.getElementById('markSentBtn').disabled = false;
+                document.getElementById('markSentBtn').textContent = '✓ 발송 완료';
+            }
+        }
+
+        async function generateNextMessage() {
+            try {
+                document.getElementById('generateBtn').disabled = true;
+                document.getElementById('generateBtn').textContent = '생성 중...';
+
+                const response = await fetch(`/api/crm/business/${businessId}/next-message`);
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || data.info || data.detail || '생성 실패');
+                }
+
+                if (!data.message) {
+                    alert(data.info || '생성할 메시지가 없습니다');
+                    return;
+                }
+
+                document.getElementById('currentMessage').textContent = data.message;
+                document.getElementById('nextMessageSection').style.display = 'none';
+                document.getElementById('messageSection').style.display = 'block';
+
+                alert(`${data.message_num}차 메시지가 생성되었습니다!`);
+            } catch (err) {
+                alert('오류: ' + err.message);
+            } finally {
+                document.getElementById('generateBtn').disabled = false;
+                document.getElementById('generateBtn').textContent = '⚡ 다음 메시지 생성';
+            }
+        }
+
+        async function sendCustomerResponse() {
+            const input = document.getElementById('customerInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            const sendBtn = document.querySelector('.send-btn');
+            sendBtn.disabled = true;
+
+            try {
+                const response = await fetch(`/api/crm/business/${businessId}/respond`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || data.detail || '전송 실패');
+                }
+
+                input.value = '';
+                await loadChat();
+            } catch (err) {
+                alert('오류: ' + err.message);
+            } finally {
+                sendBtn.disabled = false;
+            }
+        }
+
+        document.getElementById('customerInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                if (e.shiftKey) {
+                    return;
+                } else {
+                    e.preventDefault();
+                    sendCustomerResponse();
+                }
+            }
+        });
+
+        // ─── 영업 매뉴얼 함수들 ───
+        let manualData = null;
+
+        async function openManual() {
+            document.getElementById('manualOverlay').style.display = 'block';
+
+            if (manualData) {
+                renderManual(manualData);
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/crm/business/${businessId}/sales-manual`);
+                manualData = await res.json();
+                renderManual(manualData);
+            } catch (err) {
+                document.getElementById('manualContent').innerHTML = '<p style="color:red;">로드 실패: ' + err.message + '</p>';
+            }
+        }
+
+        function closeManual() {
+            document.getElementById('manualOverlay').style.display = 'none';
+        }
+
+        function renderManual(data) {
+            const msgs = data.messages || {};
+            const presc = data.prescription;
+            const playbook = data.playbook;
+            const biz = data.business || {};
+
+            let html = '';
+
+            // 1. AI 영업 기획서 (신규)
+            if (playbook) {
+                html += renderPlaybook(playbook);
+            }
+
+            // 2. 처방전 섹션 (기존)
+            if (presc) {
+                html += `<div style="background:#f0f4ff; border-radius:8px; padding:20px; margin-bottom:24px;">
+                    <h3 style="margin-bottom:12px; color:#667eea;">📋 추천 패키지: ${presc.package}</h3>
+                    <p style="margin-bottom:8px;">등급: <strong>${presc.grade}등급</strong> (${presc.score}점) · 월 ${(presc.package_price||0).toLocaleString()}원 (정상가 ${(presc.anchor_price||0).toLocaleString()}원)</p>
+                    ${presc.priorities && presc.priorities.length > 0 ? `<p style="margin-top:12px; font-weight:600;">이달 우선 처방:</p><ul style="margin:8px 0 0 16px;">${presc.priorities.map(p => `<li>${p.item||''}: ${p.action||''} — ${p.why||''}</li>`).join('')}</ul>` : ''}
+                </div>`;
+            }
+
+            // 3. 메시지 섹션
+            const firstMsg = msgs.first;
+            if (firstMsg) {
+                const firstText = typeof firstMsg === 'object' ? (firstMsg.text || '') : firstMsg;
+                if (firstText) {
+                    html += msgBlock('1차 메시지 (오프닝)', firstText, '#e3f2fd');
+                }
+            }
+            if (msgs.second) {
+                html += msgBlock('2차 메시지', msgs.second, '#f3e5f5');
+            }
+            if (msgs.third) {
+                html += msgBlock('3차 메시지 (리포트 전달)', msgs.third, '#e8f5e9');
+            }
+            if (msgs.fourth) {
+                const fourth = msgs.fourth;
+                if (typeof fourth === 'object') {
+                    let fourthHtml = '';
+                    Object.entries(fourth).forEach(([key, val]) => {
+                        if (val) fourthHtml += `<div style="margin-bottom:12px;"><strong>[${key}]</strong><div style="white-space:pre-wrap; margin-top:6px; padding:10px; background:rgba(0,0,0,0.03); border-radius:6px; font-size:13px;">${val}</div></div>`;
+                    });
+                    if (fourthHtml) html += msgBlock('4차 메시지 (거절 대응)', fourthHtml, '#fff3e0', true);
+                }
+            }
+            if (msgs.fifth) {
+                html += msgBlock('5차 메시지 (결제 안내)', msgs.fifth, '#fce4ec');
+            }
+            if (msgs.sixth) {
+                html += msgBlock('6차 메시지 (온보딩)', msgs.sixth, '#f1f8e9');
+            }
+
+            if (!html) html = '<p style="color:#999; text-align:center;">매뉴얼 데이터를 생성할 수 없습니다.</p>';
+
+            document.getElementById('manualContent').innerHTML = html;
+        }
+
+        function msgBlock(title, content, bg, isHtml=false) {
+            const safeContent = content.replace(/`/g, '\\`').replace(/"/g, '\\"');
+            const body = isHtml ? content : `<div style="white-space:pre-wrap; font-size:13px; line-height:1.7;">${content}</div>`;
+            return `<div style="margin-bottom:20px;">
+                <h4 style="font-size:14px; font-weight:700; margin-bottom:10px; color:#555; padding-bottom:6px; border-bottom:2px solid ${bg};">${title}</h4>
+                <div style="background:${bg}; border-radius:8px; padding:16px;">${body}</div>
+                <button onclick="copyManualText(\`${safeContent}\`)" style="margin-top:6px; padding:5px 12px; background:#f0f0f0; border:none; border-radius:4px; cursor:pointer; font-size:12px; color:#666;">📋 복사</button>
+            </div>`;
+        }
+
+        function renderPlaybook(playbook) {
+            if (!playbook) return '';
+
+            let html = `<div style="background:linear-gradient(135deg, #667eea 0%, #5568d3 100%); border-radius:12px; padding:24px; margin-bottom:24px; color:white;">
+                <h2 style="font-size:18px; margin-bottom:16px; color:white;">🎯 AI 영업 기획서</h2>`;
+
+            // 업체 분석
+            if (playbook.business_analysis) {
+                const ba = playbook.business_analysis;
+                html += `<div style="background:rgba(255,255,255,0.1); border-radius:8px; padding:16px; margin-bottom:16px;">
+                    <h3 style="font-size:14px; margin-bottom:10px; color:white; font-weight:700;">📊 업체 분석</h3>
+                    <div style="font-size:13px; line-height:1.6;">
+                        <p><strong>현황:</strong> ${ba.current_state || '-'}</p>
+                        ${ba.critical_weaknesses && ba.critical_weaknesses.length > 0 ? `
+                        <p style="margin-top:8px;"><strong>약점:</strong></p>
+                        <ul style="margin:4px 0 0 16px;">
+                            ${ba.critical_weaknesses.map(w => `<li>${w}</li>`).join('')}
+                        </ul>` : ''}
+                        ${ba.unique_strengths && ba.unique_strengths.length > 0 ? `
+                        <p style="margin-top:8px;"><strong>강점:</strong></p>
+                        <ul style="margin:4px 0 0 16px;">
+                            ${ba.unique_strengths.map(s => `<li>${s}</li>`).join('')}
+                        </ul>` : ''}
+                        ${ba.angle_selection ? `<p style="margin-top:8px;"><strong>공략 각도:</strong> ${ba.angle_selection}</p>` : ''}
+                    </div>
+                </div>`;
+            }
+
+            // 공략 전략
+            if (playbook.strategy) {
+                const st = playbook.strategy;
+                html += `<div style="background:rgba(255,255,255,0.1); border-radius:8px; padding:16px; margin-bottom:16px;">
+                    <h3 style="font-size:14px; margin-bottom:10px; color:white; font-weight:700;">⚡ 공략 전략</h3>
+                    <div style="font-size:13px; line-height:1.6;">
+                        ${st.core_hook ? `<p><strong>핵심 메시지:</strong> ${st.core_hook}</p>` : ''}
+                        ${st.persuasion_path ? `<p style="margin-top:8px;"><strong>설득 경로:</strong> ${st.persuasion_path}</p>` : ''}
+                        ${st.risk_warning ? `<p style="margin-top:8px;"><strong>⚠️ 주의점:</strong> ${st.risk_warning}</p>` : ''}
+                    </div>
+                </div>`;
+            }
+
+            // 단계별 맞춤 메시지
+            if (playbook.messages) {
+                const msgs = playbook.messages;
+                html += `<div style="background:rgba(255,255,255,0.1); border-radius:8px; padding:16px; margin-bottom:16px;">
+                    <h3 style="font-size:14px; margin-bottom:10px; color:white; font-weight:700;">💬 단계별 맞춤 메시지</h3>`;
+
+                if (msgs.opening) {
+                    html += `<div style="background:rgba(255,255,255,0.15); border-radius:6px; padding:10px; margin-bottom:10px; border-left:3px solid #ffeb3b;">
+                        <p style="font-size:12px; font-weight:700; margin-bottom:4px; color:#ffeb3b;">📮 오프닝</p>
+                        <p style="font-size:13px; white-space:pre-wrap; line-height:1.6;">${msgs.opening}</p>
+                        <button onclick="copyManualText(\`${msgs.opening.replace(/`/g, '\\`').replace(/"/g, '\\"')}\`)" style="margin-top:8px; padding:4px 8px; background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.4); border-radius:3px; cursor:pointer; font-size:11px; color:white;">📋 복사</button>
+                    </div>`;
+                }
+                if (msgs.second) {
+                    html += `<div style="background:rgba(255,255,255,0.15); border-radius:6px; padding:10px; margin-bottom:10px; border-left:3px solid #4fc3f7;">
+                        <p style="font-size:12px; font-weight:700; margin-bottom:4px; color:#4fc3f7;">2️⃣ 2차 메시지</p>
+                        <p style="font-size:13px; white-space:pre-wrap; line-height:1.6;">${msgs.second}</p>
+                        <button onclick="copyManualText(\`${msgs.second.replace(/`/g, '\\`').replace(/"/g, '\\"')}\`)" style="margin-top:8px; padding:4px 8px; background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.4); border-radius:3px; cursor:pointer; font-size:11px; color:white;">📋 복사</button>
+                    </div>`;
+                }
+                if (msgs.third) {
+                    html += `<div style="background:rgba(255,255,255,0.15); border-radius:6px; padding:10px; margin-bottom:10px; border-left:3px solid #81c784;">
+                        <p style="font-size:12px; font-weight:700; margin-bottom:4px; color:#81c784;">3️⃣ 3차 메시지</p>
+                        <p style="font-size:13px; white-space:pre-wrap; line-height:1.6;">${msgs.third}</p>
+                        <button onclick="copyManualText(\`${msgs.third.replace(/`/g, '\\`').replace(/"/g, '\\"')}\`)" style="margin-top:8px; padding:4px 8px; background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.4); border-radius:3px; cursor:pointer; font-size:11px; color:white;">📋 복사</button>
+                    </div>`;
+                }
+                if (msgs.closing) {
+                    html += `<div style="background:rgba(255,255,255,0.15); border-radius:6px; padding:10px; margin-bottom:10px; border-left:3px solid #ef5350;">
+                        <p style="font-size:12px; font-weight:700; margin-bottom:4px; color:#ef5350;">🎯 클로징</p>
+                        <p style="font-size:13px; white-space:pre-wrap; line-height:1.6;">${msgs.closing}</p>
+                        <button onclick="copyManualText(\`${msgs.closing.replace(/`/g, '\\`').replace(/"/g, '\\"')}\`)" style="margin-top:8px; padding:4px 8px; background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.4); border-radius:3px; cursor:pointer; font-size:11px; color:white;">📋 복사</button>
+                    </div>`;
+                }
+
+                html += '</div>';
+            }
+
+            // 반박 대응
+            if (playbook.objection_handling) {
+                const obj = playbook.objection_handling;
+                html += `<div style="background:rgba(255,255,255,0.1); border-radius:8px; padding:16px; margin-bottom:16px;">
+                    <h3 style="font-size:14px; margin-bottom:10px; color:white; font-weight:700;">🛡️ 반박 대응</h3>
+                    <div style="font-size:13px; line-height:1.6;">`;
+
+                if (obj.비싸다) {
+                    html += `<p style="margin-bottom:8px;"><strong>"비싸다":</strong> ${obj.비싸다}</p>`;
+                }
+                if (obj.효과없을것같다) {
+                    html += `<p style="margin-bottom:8px;"><strong>"효과없을것같다":</strong> ${obj.효과없을것같다}</p>`;
+                }
+                if (obj.바쁘다) {
+                    html += `<p style="margin-bottom:8px;"><strong>"바쁘다":</strong> ${obj.바쁘다}</p>`;
+                }
+                if (obj['직접해보겠다']) {
+                    html += `<p style="margin-bottom:8px;"><strong>"직접해보겠다":</strong> ${obj['직접해보겠다']}</p>`;
+                }
+
+                html += '</div></div>';
+            }
+
+            // 실행 플랜
+            if (playbook.execution_plan) {
+                const ep = playbook.execution_plan;
+                html += `<div style="background:rgba(255,255,255,0.1); border-radius:8px; padding:16px; margin-bottom:16px;">
+                    <h3 style="font-size:14px; margin-bottom:10px; color:white; font-weight:700;">📈 실행 플랜</h3>
+                    <div style="font-size:13px; line-height:1.6;">
+                        ${ep.recommended_package ? `<p><strong>추천 패키지:</strong> ${ep.recommended_package}</p>` : ''}
+                        ${ep.priority_actions && ep.priority_actions.length > 0 ? `
+                        <p style="margin-top:8px;"><strong>첫 달 우선 액션:</strong></p>
+                        <ul style="margin:4px 0 0 16px;">
+                            ${ep.priority_actions.map(a => `<li>${a}</li>`).join('')}
+                        </ul>` : ''}
+                        ${ep.success_metrics ? `<p style="margin-top:8px;"><strong>성공 기준:</strong> ${ep.success_metrics}</p>` : ''}
+                    </div>
+                </div>`;
+            }
+
+            // 운영 노트
+            if (playbook.operator_notes) {
+                const on = playbook.operator_notes;
+                html += `<div style="background:rgba(255,255,255,0.1); border-radius:8px; padding:16px; margin-bottom:16px;">
+                    <h3 style="font-size:14px; margin-bottom:10px; color:white; font-weight:700;">💡 운영 노트</h3>
+                    <div style="font-size:13px; line-height:1.6;">
+                        ${on.tone_recommendation ? `<p><strong>톤:</strong> ${on.tone_recommendation}</p>` : ''}
+                        ${on.channel_recommendation ? `<p style="margin-top:8px;"><strong>채널:</strong> ${on.channel_recommendation}</p>` : ''}
+                        ${on.timing_recommendation ? `<p style="margin-top:8px;"><strong>타이밍:</strong> ${on.timing_recommendation}</p>` : ''}
+                    </div>
+                </div>`;
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        function copyManualText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('복사되었습니다!');
+            }).catch(() => {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                alert('복사되었습니다!');
+            });
+        }
+
+        // ESC로 닫기
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeManual();
+        });
+
+        loadChat();
+        setInterval(loadChat, 10000);
+    </script>
+
+    <!-- 영업 매뉴얼 오버레이 -->
+    <div id="manualOverlay" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:1000; overflow-y:auto;">
+        <div style="background:white; max-width:700px; margin:20px auto; border-radius:12px; padding:32px; position:relative;">
+            <button onclick="closeManual()" style="position:absolute; top:16px; right:16px; background:#f0f0f0; border:none; border-radius:6px; padding:8px 14px; cursor:pointer; font-size:14px; font-weight:600;">✕ 닫기</button>
+            <h2 style="margin-bottom:24px; color:#333; font-size:22px;">📖 영업 매뉴얼</h2>
+            <div id="manualContent" style="color:#333; line-height:1.7; font-size:14px;">
+                <div style="text-align:center; padding:40px; color:#999;">로드 중...</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

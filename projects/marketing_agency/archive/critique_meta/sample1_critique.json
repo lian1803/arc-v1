@@ -1,0 +1,23 @@
+{
+  "passed": false,
+  "iterations": 2,
+  "issues_found": 10,
+  "improvements_applied": 6,
+  "unresolved_issues": [
+    {
+      "criterion": "가격 심리",
+      "status": "문제있음",
+      "detail": "6개월 집중 관리라고 기간을 명시하여 총액(588,000원)이 연상됨. '6개월 후 격차는 3,342명'처럼 장기간 누적 수치도 부담감 증가"
+    },
+    {
+      "criterion": "해결책 노출",
+      "status": "문제있음",
+      "detail": "포함 서비스에서 '네이버 플레이스 최적화, 월 8회 콘텐츠 발행, 리뷰 관리' 등 구체적 해결책 제시. 실제 사례에서도 순위 상승 방법이 노출됨"
+    },
+    {
+      "criterion": "CTA 명확도",
+      "status": "문제있음",
+      "detail": "[무료 진단 받기 - 카톡 상담] 버튼은 있으나 실제 연락처(카톡ID, 전화번호, QR코드 등)가 없어 액션 불가능"
+    }
+  ]
+}
