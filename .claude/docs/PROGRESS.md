@@ -71,6 +71,7 @@
 - Cursor dive 2회 ($0.02): Cursor 3 (4월 출시 Background Agents/Composer 2/Agent Window) + 5월 점유율 31% AI IDE 1위. ARC MODES.md "Cursor/Claude 1대1" 외부 정론 정합 확인.
 - ★ marketing_agency 호환성 연결: luna 통째 carry (7 sub-project + _shared) → `raw/molds/my/marketing_agency.md` mold 등록 / NEXT.md 진행 사업 #4 추가 / CLAUDE.md ARC integration 섹션 luna DOCTRINE 참조 → ARC 시스템 룰 매핑.
 - ★ Cursor 양방향 핸드오프 시스템: `.claude/rules/handoff.md` (Claude Code 측) + `.cursor/rules/{arc,modes,handoff,file-routing}.mdc` 4개 (Cursor 측 미러) + CLAUDE.md 라우터 1줄. AI가 작업 분산 자동 판단 → Lian은 복붙만. CLAUDE.md 25/30.
+- ★ AGENTS.md cross-tool baseline 추가 (dive 4번째 검증 결과 박음): destructive 차단 (PocketOS Cursor agent 9초 DB 삭제 사례) + 권한 스코프 (Local/Staging/Production) + post-handoff git diff 검증. CLAUDE.md @AGENTS.md import (26/30). hook WHITELIST + file-routing 화이트리스트 갱신. handoff.md/mdc §5 git status/diff 명시 강화.
 
 **다음 (2026-05-05):**
 - 옵션 A 1순위 — sales_offline (마케팅 에이전시 메인) 또는 test_run_002 PLAN 1장. 시스템 작업 5/3+5/4+오늘 누적 위반 마감.

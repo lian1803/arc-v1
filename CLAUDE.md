@@ -2,6 +2,7 @@
 
 ARC = Lian이 사업 N개 굴릴 때 쓰는 인프라.
 
+@AGENTS.md
 @.claude/docs/MODES.md
 @.claude/docs/PREMISES.md
 @.claude/docs/NEXT.md

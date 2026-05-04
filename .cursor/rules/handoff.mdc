@@ -56,12 +56,14 @@ Claude Code 터미널에 이 프롬프트 그대로 복붙:
 - **PLAN reference**: `projects/{name}/PLAN.md` 또는 `raw/molds/my/{slug}.md` 가리킴.
 - **금지**: 모호한 "그것/저것" 사용 X.
 
-## 5. Claude Code 끝나고 돌아올 때
+## 5. Claude Code 끝나고 돌아올 때 (AGENTS.md Post-Handoff 정합)
 
 Lian이 "클코 끝났어" 또는 "🟢 Cursor로 가" 박스 복붙하면:
 
-1. 변경 파일 확인
-2. 다음 동작 결정 또는 다음 핸드오프
+1. **`git status` + `git diff --stat`** 로 변경 파일 확인 (필수)
+2. 의도 외 파일 변경 있으면 stop + Lian 보고
+3. AGENTS.md §Destructive Operation 위반 흔적 검사
+4. 다음 동작 결정 또는 다음 핸드오프
 
 ## 6. 자기 점검
 

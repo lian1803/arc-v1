@@ -8,6 +8,7 @@
 
 **파일**:
 - `CLAUDE.md` — 3원칙 + 라우터 + @import (30줄 cap)
+- `AGENTS.md` — Cursor + Claude Code 둘 다 읽는 cross-tool universal (destructive 차단 / 권한 스코프 / post-handoff 검증)
 - `.env`, `.env.example`, `.gitignore`, `.cost_log.jsonl`
 
 **폴더**:

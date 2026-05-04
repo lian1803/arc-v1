@@ -21,6 +21,7 @@ except Exception:
 
 WHITELIST_FILES = {
     "CLAUDE.md",
+    "AGENTS.md",
     ".env",
     ".env.example",
     ".gitignore",

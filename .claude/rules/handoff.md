@@ -51,13 +51,15 @@ Cursor 에이전트 창(Cmd/Ctrl+L)에 이 프롬프트 그대로 복붙:
 - **PLAN reference**: 진행 중 사업이면 `projects/{name}/PLAN.md` 또는 `raw/molds/my/{slug}.md` 가리킴.
 - **금지**: 모호한 "그것/저것" 사용 X. 항상 명시.
 
-## 5. Cursor 끝나고 돌아올 때
+## 5. Cursor 끝나고 돌아올 때 (AGENTS.md Post-Handoff 정합)
 
 Lian이 "커서 끝났어" 또는 "🟣 클로드코드로 가" 박스 내용 복붙하면:
 
-1. 변경된 파일 git status / diff 로 확인
-2. raw/molds/my/{slug}.md `actions.done` 한 줄 추가
-3. 다음 동작 결정 또는 다음 핸드오프 또는 commit
+1. **`git status --short` + `git diff --stat`** 로 변경 파일 확인 (필수, 의도 외 변경 차단)
+2. 의도 외 파일 변경 있으면 stop + Lian 보고
+3. AGENTS.md §Destructive Operation 위반 흔적 검사 (DROP/rm -rf/force push 등 history)
+4. raw/molds/my/{slug}.md `actions.done` 한 줄 추가
+5. 다음 동작 결정 또는 다음 핸드오프 또는 commit
 
 ## 6. 자기 점검
 

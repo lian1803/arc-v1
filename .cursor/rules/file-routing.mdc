@@ -10,7 +10,7 @@ alwaysApply: true
 
 ## 루트 화이트리스트 (이거 외엔 루트에 못 만듬)
 
-**파일**: `CLAUDE.md`, `.env`, `.env.example`, `.gitignore`, `.cost_log.jsonl`
+**파일**: `CLAUDE.md`, `AGENTS.md` (cross-tool universal), `.env`, `.env.example`, `.gitignore`, `.cost_log.jsonl`
 **폴더**: `.claude/`, `.cursor/`, `.git/`, `archive/`, `projects/`, `raw/`, `tools/`
 
 `.claude/docs/` 안: `MODES.md`, `NEXT.md`, `PREMISES.md`, `PROGRESS.md` (CLAUDE.md @import)
